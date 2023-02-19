@@ -1,0 +1,37 @@
+<div class="flex flex-wrap justify-center">
+  <app-pad-button
+    color="bg-cyan-700"
+    class="m-1"
+    (click)="onClickChase(chaseNameEnum.ON)"
+    [active]="isChaseActive(chaseNameEnum.ON)"
+    >On</app-pad-button
+  >
+  <app-pad-button
+    color="bg-cyan-700"
+    class="m-1"
+    (click)="onClickChase(chaseNameEnum.MOODY)"
+    [active]="isChaseActive(chaseNameEnum.MOODY)"
+    >Moody</app-pad-button
+  >
+  <!-- <app-pad-button
+    color="bg-gray-500"
+    class="m-1"
+    (click)="onClickChase(chaseNameEnum.DISCO)"
+    [active]="isChaseActive(chaseNameEnum.DISCO)"
+    >Disco</app-pad-button
+  > -->
+  <app-pad-button
+    color="bg-cyan-700"
+    class="m-1"
+    (click)="onClickChase(chaseNameEnum.CLUB)"
+    [active]="isChaseActive(chaseNameEnum.CLUB)"
+    >Club</app-pad-button
+  >
+  <!-- <app-pad-button
+    color="bg-gray-500"
+    class="m-1"
+    (click)="onClickChase(chaseNameEnum.FLASHY)"
+    [active]="isChaseActive(chaseNameEnum.FLASHY)"
+    >Flashy</app-pad-button
+  > -->
+</div>

@@ -7,7 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ToggleButtonComponent implements OnInit {
   @Input() colorOff: string = 'bg-gray-900';
-  @Input() colorOn: string = 'bg-gray-100';
+  @Input() colorOn: string = 'bg-cyan-700';
   @Input() active: boolean | null = false;
 
   constructor() {}

@@ -1,4 +1,4 @@
-import { bar, hex1, hex2 } from '../devices/devices';
+import { bar, hex1, hex2, hex3, hex4, hex5 } from '../devices/devices';
 import { Chase, ChaseColor, ChaseName } from './chase';
 
 const createMoodyChase = (color: ChaseColor): Chase => {
@@ -43,27 +43,114 @@ const createMoodyChase = (color: ChaseColor): Chase => {
     { index: 'odd', values: { master: 255, ...colorA } },
   ]);
 
+  const barFullA = bar.state([
+    { index: 'all', values: { master: 255, ...colorA } },
+  ]);
+
+  const barFullB = bar.state([
+    { index: 'all', values: { master: 255, ...colorB } },
+  ]);
+
+  const hex1A = [
+    hex1.state({ master: 255, ...colorA }),
+    hex2.state({ master: 0 }),
+    hex3.state({ master: 0 }),
+    hex4.state({ master: 0 }),
+    hex5.state({ master: 0 }),
+  ];
+
+  const hex1B = [
+    hex1.state({ master: 255, ...colorB }),
+    hex2.state({ master: 0 }),
+    hex3.state({ master: 0 }),
+    hex4.state({ master: 0 }),
+    hex5.state({ master: 0 }),
+  ];
+
+  const hex2A = [
+    hex1.state({ master: 0 }),
+    hex2.state({ master: 255, ...colorA }),
+    hex3.state({ master: 0 }),
+    hex4.state({ master: 0 }),
+    hex5.state({ master: 0 }),
+  ];
+
+  const hex2B = [
+    hex1.state({ master: 0 }),
+    hex2.state({ master: 255, ...colorB }),
+    hex3.state({ master: 0 }),
+    hex4.state({ master: 0 }),
+    hex5.state({ master: 0 }),
+  ];
+
+  const hex3A = [
+    hex1.state({ master: 0 }),
+    hex2.state({ master: 0 }),
+    hex3.state({ master: 255, ...colorA }),
+    hex4.state({ master: 0 }),
+    hex5.state({ master: 0 }),
+  ];
+
+  const hex3B = [
+    hex1.state({ master: 0 }),
+    hex2.state({ master: 0 }),
+    hex3.state({ master: 255, ...colorB }),
+    hex4.state({ master: 0 }),
+    hex5.state({ master: 0 }),
+  ];
+
+  const hex4A = [
+    hex1.state({ master: 0 }),
+    hex2.state({ master: 0 }),
+    hex3.state({ master: 0 }),
+    hex4.state({ master: 255, ...colorA }),
+    hex5.state({ master: 0 }),
+  ];
+
+  const hex4B = [
+    hex1.state({ master: 0 }),
+    hex2.state({ master: 0 }),
+    hex3.state({ master: 0 }),
+    hex4.state({ master: 255, ...colorB }),
+    hex5.state({ master: 0 }),
+  ];
+
+  const hex5A = [
+    hex1.state({ master: 0 }),
+    hex2.state({ master: 0 }),
+    hex3.state({ master: 0 }),
+    hex4.state({ master: 0 }),
+    hex5.state({ master: 255, ...colorA }),
+  ];
+
+  const hex5B = [
+    hex1.state({ master: 0 }),
+    hex2.state({ master: 0 }),
+    hex3.state({ master: 0 }),
+    hex4.state({ master: 0 }),
+    hex5.state({ master: 255, ...colorB }),
+  ];
+
   for (let i = 0; i < 8; i++) {
-    chase.addStep(
-      hex1.state({ master: 255, ...colorA }),
-      hex2.state({ master: 0 }),
-      barMixedA,
-    );
-    chase.addStep(
-      hex1.state({ master: 0 }),
-      hex2.state({ master: 255, ...colorA }),
-      barMixedA,
-    );
-    chase.addStep(
-      hex1.state({ master: 255, ...colorB }),
-      hex2.state({ master: 0 }),
-      barMixedB,
-    );
-    chase.addStep(
-      hex1.state({ master: 0 }),
-      hex2.state({ master: 255, ...colorB }),
-      barMixedB,
-    );
+    // 8 Blocks
+    chase.addStep(...hex1A, barMixedA);
+    chase.addStep(...hex2A, barMixedA);
+    chase.addStep(...hex3A, barMixedB);
+    chase.addStep(...hex4A, barMixedB);
+    chase.addStep(...hex5A, barMixedA);
+    chase.addStep(...hex1B, barMixedA);
+    chase.addStep(...hex2B, barMixedB);
+    chase.addStep(...hex3B, barMixedB);
+
+    // 8 Blocks
+    chase.addStep(...hex4B, barMixedA);
+    chase.addStep(...hex5B, barMixedA);
+    chase.addStep(...hex1A, barMixedB);
+    chase.addStep(...hex2A, barMixedB);
+    chase.addStep(...hex3A, barMixedA);
+    chase.addStep(...hex4A, barMixedA);
+    chase.addStep(...hex5A, barMixedB);
+    chase.addStep(barFullA);
   }
 
   return chase;

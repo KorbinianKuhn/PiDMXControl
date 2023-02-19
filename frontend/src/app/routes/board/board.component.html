@@ -1,154 +1,22 @@
-<div class="flex">
-  <div class="flex flex-col">
-    <div class="flex flex-col">
-      <div class="flex">
-        <app-pad-button
-          color="bg-red-500"
-          [active]="isColorActive(chaseColorEnum.RED)"
-          (click)="onClickToggleColor(chaseColorEnum.RED)"
-        ></app-pad-button>
-        <app-pad-button
-          color="bg-blue-500"
-          [active]="isColorActive(chaseColorEnum.BLUE)"
-          (click)="onClickToggleColor(chaseColorEnum.BLUE)"
-        ></app-pad-button>
-        <app-pad-button
-          color="bg-green-500"
-          [active]="isColorActive(chaseColorEnum.GREEN)"
-          (click)="onClickToggleColor(chaseColorEnum.GREEN)"
-        ></app-pad-button>
-        <app-pad-button
-          color="bg-white"
-          [active]="isColorActive(chaseColorEnum.WHITE)"
-          (click)="onClickToggleColor(chaseColorEnum.WHITE)"
-        ></app-pad-button>
-        <app-pad-button
-          color="bg-purple-500"
-          [active]="isColorActive(chaseColorEnum.UV)"
-          (click)="onClickToggleColor(chaseColorEnum.UV)"
-        ></app-pad-button>
-        <app-pad-button
-          color="bg-yellow-500"
-          [active]="isColorActive(chaseColorEnum.AMBER)"
-          (click)="onClickToggleColor(chaseColorEnum.AMBER)"
-        ></app-pad-button>
-      </div>
-    </div>
+<div class="flex flex-col pt-2">
+  <h2 class="text-cyan-600 font-thin text-center">Colors</h2>
+  <app-board-colors></app-board-colors>
+  <hr class="border-cyan-900 mb-1 mt-2" />
 
-    <div class="flex flex-col">
-      <div class="flex">
-        <app-pad-button
-          color="bg-gray-500"
-          (click)="onClickChase(chaseNameEnum.ON)"
-          [active]="isChaseActive(chaseNameEnum.ON)"
-          >On</app-pad-button
-        >
-        <app-pad-button
-          color="bg-gray-500"
-          (click)="onClickChase(chaseNameEnum.MOODY)"
-          [active]="isChaseActive(chaseNameEnum.MOODY)"
-          >Moody</app-pad-button
-        >
-        <app-pad-button
-          color="bg-gray-500"
-          (click)="onClickChase(chaseNameEnum.DISCO)"
-          [active]="isChaseActive(chaseNameEnum.DISCO)"
-          >Disco</app-pad-button
-        >
-        <app-pad-button
-          color="bg-gray-500"
-          (click)="onClickChase(chaseNameEnum.CLUB)"
-          [active]="isChaseActive(chaseNameEnum.CLUB)"
-          >Club</app-pad-button
-        >
-        <app-pad-button
-          color="bg-gray-500"
-          [current]="true"
-          (click)="onClickChase(chaseNameEnum.FLASHY)"
-          [active]="isChaseActive(chaseNameEnum.FLASHY)"
-          >Flashy</app-pad-button
-        >
-      </div>
-    </div>
+  <h2 class="text-cyan-600 font-thin text-center">Chases</h2>
+  <app-board-chases></app-board-chases>
+  <hr class="border-cyan-900 mb-1 mt-2" />
 
-    <div class="flex flex-col">
-      <div class="flex">
-        <app-pad-button color="bg-gray-900">8</app-pad-button>
-        <app-pad-button color="bg-gray-900">16</app-pad-button>
-        <app-pad-button color="bg-gray-900">32</app-pad-button>
-        <app-pad-button color="bg-gray-900">Kugel</app-pad-button>
-        <app-toggle-button [active]="strobe$ | async" (click)="onClickStrobe()">
-          Strobe
-        </app-toggle-button>
-        <app-toggle-button [active]="black$ | async" (click)="onClickBlack()">
-          Black
-        </app-toggle-button>
-      </div>
-    </div>
+  <h2 class="text-cyan-600 font-thin text-center">Overrides</h2>
+  <app-board-overrides></app-board-overrides>
+  <hr class="border-cyan-900 mb-1 mt-2" />
 
-    <div class="flex">
-      <div class="relative pt-1">
-        <label for="customRange1" class="form-label">Example range</label>
-        <input
-          value="100"
-          type="range"
-          class="form-range w-full h-6 p-0 bg-transparent focus:outline-none focus:ring-0 focus:shadow-none"
-          (change)="onMasterChange($event)"
-        />
-      </div>
-    </div>
-  </div>
-  <div class="flex flex-col m-4">
+  <h2 class="text-cyan-600 font-thin text-center">BPM</h2>
+  <div class="flex justify-center">
     <app-bpm></app-bpm>
-
-    <!-- Front -->
-    <div class="flex items-end">
-      <app-varytec-hero-wash class="mr-2"></app-varytec-hero-wash>
-      <app-eurolite-led-pix-bar [address]="50"></app-eurolite-led-pix-bar>
-      <app-varytec-hero-wash class="ml-2"></app-varytec-hero-wash>
-    </div>
-    <!-- Middle -->
-    <div class="flex justify-center">
-      <!-- Left -->
-      <div class="flex flex-col items-center justify-center">
-        <app-varytec-gigabar-hex
-          class="m-2"
-          [vertical]="true"
-          [address]="1"
-        ></app-varytec-gigabar-hex>
-        <app-varytec-gigabar-hex
-          class="m-2"
-          [vertical]="true"
-          [address]="20"
-        ></app-varytec-gigabar-hex>
-      </div>
-      <!-- Center -->
-      <div class="flex flex-1 justify-center items-center">
-        <app-adj-saber-spot class="m-2"></app-adj-saber-spot>
-        <app-fun-generation-led-diamond-dome
-          class="m-2"
-        ></app-fun-generation-led-diamond-dome>
-      </div>
-      <!-- Right -->
-      <div class="flex flex-col items-center justify-center">
-        <app-varytec-gigabar-hex
-          class="m-2"
-          [vertical]="true"
-          [address]="10"
-        ></app-varytec-gigabar-hex>
-        <app-varytec-gigabar-hex
-          class="m-2"
-          [vertical]="true"
-          [address]="30"
-        ></app-varytec-gigabar-hex>
-      </div>
-    </div>
-    <!-- Back -->
-    <div class="flex justify-center">
-      <app-varytec-gigabar-hex
-        class="rotate-90 m-2"
-        [address]="40"
-      ></app-varytec-gigabar-hex>
-    </div>
   </div>
+  <hr class="border-cyan-900 mb-1 mt-2" />
+
+  <h2 class="text-cyan-600 font-thin text-center">Preview</h2>
+  <app-visualization></app-visualization>
 </div>
