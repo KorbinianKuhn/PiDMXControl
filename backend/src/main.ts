@@ -1,0 +1,48 @@
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import { DMX } from './dmx/dmx';
+import {
+  ClientToServerEvents,
+  ServerToClientEvents,
+} from './server/events.interfaces';
+import { Logger } from './utils/logger';
+
+const logger = new Logger('main');
+
+const main = async () => {
+  const httpServer = createServer();
+  const io = new Server<ClientToServerEvents, ServerToClientEvents>(
+    httpServer,
+    {
+      cors: {
+        origin: '*',
+      },
+    },
+  );
+
+  const dmx = new DMX(io);
+
+  await dmx.init();
+
+  io.on('connection', (socket) => {
+    socket.on('set:bpm', (args) => {
+      dmx.setBpm(args.value);
+    });
+
+    socket.on('set:black', (args) => {
+      dmx.setBlack(args.value);
+    });
+
+    socket.on('set:master', (args) => {
+      dmx.setMaster(args.value);
+    });
+  });
+
+  logger.info(`Listen on port 3000`);
+  io.listen(3000);
+};
+
+logger.info('setup');
+main()
+  .then(() => logger.info('started'))
+  .catch((err) => logger.error(err.message, err));

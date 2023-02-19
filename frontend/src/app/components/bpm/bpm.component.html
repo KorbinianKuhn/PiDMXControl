@@ -1,0 +1,29 @@
+<div class="flex flex-col m-4 w-40">
+  <div class="flex">
+    <div
+      *ngFor="let bar of bars$ | async; first as first; last as last"
+      [class.ml-0]="first"
+      [class.mr-0]="last"
+      [ngClass]="bar ? 'bg-gray-400' : 'bg-gray-900'"
+      class="w-8 h-4 m-2"
+    ></div>
+  </div>
+
+  <div
+    class="w-40 h-16 bg-gray-900 rounded-md flex justify-center items-center text-3xl"
+  >
+    {{ bpm$ | async }}
+  </div>
+
+  <div class="flex mt-4">
+    <app-pad-button
+      color="bg-gray-900 mr-8"
+      [active]="true"
+      (click)="onClickStart()"
+      >Start</app-pad-button
+    >
+    <app-pad-button color="bg-gray-900" [active]="true" (click)="onClickTap()"
+      >Tap</app-pad-button
+    >
+  </div>
+</div>

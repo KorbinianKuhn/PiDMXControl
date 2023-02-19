@@ -1,0 +1,14 @@
+<button
+  class="relative w-16 h-16 rounded-md"
+  [ngClass]="color"
+  (click)="onClick()"
+>
+  <div
+    class="absolute inset-0 bg-black"
+    [ngClass]="'opacity-' + opacity"
+    [class.animate-pulse]="current"
+  ></div>
+  <div class="relative">
+    <ng-content> </ng-content>
+  </div>
+</button>
