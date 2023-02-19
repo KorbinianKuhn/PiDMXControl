@@ -8,9 +8,8 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc -p tsconfig.build.json",
-    "start": "ts-node-dev src/main.ts",
-    "start:pi": "CONFIG=pi ts-node-dev src/main.ts",
-    "start:build": "node dist/main.js"
+    "start": "CONFIG=dev ts-node-dev src/main.ts",
+    "start:build": "CONFIG=pi node dist/main.js"
   },
   "dependencies": {
     "rimraf": "^4.1.2",

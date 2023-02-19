@@ -10,4 +10,5 @@ export interface ServerToClientEvents {
   'master:updated': (payload: { value: number }) => void;
   'chase:updated': (payload: { value: number }) => void;
   'step:updated': (payload: { value: number }) => void;
+  'dmx:write': (payload: { data: Buffer }) => void;
 }

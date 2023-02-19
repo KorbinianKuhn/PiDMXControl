@@ -1,7 +1,7 @@
 import { SerialPort } from 'serialport';
 import { Logger } from '../../utils/logger';
 import { wait } from '../../utils/time';
-import { Serial } from './uart-serial.interface';
+import { Serial } from './serial.interface';
 
 export class UartSerial extends Serial {
   private serial!: SerialPort;

@@ -4,10 +4,11 @@ import { Chase, ChaseColor } from './chases/chase';
 import { createMoodyChase } from './chases/chase-moody';
 import { Program } from './program/program';
 import { DummySerial } from './serial/dummy-serial';
-import { UartSerial } from './serial/serial';
+import { UartSerial } from './serial/uart-serial';
 
 export class DMX {
-  private serial = true ? new DummySerial() : new UartSerial();
+  private serial =
+    process.env.CONFIG === 'pi' ? new UartSerial() : new DummySerial();
 
   public chases: Chase[] = [
     createMoodyChase('moody', ChaseColor.RED),
@@ -55,13 +56,14 @@ export class DMX {
     this.io.emit('black:updated', { value });
   }
 
-  _send() {
+  async _send() {
     if (this.black) {
       const data = Buffer.alloc(512 + 1, 0);
       this.serial.write(data);
     }
 
     const data = this.program.data();
-    this.serial.write(data);
+    await this.serial.write(data);
+    this.io.emit('dmx:write', { data });
   }
 }

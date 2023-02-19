@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../environments/environment';
 import { ClientToServerEvents, ServerToClientEvents } from './ws.interfaces';
@@ -13,6 +13,7 @@ export class WSService {
   public bpm$ = new BehaviorSubject<number>(128);
   public black$ = new BehaviorSubject<boolean>(false);
   public master$ = new BehaviorSubject<number>(100);
+  public dmx$ = new Subject<Buffer>();
 
   constructor() {
     this.createSocket();

@@ -1,6 +1,6 @@
 import { Logger } from '../../utils/logger';
 import { wait } from '../../utils/time';
-import { Serial } from './uart-serial.interface';
+import { Serial } from './serial.interface';
 
 export class DummySerial extends Serial {
   private logger = new Logger('dummy-serial');
@@ -11,6 +11,6 @@ export class DummySerial extends Serial {
 
   async write(data: Buffer) {
     await wait(2);
-    // this.logger.info('write', data);
+    this.logger.info('write', data);
   }
 }

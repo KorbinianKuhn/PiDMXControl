@@ -36,28 +36,28 @@ export class VarytecGigabarHex extends DmxDevice {
       const value = values[key];
       switch (key) {
         case 'r':
-          channels[0] = value;
+          channels[0].value = value;
           break;
         case 'g':
-          channels[1] = value;
+          channels[1].value = value;
           break;
         case 'b':
-          channels[2] = value;
+          channels[2].value = value;
           break;
         case 'w':
-          channels[3] = value;
+          channels[3].value = value;
           break;
         case 'a':
-          channels[4] = value;
+          channels[4].value = value;
           break;
         case 'uv':
-          channels[5] = value;
+          channels[5].value = value;
           break;
         case 'master':
-          channels[6] = value;
+          channels[6].value = value;
           break;
         case 'strobe':
-          channels[7] = value;
+          channels[7].value = value;
           break;
       }
     });

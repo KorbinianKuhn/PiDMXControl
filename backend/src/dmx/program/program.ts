@@ -60,6 +60,6 @@ export class Program {
   }
 
   data() {
-    return Buffer.alloc(513, 255);
+    return this.chases[this.chaseIndex].data(this.stepIndex);
   }
 }

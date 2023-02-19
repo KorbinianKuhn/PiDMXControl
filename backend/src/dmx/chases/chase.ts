@@ -24,5 +24,16 @@ export class Chase {
     this.steps.push(devices);
   }
 
-  createAnimation() {}
+  data(stepIndex: number): Buffer {
+    const data = Buffer.alloc(513, 0);
+    const step = this.steps[stepIndex];
+
+    for (const device of step) {
+      for (const channel of device.channels) {
+        data[channel.address] = channel.value;
+      }
+    }
+
+    return data;
+  }
 }
