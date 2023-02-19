@@ -21,7 +21,7 @@ export class EuroliteLedPixBar extends DmxDevice {
 
     this.channels = [];
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 8; i++) {
       const offset = SEGMENT_CHANNEL_ORDER.length * i;
       this.channels.push(
         ...SEGMENT_CHANNEL_ORDER.map((type, i2) => ({
@@ -71,6 +71,7 @@ export class EuroliteLedPixBar extends DmxDevice {
     offset: number,
     values: DmxChannelStateValues,
   ): void {
+    console.log(channels.length, offset);
     Object.keys(values).map((key) => {
       const value = values[key];
       switch (key) {
