@@ -14,7 +14,7 @@ export class VarytecGigabarHexComponent implements OnInit, OnDestroy {
   private destroy$$ = new Subject<void>();
   private numChannels = 9;
 
-  public color: string = 'bg-black';
+  public color: string = 'rgba(0,0,0,255)';
 
   constructor(private wsService: WSService) {}
 
