@@ -8,7 +8,7 @@ const createOnChase = (color: ChaseColor): Chase => {
     chase.addStep(
       hex1.state({ master: 255, [color]: 255 }),
       hex2.state({ master: 255, [color]: 255 }),
-      bar.state([{ index: 0, values: { master: 255, [color]: 255 } }]),
+      bar.state([{ index: 'all', values: { master: 255, [color]: 255 } }]),
     );
   }
 
