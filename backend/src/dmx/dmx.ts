@@ -22,6 +22,7 @@ export class DMX {
 
   public master = 255;
   public black = false;
+  public strobe = false;
   public colors: ChaseColor[] = [ChaseColor.RED];
   public chaseName = ChaseName.ON;
 
@@ -63,6 +64,12 @@ export class DMX {
     this.io.emit('black:updated', { value });
   }
 
+  setStrobe(value: boolean) {
+    console.log('set strobe', value);
+    this.strobe = value;
+    this.io.emit('strobe:updated', { value });
+  }
+
   setColors(colors: ChaseColor[]) {
     this.colors = colors;
     this.setFilteredChases();
@@ -83,7 +90,7 @@ export class DMX {
       return;
     }
 
-    const data = this.program.data();
+    const data = this.program.data(this.master, this.strobe);
     await this.serial.write(data);
     this.io.emit('dmx:write', { data: [...data] });
   }

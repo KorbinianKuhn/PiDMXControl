@@ -43,7 +43,7 @@ export class EuroliteLedPixBarComponent implements OnInit, OnDestroy {
       if (master === 0) {
         this.colors[segment] = 'rgba(0,0,0,255)';
       } else {
-        this.colors[segment] = `rgba(${red},${green},${blue},${master})`;
+        this.colors[segment] = `rgba(${red},${green},${blue},${master / 255})`;
       }
     }
   }

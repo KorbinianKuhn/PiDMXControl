@@ -59,10 +59,11 @@ export class Program {
     this._start();
   }
 
-  data() {
+  data(master: number, strobe: boolean) {
     if (this.chases.length === 0) {
       return Buffer.alloc(512 + 1, 0);
     }
-    return this.chases[this.chaseIndex].data(this.stepIndex);
+
+    return this.chases[this.chaseIndex].data(this.stepIndex, master, strobe);
   }
 }

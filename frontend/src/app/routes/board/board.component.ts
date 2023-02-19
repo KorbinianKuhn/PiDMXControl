@@ -13,6 +13,7 @@ export class BoardComponent implements OnInit {
 
   public bpm$ = this.wsService.bpm$;
   public black$ = this.wsService.black$;
+  public strobe$ = this.wsService.strobe$;
   public master$ = this.wsService.master$;
   public colors$ = this.wsService.colors$;
   public chaseName$ = this.wsService.chaseName$;
@@ -47,5 +48,14 @@ export class BoardComponent implements OnInit {
 
   onClickChase(name: ChaseName) {
     this.wsService.setChaseName(name);
+  }
+
+  onMasterChange(event: any) {
+    this.wsService.setMaster(event.target.value);
+  }
+
+  onClickStrobe() {
+    const value = this.strobe$.getValue();
+    this.wsService.setStrobe(!value);
   }
 }

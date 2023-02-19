@@ -77,10 +77,24 @@
         <app-pad-button color="bg-gray-900">16</app-pad-button>
         <app-pad-button color="bg-gray-900">32</app-pad-button>
         <app-pad-button color="bg-gray-900">Kugel</app-pad-button>
-        <app-pad-button color="bg-gray-900">Strobe</app-pad-button>
+        <app-toggle-button [active]="strobe$ | async" (click)="onClickStrobe()">
+          Strobe
+        </app-toggle-button>
         <app-toggle-button [active]="black$ | async" (click)="onClickBlack()">
           Black
         </app-toggle-button>
+      </div>
+    </div>
+
+    <div class="flex">
+      <div class="relative pt-1">
+        <label for="customRange1" class="form-label">Example range</label>
+        <input
+          value="100"
+          type="range"
+          class="form-range w-full h-6 p-0 bg-transparent focus:outline-none focus:ring-0 focus:shadow-none"
+          (change)="onMasterChange($event)"
+        />
       </div>
     </div>
   </div>

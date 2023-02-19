@@ -17,6 +17,7 @@ export class WSService {
 
   public bpm$ = new BehaviorSubject<number>(128);
   public black$ = new BehaviorSubject<boolean>(false);
+  public strobe$ = new BehaviorSubject<boolean>(false);
   public master$ = new BehaviorSubject<number>(100);
   public dmx$ = new Subject<number[]>();
   public chaseName$ = new BehaviorSubject<ChaseName>(ChaseName.ON);
@@ -60,6 +61,10 @@ export class WSService {
       this.black$.next(data.value);
     });
 
+    this.socket.on('strobe:updated', (data) => {
+      this.strobe$.next(data.value);
+    });
+
     this.socket.on('master:updated', (data) => {
       this.master$.next(data.value);
     });
@@ -91,6 +96,10 @@ export class WSService {
 
   setBlack(value: boolean) {
     this.socket.emit('set:black', { value });
+  }
+
+  setStrobe(value: boolean) {
+    this.socket.emit('set:strobe', { value });
   }
 
   setMaster(value: number) {

@@ -36,6 +36,10 @@ const main = async () => {
       dmx.setBlack(args.value);
     });
 
+    socket.on('set:strobe', (args) => {
+      dmx.setStrobe(args.value);
+    });
+
     socket.on('set:master', (args) => {
       dmx.setMaster(args.value);
     });
