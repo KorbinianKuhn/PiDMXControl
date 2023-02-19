@@ -60,10 +60,12 @@ export class DMX {
     if (this.black) {
       const data = Buffer.alloc(512 + 1, 0);
       this.serial.write(data);
+      this.io.emit('dmx:write', { data: [...data] });
+      return;
     }
 
     const data = this.program.data();
     await this.serial.write(data);
-    this.io.emit('dmx:write', { data });
+    this.io.emit('dmx:write', { data: [...data] });
   }
 }

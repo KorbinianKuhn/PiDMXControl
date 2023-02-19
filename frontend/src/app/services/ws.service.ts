@@ -13,7 +13,7 @@ export class WSService {
   public bpm$ = new BehaviorSubject<number>(128);
   public black$ = new BehaviorSubject<boolean>(false);
   public master$ = new BehaviorSubject<number>(100);
-  public dmx$ = new Subject<Buffer>();
+  public dmx$ = new Subject<number[]>();
 
   constructor() {
     this.createSocket();
@@ -63,6 +63,10 @@ export class WSService {
 
     this.socket.on('step:updated', (data) => {
       // console.log(data.value);
+    });
+
+    this.socket.on('dmx:write', (data) => {
+      this.dmx$.next(data.data);
     });
   }
 

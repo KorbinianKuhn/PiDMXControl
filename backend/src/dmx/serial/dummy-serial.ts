@@ -11,6 +11,6 @@ export class DummySerial extends Serial {
 
   async write(data: Buffer) {
     await wait(2);
-    this.logger.info('write', data);
+    // this.logger.info('write', data);
   }
 }
