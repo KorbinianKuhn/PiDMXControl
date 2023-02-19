@@ -1,10 +1,7 @@
 <div class="flex bg-gray-900 px-2">
-  <div class="w-4 h-2 m-1" [style.background]="color"></div>
-  <div class="w-4 h-2 m-1" [style.background]="color"></div>
-  <div class="w-4 h-2 m-1" [style.background]="color"></div>
-  <div class="w-4 h-2 m-1" [style.background]="color"></div>
-  <div class="w-4 h-2 m-1" [style.background]="color"></div>
-  <div class="w-4 h-2 m-1" [style.background]="color"></div>
-  <div class="w-4 h-2 m-1" [style.background]="color"></div>
-  <div class="w-4 h-2 m-1" [style.background]="color"></div>
+  <div
+    *ngFor="let color of colors"
+    class="w-4 h-2 m-1"
+    [style.background]="color"
+  ></div>
 </div>

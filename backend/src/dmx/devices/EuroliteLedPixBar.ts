@@ -71,7 +71,6 @@ export class EuroliteLedPixBar extends DmxDevice {
     offset: number,
     values: DmxChannelStateValues,
   ): void {
-    console.log(channels.length, offset);
     Object.keys(values).map((key) => {
       const value = values[key];
       switch (key) {
@@ -90,12 +89,12 @@ export class EuroliteLedPixBar extends DmxDevice {
           channels[4 + offset].value = value;
           break;
         case 'a':
-          channels[2 + offset].value = value;
-          channels[3 + offset].value = Math.round(value / 100);
+          channels[2 + offset].value = Math.round(value / 2);
+          channels[3 + offset].value = Math.round(value / 5);
           break;
         case 'uv':
-          channels[2 + offset].value = Math.round(value / 100);
-          channels[4 + offset].value = value;
+          channels[2 + offset].value = Math.round(value / 5);
+          channels[4 + offset].value = Math.round(value / 2);
           break;
         case 'master':
           channels[0 + offset].value = value;
