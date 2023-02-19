@@ -1,4 +1,4 @@
-import { hex1, hex2 } from '../devices/devices';
+import { bar, hex1, hex2 } from '../devices/devices';
 import { Chase, ChaseColor, ChaseName } from './chase';
 
 const createOnChase = (color: ChaseColor): Chase => {
@@ -8,6 +8,7 @@ const createOnChase = (color: ChaseColor): Chase => {
     chase.addStep(
       hex1.state({ master: 255, [color]: 255 }),
       hex2.state({ master: 255, [color]: 255 }),
+      bar.state([{ index: 0, values: { master: 255, [color]: 255 } }]),
     );
   }
 

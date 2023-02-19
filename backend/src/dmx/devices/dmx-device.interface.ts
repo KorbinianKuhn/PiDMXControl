@@ -42,6 +42,4 @@ export abstract class DmxDevice {
   _cloneState(): DmxChannel[] {
     return this.channels.map((o) => ({ ...o }));
   }
-
-  abstract state(values: DmxChannelStateValues): DmxDeviceState;
 }
