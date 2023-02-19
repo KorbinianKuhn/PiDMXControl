@@ -28,6 +28,13 @@ const main = async () => {
   await dmx.init();
 
   io.on('connection', (socket) => {
+    socket.emit('black:updated', { value: dmx.black });
+    socket.emit('master:updated', { value: dmx.master });
+    socket.emit('strobe:updated', { value: dmx.strobe });
+    socket.emit('chase-name:updated', { value: dmx.chaseName });
+    socket.emit('colors:updated', { colors: dmx.colors });
+    socket.emit('bpm:updated', { value: dmx.bpm });
+
     socket.on('set:bpm', (args) => {
       dmx.setBpm(args.value);
     });

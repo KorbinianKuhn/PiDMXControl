@@ -21,6 +21,7 @@ export class DMX {
   public program = new Program(this.io);
 
   public master = 255;
+  public bpm = 128;
   public black = false;
   public strobe = false;
   public colors: ChaseColor[] = [ChaseColor.RED];
@@ -46,26 +47,23 @@ export class DMX {
   }
 
   setBpm(value: number) {
-    console.log('set bpm', value);
     const bpm = parseFloat(value.toFixed(1));
+    this.bpm = bpm;
     this.program.setSpeed(bpmToMs(bpm));
     this.io.emit('bpm:updated', { value: bpm });
   }
 
   setMaster(value: number) {
-    console.log('set master', value);
     this.master = value;
     this.io.emit('master:updated', { value });
   }
 
   setBlack(value: boolean) {
-    console.log('set black', value);
     this.black = value;
     this.io.emit('black:updated', { value });
   }
 
   setStrobe(value: boolean) {
-    console.log('set strobe', value);
     this.strobe = value;
     this.io.emit('strobe:updated', { value });
   }
