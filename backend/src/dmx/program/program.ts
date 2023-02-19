@@ -60,6 +60,9 @@ export class Program {
   }
 
   data() {
+    if (this.chases.length === 0) {
+      return Buffer.alloc(512 + 1, 0);
+    }
     return this.chases[this.chaseIndex].data(this.stepIndex);
   }
 }

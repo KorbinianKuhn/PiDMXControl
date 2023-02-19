@@ -39,6 +39,14 @@ const main = async () => {
     socket.on('set:master', (args) => {
       dmx.setMaster(args.value);
     });
+
+    socket.on('set:chase-name', (args) => {
+      dmx.setChaseName(args.value);
+    });
+
+    socket.on('set:colors', (args) => {
+      dmx.setColors(args.colors);
+    });
   });
 
   logger.info(`Listen on port 3000`);

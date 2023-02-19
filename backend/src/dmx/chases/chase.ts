@@ -1,10 +1,20 @@
 import { DmxDeviceState } from '../devices/dmx-device.interface';
 
 export enum ChaseColor {
-  RED = 'red',
-  BLUE = 'blue',
-  GREEN = 'green',
-  WHITE = 'white',
+  RED = 'r',
+  BLUE = 'b',
+  GREEN = 'g',
+  WHITE = 'w',
+  AMBER = 'a',
+  UV = 'uv',
+}
+
+export enum ChaseName {
+  ON = 'on',
+  MOODY = 'moody',
+  DISCO = 'disco',
+  CLUB = 'club',
+  FLASHY = 'flashy',
 }
 
 export class Chase {
@@ -18,7 +28,7 @@ export class Chase {
     return `${this.id}-${this.color}`;
   }
 
-  constructor(public id: string, public color: ChaseColor) {}
+  constructor(public id: ChaseName, public color: ChaseColor) {}
 
   addStep(...devices: DmxDeviceState[]) {
     this.steps.push(devices);

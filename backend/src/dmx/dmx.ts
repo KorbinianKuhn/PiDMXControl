@@ -1,7 +1,9 @@
 import { TypedServer } from '../server/events.interfaces';
 import { bpmToMs } from '../utils/time';
-import { Chase, ChaseColor } from './chases/chase';
-import { createMoodyChase } from './chases/chase-moody';
+import { Chase, ChaseColor, ChaseName } from './chases/chase';
+import { createClubChases } from './chases/chase-club';
+import { createMoodyChases } from './chases/chase-moody';
+import { createOnChases } from './chases/chase-on';
 import { Program } from './program/program';
 import { DummySerial } from './serial/dummy-serial';
 import { UartSerial } from './serial/uart-serial';
@@ -11,15 +13,17 @@ export class DMX {
     process.env.CONFIG === 'pi' ? new UartSerial() : new DummySerial();
 
   public chases: Chase[] = [
-    createMoodyChase('moody', ChaseColor.RED),
-    createMoodyChase('moody', ChaseColor.BLUE),
+    ...createOnChases(),
+    ...createMoodyChases(),
+    ...createClubChases(),
   ];
 
   public program = new Program(this.io);
 
   public master = 255;
   public black = false;
-  public colors: ChaseColor[] = [];
+  public colors: ChaseColor[] = [ChaseColor.RED];
+  public chaseName = ChaseName.ON;
 
   constructor(private io: TypedServer) {}
 
@@ -30,7 +34,14 @@ export class DMX {
       this._send();
     }, 46);
 
-    this.program.setChases(this.chases);
+    this.setFilteredChases();
+  }
+
+  setFilteredChases() {
+    const chases = this.chases.filter(
+      (o) => o.id === this.chaseName && this.colors.includes(o.color),
+    );
+    this.program.setChases(chases);
   }
 
   setBpm(value: number) {
@@ -38,10 +49,6 @@ export class DMX {
     const bpm = parseFloat(value.toFixed(1));
     this.program.setSpeed(bpmToMs(bpm));
     this.io.emit('bpm:updated', { value: bpm });
-  }
-
-  setColors(colors: ChaseColor[]) {
-    this.colors = colors;
   }
 
   setMaster(value: number) {
@@ -54,6 +61,18 @@ export class DMX {
     console.log('set black', value);
     this.black = value;
     this.io.emit('black:updated', { value });
+  }
+
+  setColors(colors: ChaseColor[]) {
+    this.colors = colors;
+    this.setFilteredChases();
+    this.io.emit('colors:updated', { colors });
+  }
+
+  setChaseName(value: ChaseName) {
+    this.chaseName = value;
+    this.setFilteredChases();
+    this.io.emit('chase-name:updated', { value });
   }
 
   async _send() {
