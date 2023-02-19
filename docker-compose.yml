@@ -23,5 +23,9 @@ services:
     build:
       context: ./backend
     container_name: dmx-backend
+    environment:
+      - CONFIG=pi
+    devices:
+      - /dev/ttyAMA0:/dev/ttyAMA0
     # ports:
     #   - 3000:3000
