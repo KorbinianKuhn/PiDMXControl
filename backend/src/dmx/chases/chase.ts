@@ -50,7 +50,7 @@ export class Chase {
         }
 
         if (channel.type === DmxChannelType.STROBE && strobe) {
-          data[channel.address] = 220;
+          data[channel.address] = 250;
         }
       }
     }
