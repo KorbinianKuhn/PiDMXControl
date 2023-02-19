@@ -10,7 +10,10 @@ import { Logger } from './utils/logger';
 const logger = new Logger('main');
 
 const main = async () => {
-  const httpServer = createServer();
+  const httpServer = createServer((req, res) => {
+    res.write('hello\n');
+    res.end();
+  });
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(
     httpServer,
     {

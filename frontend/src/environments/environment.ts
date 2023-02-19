@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseRestApi: 'http://localhost:3000',
+  baseRestApi: 'http://dmx.local:3000',
 };
 
 /*

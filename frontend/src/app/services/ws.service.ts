@@ -26,9 +26,8 @@ export class WSService {
     const path = `/${[...elements].join('/')}/`;
     const url = `${protocol}://${hostname}`;
 
-    this.socket = io('ws://localhost:3000', {
+    this.socket = io('ws://dmx.local:3000', {
       autoConnect: false,
-      // path,
     });
 
     this.registerEvents();

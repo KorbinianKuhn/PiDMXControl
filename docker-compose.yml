@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  nginx:
+    image: nginx
+    network_mode: host
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    links:
+      - frontend
+  frontend:
+    build:
+      context: ./frontend
+  #     - backend
+  # backend:
+  #   build:
+  #     context: ./backend
