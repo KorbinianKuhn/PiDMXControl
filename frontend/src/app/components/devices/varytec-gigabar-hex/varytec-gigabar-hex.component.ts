@@ -38,6 +38,12 @@ export class VarytecGigabarHexComponent implements OnInit, OnDestroy {
 
     if (master === 0) {
       this.color = 'rgba(0,0,0,255)';
+    } else if (white) {
+      this.color = `rgba(255,255,${master})`;
+    } else if (uv) {
+      this.color = `rgba(168, 85, 247,${master})`;
+    } else if (amber) {
+      this.color = `rgba(234, 179, 8,${master})`;
     } else {
       this.color = `rgba(${red},${green},${blue},${master})`;
     }

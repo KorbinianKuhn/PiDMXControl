@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../environments/environment';
-import { ClientToServerEvents, ServerToClientEvents } from './ws.interfaces';
+import {
+  ChaseColor,
+  ChaseName,
+  ClientToServerEvents,
+  ServerToClientEvents,
+} from './ws.interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +19,8 @@ export class WSService {
   public black$ = new BehaviorSubject<boolean>(false);
   public master$ = new BehaviorSubject<number>(100);
   public dmx$ = new Subject<number[]>();
+  public chaseName$ = new BehaviorSubject<ChaseName>(ChaseName.ON);
+  public colors$ = new BehaviorSubject<ChaseColor[]>([ChaseColor.RED]);
 
   constructor() {
     this.createSocket();
@@ -68,20 +75,33 @@ export class WSService {
     this.socket.on('dmx:write', (data) => {
       this.dmx$.next(data.data);
     });
+
+    this.socket.on('chase-name:updated', (data) => {
+      this.chaseName$.next(data.value);
+    });
+
+    this.socket.on('colors:updated', (data) => {
+      this.colors$.next(data.colors);
+    });
   }
 
   setBpm(value: number) {
-    console.log('update bpm');
     this.socket.emit('set:bpm', { value });
   }
 
   setBlack(value: boolean) {
-    console.log('set black');
     this.socket.emit('set:black', { value });
   }
 
   setMaster(value: number) {
-    console.log('set master');
     this.socket.emit('set:master', { value });
+  }
+
+  setChaseName(value: ChaseName) {
+    this.socket.emit('set:chase-name', { value });
+  }
+
+  setColors(colors: ChaseColor[]) {
+    this.socket.emit('set:colors', { colors });
   }
 }

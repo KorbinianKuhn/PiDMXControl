@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./varytec-hero-wash.component.scss'],
 })
 export class VarytecHeroWashComponent implements OnInit {
+  public color = 'rgba(0,0,0,255)';
   constructor() {}
 
   ngOnInit(): void {}

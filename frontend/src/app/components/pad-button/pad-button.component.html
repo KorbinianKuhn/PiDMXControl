@@ -4,7 +4,9 @@
   (click)="onClick()"
 >
   <div
-    class="absolute inset-0 bg-black opacity-0"
+    class="absolute inset-0 bg-black"
+    [class.opacity-0]="active"
+    [class.opacity-70]="!active"
     [class.animate-pulse]="current"
   ></div>
   <div class="relative">
