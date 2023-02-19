@@ -13,4 +13,4 @@ RUN npm run build
 # Stage 2
 FROM nginx:alpine
 COPY --from=node /usr/src/app/dist/dmx-frontend /usr/share/nginx/html
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx.conf /etc/nginx/nginx.conf

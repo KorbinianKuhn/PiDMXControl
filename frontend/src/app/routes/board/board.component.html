@@ -2,25 +2,22 @@
   <div class="flex flex-col">
     <div class="flex flex-col">
       <div class="flex">
-        <app-pad-button color="bg-red-500 m-4"> </app-pad-button>
-        <app-pad-button
-          color="bg-blue-500 m-4"
-          [current]="true"
-        ></app-pad-button>
-        <app-pad-button color="bg-green-500 m-4"></app-pad-button>
-        <app-pad-button color="bg-white m-4"></app-pad-button>
-        <app-pad-button color="bg-purple-500 m-4"></app-pad-button>
-        <app-pad-button color="bg-yellow-500 m-4"></app-pad-button>
+        <app-pad-button color="bg-red-500"> </app-pad-button>
+        <app-pad-button color="bg-blue-500" [current]="true"></app-pad-button>
+        <app-pad-button color="bg-green-500"></app-pad-button>
+        <app-pad-button color="bg-white"></app-pad-button>
+        <app-pad-button color="bg-purple-500"></app-pad-button>
+        <app-pad-button color="bg-yellow-500"></app-pad-button>
       </div>
     </div>
 
     <div class="flex flex-col">
       <div class="flex">
-        <app-pad-button color="bg-gray-500 m-4">On</app-pad-button>
-        <app-pad-button color="bg-gray-500 m-4">Moody</app-pad-button>
-        <app-pad-button color="bg-gray-500 m-4">Disco</app-pad-button>
-        <app-pad-button color="bg-gray-500 m-4">Club</app-pad-button>
-        <app-pad-button color="bg-gray-500 m-4" [current]="true"
+        <app-pad-button color="bg-gray-500">On</app-pad-button>
+        <app-pad-button color="bg-gray-500">Moody</app-pad-button>
+        <app-pad-button color="bg-gray-500">Disco</app-pad-button>
+        <app-pad-button color="bg-gray-500">Club</app-pad-button>
+        <app-pad-button color="bg-gray-500" [current]="true"
           >Flashy</app-pad-button
         >
       </div>
@@ -28,11 +25,11 @@
 
     <div class="flex flex-col">
       <div class="flex">
-        <app-pad-button color="bg-gray-900 m-4">8</app-pad-button>
-        <app-pad-button color="bg-gray-900 m-4">16</app-pad-button>
-        <app-pad-button color="bg-gray-900 m-4">32</app-pad-button>
-        <app-pad-button color="bg-gray-900 m-4">Kugel</app-pad-button>
-        <app-pad-button color="bg-gray-900 m-4">Strobe</app-pad-button>
+        <app-pad-button color="bg-gray-900">8</app-pad-button>
+        <app-pad-button color="bg-gray-900">16</app-pad-button>
+        <app-pad-button color="bg-gray-900">32</app-pad-button>
+        <app-pad-button color="bg-gray-900">Kugel</app-pad-button>
+        <app-pad-button color="bg-gray-900">Strobe</app-pad-button>
         <app-toggle-button [active]="black$ | async" (click)="onClickBlack()">
           Black
         </app-toggle-button>

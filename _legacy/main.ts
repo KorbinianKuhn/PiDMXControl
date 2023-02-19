@@ -1,13 +1,13 @@
-import { VarytecGigabarHex3 } from '../dmx/devices/VarytecGigaBarHex3';
-import { Logger } from '../utils/logger';
-import { Chase } from './chase';
-import { Runtime } from './runtime';
-import { Universe } from './universe';
+import { VarytecGigabarHex3 } from "../backend/src/dmx/devices/VarytecGigaBarHex";
+import { Logger } from "../backend/src/utils/logger";
+import { Chase } from "./chase";
+import { Runtime } from "./runtime";
+import { Universe } from "./universe";
 
-const logger = new Logger('main');
+const logger = new Logger("main");
 
 const main = async () => {
-  logger.info('start');
+  logger.info("start");
 
   const universe = new Universe();
 
@@ -26,7 +26,7 @@ const main = async () => {
         .reset()
         .master(255)
         .red(i % 2 ? 0 : 255)
-        .snapshot(),
+        .snapshot()
     );
   }
 
@@ -42,7 +42,7 @@ const main = async () => {
         .reset()
         .master(255)
         .white(i % 2 ? 0 : 255)
-        .snapshot(),
+        .snapshot()
     );
   }
 
@@ -53,23 +53,23 @@ const main = async () => {
   await runtime.init();
 
   process.stdin.setRawMode(true);
-  process.stdin.setEncoding('utf8');
+  process.stdin.setEncoding("utf8");
   process.stdin.resume();
-  process.stdin.on('data', function (data) {
+  process.stdin.on("data", function (data) {
     const key = data.toString();
     switch (key) {
-      case 'e':
+      case "e":
         process.exit(0);
-      case '1':
+      case "1":
         universe.setChases([chase1]);
         break;
-      case '2':
+      case "2":
         universe.setChases([chase2]);
         break;
-      case '3':
+      case "3":
         universe.setChases([chase1, chase2]);
         break;
-      case 't':
+      case "t":
         universe.tap();
         break;
     }
@@ -77,5 +77,5 @@ const main = async () => {
 };
 
 main()
-  .then(() => logger.info('application is running'))
+  .then(() => logger.info("application is running"))
   .catch((err) => logger.error(err.message, err));

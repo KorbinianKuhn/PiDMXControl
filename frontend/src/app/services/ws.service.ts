@@ -19,15 +19,16 @@ export class WSService {
   }
 
   private createSocket() {
-    const [scheme, basename] = environment.baseRestApi.split('://');
-    const protocol = scheme === 'https' ? 'wss' : 'ws';
-    const [hostname, ...elements] = basename.split('/');
+    const url = environment.baseRestApi.replace('http://', '');
 
-    const path = `/${[...elements].join('/')}/`;
-    const url = `${protocol}://${hostname}`;
+    const [hostname, ...paths] = url.split('/');
+    const path = '/' + [...paths, 'socket.io'].join('/');
 
-    this.socket = io('ws://dmx.local:3000', {
+    console.log(path);
+
+    this.socket = io(`ws://${hostname}`, {
       autoConnect: false,
+      path,
     });
 
     this.registerEvents();
