@@ -88,14 +88,14 @@ export class EuroliteLedPixBar extends Device {
           break;
         case 'a': {
           const factor = value / 255;
-          channels[2 + offset].value = 200 * factor;
-          channels[3 + offset].value = 100 * factor;
+          channels[2 + offset].value = Math.round(255 * factor);
+          channels[3 + offset].value = Math.round(64 * factor);
           break;
         }
         case 'uv': {
           const factor = value / 255;
-          channels[2 + offset].value = 50 * factor;
-          channels[4 + offset].value = value;
+          channels[2 + offset].value = Math.round(64 * factor);
+          channels[4 + offset].value = Math.round(127 * factor);
           break;
         }
         case 'master':

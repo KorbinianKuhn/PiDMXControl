@@ -2,7 +2,7 @@ import {
   ChannelState,
   ChannelType,
   Device,
-  DeviceStateValues,
+  DeviceStateValues
 } from '../lib/device';
 
 const CHANNEL_ORDER: ChannelType[] = [
@@ -41,12 +41,13 @@ export class AdjSaberSpot extends Device {
           channels[4].value = value;
           break;
         case 'a':
-          channels[1].value = Math.round(value / 2);
-          channels[2].value = Math.round(value / 5);
+          const factor = value / 255;
+          channels[1].value = Math.round(255 * factor);
+          channels[2].value = Math.round(64 * factor);
           break;
         case 'uv':
-          channels[1].value = Math.round(value / 5);
-          channels[3].value = Math.round(value / 2);
+          channels[1].value = Math.round(64 * factor);
+          channels[3].value = Math.round(127 * factor;
           break;
         case 'master':
           channels[5].value = value;
