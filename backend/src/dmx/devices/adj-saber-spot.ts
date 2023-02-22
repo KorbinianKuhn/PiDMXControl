@@ -50,6 +50,7 @@ export class AdjSaberSpot extends Device {
           break;
         case 'master':
           channels[5].value = value;
+          channels[0].value = 255; // Set strobe channel to static value
           break;
         case 'strobe':
           channels[0].value = this._normalizeStrobeValue(value);

@@ -28,6 +28,8 @@ export class Config {
   public overrideProgram: OverrideProgramName;
   public activeProgram: ActiveProgramName;
   public activeColors: ChaseColor[];
+  public settingsMode = false;
+  public settingsData = Buffer.alloc(512 + 1, 0);
 
   private store$ = new Subject<void>();
   private logger = new Logger('config');
@@ -110,5 +112,15 @@ export class Config {
     this.activeColors = colors;
     this.io.emit('active-colors:updated', { colors });
     this.store$.next();
+  }
+
+  setSettingsMode(value: boolean) {
+    this.settingsMode = value;
+    this.io.emit('settings-mode:updated', { value });
+  }
+
+  setSettingsChannel(address: number, value: number) {
+    this.settingsData[address] = value;
+    this.io.emit('settings-data:updated', { buffer: [...this.settingsData] });
   }
 }

@@ -42,7 +42,7 @@ export class AdjSaberSpotComponent implements OnInit {
     this.color = this.colorService.toRGB(master, r, g, b, w, 0, 0);
 
     const { classes, duration } = this.colorService.getStrobeClasses(
-      strobe,
+      strobe === 255 ? 0 : strobe, // 255 is always on
       64,
       95
     );

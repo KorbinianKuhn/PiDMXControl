@@ -3,9 +3,18 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'board',
     loadChildren: () =>
       import('./routes/board/board.module').then((m) => m.BoardModule),
+  },
+  {
+    path: 'settings',
+    loadChildren: () =>
+      import('./routes/settings/settings.module').then((m) => m.SettingsModule),
+  },
+  {
+    path: '**',
+    redirectTo: 'board',
   },
 ];
 

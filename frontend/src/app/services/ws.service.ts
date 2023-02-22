@@ -28,6 +28,8 @@ export class WSService {
   public activeColors$ = new BehaviorSubject<ChaseColor[]>([
     ChaseColor.RED_WHITE,
   ]);
+  public settingsMode$ = new BehaviorSubject<boolean>(false);
+  public settingsData$ = new BehaviorSubject<number[]>([]);
 
   constructor() {
     this.createSocket();
@@ -89,8 +91,16 @@ export class WSService {
       this.activeColors$.next(data.colors);
     });
 
+    this.socket.on('settings-mode:updated', (data) => {
+      this.settingsMode$.next(data.value);
+    });
+
+    this.socket.on('settings-data:updated', (data) => {
+      this.settingsData$.next(data.buffer);
+    });
+
     this.socket.on('dmx:write', (data) => {
-      this.dmx$.next(data.data);
+      this.dmx$.next(data.buffer);
     });
   }
 
@@ -120,5 +130,13 @@ export class WSService {
 
   setColors(colors: ChaseColor[]) {
     this.socket.emit('set:active-colors', { colors });
+  }
+
+  setSettingsMode(value: boolean) {
+    this.socket.emit('set:settings-mode', { value });
+  }
+
+  setSettingsChannel(address: number, value: number) {
+    this.socket.emit('set:settings-channel', { address, value });
   }
 }

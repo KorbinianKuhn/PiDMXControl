@@ -1,0 +1,23 @@
+<table class="mx-4">
+  <thead>
+    <tr>
+      <th>CH</th>
+      <th>Addr</th>
+      <th>Type</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let channel of device.channels; index as index">
+      <td class="w-10">{{ index + 1 }}</td>
+      <td class="w-10">{{ index + device.address }}</td>
+      <td class="w-15">{{ channel }}</td>
+      <td>
+        <app-range-slider
+          [(value)]="values[index]"
+          (valueChange)="onValueChange(index + device.address, $event)"
+        ></app-range-slider>
+      </td>
+    </tr>
+  </tbody>
+</table>

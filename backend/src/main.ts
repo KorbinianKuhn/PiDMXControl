@@ -37,9 +37,13 @@ const main = async () => {
     });
     socket.emit('active-program:updated', { value: dmx.config.activeProgram });
     socket.emit('active-colors:updated', { colors: dmx.config.activeColors });
+    socket.emit('settings-mode:updated', { value: dmx.config.settingsMode });
+    socket.emit('settings-data:updated', {
+      buffer: [...dmx.config.settingsData],
+    });
 
     socket.on('set:bpm', (args) => {
-      dmx.setBpm(args.value);
+      dmx.config.setBpm(args.value);
     });
 
     socket.on('set:start', () => {
@@ -47,15 +51,15 @@ const main = async () => {
     });
 
     socket.on('set:black', (args) => {
-      dmx.setBlack(args.value);
+      dmx.config.setBlack(args.value);
     });
 
     socket.on('set:master', (args) => {
-      dmx.setMaster(args.value);
+      dmx.config.setMaster(args.value);
     });
 
     socket.on('set:ambient-uv', (args) => {
-      dmx.setAmbientUV(args.value);
+      dmx.config.setAmbientUV(args.value);
     });
 
     socket.on('set:override-program', (args) => {
@@ -68,6 +72,14 @@ const main = async () => {
 
     socket.on('set:active-colors', (args) => {
       dmx.setActiveColors(args.colors);
+    });
+
+    socket.on('set:settings-mode', (args) => {
+      dmx.config.setSettingsMode(args.value);
+    });
+
+    socket.on('set:settings-channel', (args) => {
+      dmx.config.setSettingsChannel(args.address, args.value);
     });
   });
 

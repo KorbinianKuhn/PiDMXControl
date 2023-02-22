@@ -33,10 +33,6 @@ export class DMX {
     this.setActiveProgram(this.config.activeProgram);
   }
 
-  setBpm(value: number) {
-    this.config.setBpm(value);
-  }
-
   setStart() {
     this.clock.setStart();
     if (this.config.overrideProgram) {
@@ -44,18 +40,6 @@ export class DMX {
     } else {
       this.activeProgram.start();
     }
-  }
-
-  setMaster(value: number) {
-    this.config.setMaster(value);
-  }
-
-  setBlack(value: boolean) {
-    this.config.setBlack(value);
-  }
-
-  setAmbientUV(value: number) {
-    this.config.setAmbientUV(value);
   }
 
   setOverrideProgram(value: OverrideProgramName | null) {
@@ -78,6 +62,10 @@ export class DMX {
   }
 
   data(): Buffer {
+    if (this.config.settingsMode) {
+      return this.config.settingsData;
+    }
+
     if (this.config.black) {
       return Buffer.alloc(512 + 1, 0);
     }
@@ -109,6 +97,6 @@ export class DMX {
   async _send() {
     const data = this.data();
     await this.serial.write(data);
-    this.io.emit('dmx:write', { data: [...data] });
+    this.io.emit('dmx:write', { buffer: [...data] });
   }
 }

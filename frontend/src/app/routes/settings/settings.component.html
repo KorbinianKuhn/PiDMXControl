@@ -1,0 +1,15 @@
+<div class="flex justify-center mb-4">
+  <button
+    class="px-4 py-2 rounded-sm"
+    [ngClass]="(enabled | async) ? 'bg-cyan-500' : 'bg-gray-900'"
+    (click)="onToggle()"
+  >
+    {{ (enabled | async) ? "On" : "Off" }}
+  </button>
+</div>
+
+<app-accordion>
+  <app-accordion-item *ngFor="let device of devices" [label]="device.name">
+    <app-device-tester [device]="device"></app-device-tester>
+  </app-accordion-item>
+</app-accordion>

@@ -29,6 +29,8 @@ export interface ClientToServerEvents {
   'set:override-program': (payload: { value: OverrideProgramName }) => void;
   'set:active-program': (payload: { value: ActiveProgramName }) => void;
   'set:active-colors': (payload: { colors: ChaseColor[] }) => void;
+  'set:settings-mode': (payload: { value: boolean }) => void;
+  'set:settings-channel': (payload: { address: number; value: number }) => void;
 }
 
 export interface ServerToClientEvents {
@@ -42,5 +44,7 @@ export interface ServerToClientEvents {
   'active-colors:updated': (payload: { colors: ChaseColor[] }) => void;
   // 'chase:updated': (payload: { value: number }) => void;
   // 'step:updated': (payload: { value: number }) => void;
-  'dmx:write': (payload: { data: number[] }) => void;
+  'dmx:write': (payload: { buffer: number[] }) => void;
+  'settings-mode:updated': (payload: { value: boolean }) => void;
+  'settings-data:updated': (payload: { buffer: number[] }) => void;
 }
