@@ -1,35 +1,28 @@
 import {
-  DmxChannelStateValues,
-  DmxChannelType,
-  DmxDevice,
-  DmxDeviceState,
-} from './dmx-device.interface';
+  ChannelState,
+  ChannelType,
+  Device,
+  DeviceStateValues,
+} from '../lib/device';
 
-const CHANNEL_ORDER: DmxChannelType[] = [
-  DmxChannelType.RED,
-  DmxChannelType.GREEN,
-  DmxChannelType.BLUE,
-  DmxChannelType.WHITE,
-  DmxChannelType.AMBER,
-  DmxChannelType.UV,
-  DmxChannelType.MASTER,
-  DmxChannelType.STROBE,
+const CHANNEL_ORDER: ChannelType[] = [
+  ChannelType.RED,
+  ChannelType.GREEN,
+  ChannelType.BLUE,
+  ChannelType.WHITE,
+  ChannelType.AMBER,
+  ChannelType.UV,
+  ChannelType.MASTER,
+  ChannelType.STROBE,
+  null, // sound mode
 ];
 
-export class VarytecGigabarHex extends DmxDevice {
+export class VarytecGigabarHex extends Device {
   constructor(address: number, id: string) {
-    super(address, id);
-
-    this.channels = CHANNEL_ORDER.map((type, i) => ({
-      address: address + i,
-      type,
-      value: 0,
-      min: 0,
-      max: 255,
-    }));
+    super(address, id, CHANNEL_ORDER);
   }
 
-  state(values: DmxChannelStateValues): DmxDeviceState {
+  state(values: DeviceStateValues): ChannelState[] {
     const channels = this._cloneState();
 
     Object.keys(values).map((key) => {
@@ -62,6 +55,6 @@ export class VarytecGigabarHex extends DmxDevice {
       }
     });
 
-    return { device: this, channels };
+    return channels;
   }
 }

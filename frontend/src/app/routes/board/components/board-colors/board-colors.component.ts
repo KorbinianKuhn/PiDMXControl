@@ -9,7 +9,7 @@ import { WSService } from '../../../../services/ws.service';
 })
 export class BoardColorsComponent {
   public chaseColorEnum = ChaseColor;
-  public colors$ = this.wsService.colors$;
+  public colors$ = this.wsService.activeColors$;
 
   constructor(private wsService: WSService) {}
 

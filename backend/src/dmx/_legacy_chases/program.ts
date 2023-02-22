@@ -1,7 +1,7 @@
 import { TypedServer } from '../../server/events.interfaces';
 import { Logger } from '../../utils/logger';
 import { bpmToMs } from '../../utils/time';
-import { Chase } from '../chases/chase';
+import { Chase } from './chase';
 
 export class Program {
   private speed: number = bpmToMs(128);
@@ -12,6 +12,7 @@ export class Program {
   private stepIndex = 0;
   private chases: Chase[] = [];
   private logger = new Logger('program');
+  private tick = 0;
 
   constructor(private io: TypedServer) {}
 
@@ -20,11 +21,18 @@ export class Program {
       clearInterval(this.timer);
     }
 
+    this.tick = -1;
+    this.stepIndex = -1;
+    this.chaseIndex = 0;
+
     this._next();
     this.timer = setInterval(() => this._next(), this.speed);
   }
 
   _next() {
+    this.tick = this.tick == 3 ? 0 : this.tick + 1;
+    this.io.emit('tick:updated', { value: this.tick });
+
     if (this.chases.length === 0) {
       return;
     }
@@ -54,16 +62,20 @@ export class Program {
     this._start();
   }
 
+  setStart() {
+    this._start();
+  }
+
   setChases(chases: Chase[]) {
     this.chases = chases;
     this._start();
   }
 
-  data(master: number, strobe: boolean) {
+  data() {
     if (this.chases.length === 0) {
       return Buffer.alloc(512 + 1, 0);
     }
 
-    return this.chases[this.chaseIndex].data(this.stepIndex, master, strobe);
+    return this.chases[this.chaseIndex].data(this.stepIndex);
   }
 }

@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { map, Subject } from 'rxjs';
-import { ConfigService } from '../../services/config.service';
 import { WSService } from '../../services/ws.service';
 
 @Component({
@@ -11,7 +10,8 @@ import { WSService } from '../../services/ws.service';
 export class BpmComponent implements OnInit, OnDestroy {
   private destroy$$ = new Subject<void>();
 
-  public bars$ = this.configService.clock$.pipe(
+  public bpm$ = this.wsService.bpm$;
+  public bars$ = this.wsService.tick$.pipe(
     map((value) => {
       const values = [false, false, false, false];
       values[value] = true;
@@ -19,14 +19,9 @@ export class BpmComponent implements OnInit, OnDestroy {
     })
   );
 
-  public bpm$ = this.wsService.bpm$;
-
   private taps: number[] = [];
 
-  constructor(
-    private configService: ConfigService,
-    private wsService: WSService
-  ) {}
+  constructor(private wsService: WSService) {}
 
   ngOnInit(): void {
     // this.tap$.pipe(takeUntil(this.destroy$$), ).subscribe();
@@ -36,14 +31,15 @@ export class BpmComponent implements OnInit, OnDestroy {
     this.destroy$$.next();
   }
 
-  onClickStart() {}
+  onClickStart() {
+    this.wsService.setStart();
+  }
 
   onClickTap() {
     const now = Date.now();
     const length = this.taps.length;
 
     if (length === 0) {
-      console.log('empty');
       this.taps.push(now);
       return;
     }

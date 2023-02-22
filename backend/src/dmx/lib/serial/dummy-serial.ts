@@ -1,5 +1,5 @@
-import { Logger } from '../../utils/logger';
-import { wait } from '../../utils/time';
+import { Logger } from '../../../utils/logger';
+import { wait } from '../../../utils/time';
 import { Serial } from './serial.interface';
 
 export class DummySerial extends Serial {

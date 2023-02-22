@@ -8,8 +8,8 @@ import { WSService } from '../../../../services/ws.service';
 })
 export class BoardOverridesComponent {
   public black$ = this.wsService.black$;
-  public strobe$ = this.wsService.strobe$;
   public master$ = this.wsService.master$;
+  public ambientUV$ = this.wsService.ambientUV$;
 
   constructor(private wsService: WSService) {}
 
@@ -22,8 +22,9 @@ export class BoardOverridesComponent {
     this.wsService.setMaster(event.target.value);
   }
 
-  onClickStrobe() {
-    const value = this.strobe$.getValue();
-    this.wsService.setStrobe(!value);
+  onAmbientUVChange(event: any) {
+    this.wsService.setAmbientUV(event.target.value);
   }
+
+  onClickStrobe() {}
 }

@@ -1,0 +1,11 @@
+{
+  "bpm": 128,
+  "black": false,
+  "master": "0.55",
+  "ambientUV": 0,
+  "overrideProgram": null,
+  "activeProgram": "moody",
+  "activeColors": [
+    "uv-pink"
+  ]
+}

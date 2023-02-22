@@ -1,7 +1,4 @@
-import {
-  DmxChannelType,
-  DmxDeviceState,
-} from '../devices/dmx-device.interface';
+import { DmxChannelType, DmxDeviceState } from '../lib/device';
 
 export enum ChaseColor {
   RED = 'r',

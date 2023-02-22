@@ -5,3 +5,56 @@
 button {
   touch-action: manipulation;
 }
+
+.strobe {
+  animation-delay: 0s;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  opacity: 0;
+  &.slow {
+    animation-name: fade-animation-slow;
+  }
+  &.middle {
+    animation-name: fade-animation-middle;
+  }
+  &.fast {
+    animation-name: fade-animation-fast;
+  }
+}
+
+@keyframes fade-animation-fast {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  0% {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-animation-middle {
+  25% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-animation-slow {
+  40% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0;
+  }
+}

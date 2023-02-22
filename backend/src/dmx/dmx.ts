@@ -1,31 +1,25 @@
 import { TypedServer } from '../server/events.interfaces';
-import { bpmToMs } from '../utils/time';
-import { Chase, ChaseColor, ChaseName } from './chases/chase';
-import { createClubChases } from './chases/chase-club';
-import { createMoodyChases } from './chases/chase-moody';
-import { createOnChases } from './chases/chase-on';
-import { Program } from './program/program';
-import { DummySerial } from './serial/dummy-serial';
-import { UartSerial } from './serial/uart-serial';
+import { ChaseColor } from './lib/chase';
+import { ChaseRegistry } from './lib/chase-registry';
+import { Clock } from './lib/clock';
+import { Config } from './lib/config';
+import { DeviceRegistry } from './lib/device-registry';
+import { ActiveProgramName, OverrideProgramName, Program } from './lib/program';
+import { DummySerial } from './lib/serial/dummy-serial';
+import { UartSerial } from './lib/serial/uart-serial';
 
 export class DMX {
   private serial =
     process.env.CONFIG === 'pi' ? new UartSerial() : new DummySerial();
 
-  public chases: Chase[] = [
-    ...createOnChases(),
-    ...createMoodyChases(),
-    ...createClubChases(),
-  ];
+  private devices = new DeviceRegistry();
+  public config = new Config(this.io);
+  private clock = new Clock(this.io, this.config);
 
-  public program = new Program(this.io);
+  private chases = new ChaseRegistry(this.config, this.devices);
 
-  public master = 255;
-  public bpm = 128;
-  public black = false;
-  public strobe = false;
-  public colors: ChaseColor[] = [ChaseColor.RED];
-  public chaseName = ChaseName.ON;
+  private activeProgram = new Program(this.io, this.clock);
+  private overrideProgram = new Program(this.io, this.clock);
 
   constructor(private io: TypedServer) {}
 
@@ -36,59 +30,84 @@ export class DMX {
       this._send();
     }, 46);
 
-    this.setFilteredChases();
-  }
-
-  setFilteredChases() {
-    const chases = this.chases.filter(
-      (o) => o.id === this.chaseName && this.colors.includes(o.color),
-    );
-    this.program.setChases(chases);
+    this.setActiveProgram(this.config.activeProgram);
   }
 
   setBpm(value: number) {
-    const bpm = parseFloat(value.toFixed(1));
-    this.bpm = bpm;
-    this.program.setSpeed(bpmToMs(bpm));
-    this.io.emit('bpm:updated', { value: bpm });
+    this.config.setBpm(value);
+  }
+
+  setStart() {
+    this.clock.setStart();
+    if (this.config.overrideProgram) {
+      this.overrideProgram.start();
+    } else {
+      this.activeProgram.start();
+    }
   }
 
   setMaster(value: number) {
-    this.master = value;
-    this.io.emit('master:updated', { value });
+    this.config.setMaster(value);
   }
 
   setBlack(value: boolean) {
-    this.black = value;
-    this.io.emit('black:updated', { value });
+    this.config.setBlack(value);
   }
 
-  setStrobe(value: boolean) {
-    this.strobe = value;
-    this.io.emit('strobe:updated', { value });
+  setAmbientUV(value: number) {
+    this.config.setAmbientUV(value);
   }
 
-  setColors(colors: ChaseColor[]) {
-    this.colors = colors;
-    this.setFilteredChases();
-    this.io.emit('colors:updated', { colors });
+  setOverrideProgram(value: OverrideProgramName | null) {
+    this.config.setOverrideProgram(value);
+    if (value === null) {
+      this.overrideProgram.reset();
+    } else {
+      this.overrideProgram.setChases(this.chases.override(value));
+    }
   }
 
-  setChaseName(value: ChaseName) {
-    this.chaseName = value;
-    this.setFilteredChases();
-    this.io.emit('chase-name:updated', { value });
+  setActiveProgram(value: ActiveProgramName) {
+    this.config.setActiveProgram(value);
+    this.activeProgram.setChases(this.chases.active(value));
+  }
+
+  setActiveColors(value: ChaseColor[]) {
+    this.config.setActiveColors(value);
+    this.activeProgram.setChases(this.chases.active(this.config.activeProgram));
+  }
+
+  data(): Buffer {
+    if (this.config.black) {
+      return Buffer.alloc(512 + 1, 0);
+    }
+
+    const data = this.config.overrideProgram
+      ? this.overrideProgram.data()
+      : this.activeProgram.data();
+
+    // UV override
+    if (this.config.ambientUV !== 0) {
+      for (const address of this.devices.ambientUVChannels) {
+        data[address] = Math.max(data[address], this.config.ambientUV);
+      }
+      for (const address of this.devices.ambientUVMasterChannels) {
+        data[address] = 255;
+      }
+    }
+
+    // Master override
+    if (this.config.master !== 1) {
+      for (const address of this.devices.masterChannels) {
+        data[address] *= this.config.master;
+      }
+    }
+
+    return data;
   }
 
   async _send() {
-    if (this.black) {
-      const data = Buffer.alloc(512 + 1, 0);
-      this.serial.write(data);
-      this.io.emit('dmx:write', { data: [...data] });
-      return;
-    }
-
-    const data = this.program.data(this.master, this.strobe);
+    const data = this.data();
     await this.serial.write(data);
     this.io.emit('dmx:write', { data: [...data] });
   }

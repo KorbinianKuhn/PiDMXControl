@@ -3,13 +3,13 @@
   <app-pad-button color="bg-gray-900" class="m-1">16</app-pad-button>
   <app-pad-button color="bg-gray-900" class="m-1">32</app-pad-button>
   <app-pad-button color="bg-gray-900" class="m-1">Kugel</app-pad-button> -->
-  <app-toggle-button
+  <!-- <app-toggle-button
     [active]="strobe$ | async"
     (click)="onClickStrobe()"
     class="m-1"
   >
     Strobe
-  </app-toggle-button>
+  </app-toggle-button> -->
   <app-toggle-button
     [active]="black$ | async"
     (click)="onClickBlack()"
@@ -21,9 +21,24 @@
 <div class="flex justify-center mx-6 my-2">
   <label for="customRange1" class="form-label mr-2">Brightness</label>
   <input
-    value="100"
+    [value]="master$ | async"
+    [min]="0"
+    [max]="1"
+    [step]="0.05"
     type="range"
     class="form-range w-full h-6 p-0 bg-transparent focus:outline-none focus:ring-0 focus:shadow-none accent-cyan-500"
     (change)="onMasterChange($event)"
+  />
+</div>
+
+<div class="flex justify-center mx-6 my-2">
+  <label for="customRange1" class="form-label mr-2">Ambient UV</label>
+  <input
+    [value]="ambientUV$ | async"
+    [min]="0"
+    [max]="255"
+    type="range"
+    class="form-range w-full h-6 p-0 bg-transparent focus:outline-none focus:ring-0 focus:shadow-none accent-cyan-500"
+    (change)="onAmbientUVChange($event)"
   />
 </div>

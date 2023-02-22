@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ChaseName } from '../../../../services/ws.interfaces';
+import { ActiveProgramName } from '../../../../services/ws.interfaces';
 import { WSService } from '../../../../services/ws.service';
 
 @Component({
@@ -8,17 +8,17 @@ import { WSService } from '../../../../services/ws.service';
   styleUrls: ['./board-chases.component.scss'],
 })
 export class BoardChasesComponent {
-  public chaseNameEnum = ChaseName;
+  public programs = ActiveProgramName;
 
-  public chaseName$ = this.wsService.chaseName$;
+  public activeProgramName$ = this.wsService.activeProgramName$;
 
   constructor(private wsService: WSService) {}
 
-  isChaseActive(chaseName: ChaseName) {
-    return this.chaseName$.getValue() === chaseName;
+  isChaseActive(name: ActiveProgramName) {
+    return this.activeProgramName$.getValue() === name;
   }
 
-  onClickChase(name: ChaseName) {
-    this.wsService.setChaseName(name);
+  onClickChase(name: ActiveProgramName) {
+    this.wsService.setActiveProgramName(name);
   }
 }

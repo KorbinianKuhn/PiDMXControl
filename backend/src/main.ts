@@ -28,35 +28,46 @@ const main = async () => {
   await dmx.init();
 
   io.on('connection', (socket) => {
-    socket.emit('black:updated', { value: dmx.black });
-    socket.emit('master:updated', { value: dmx.master });
-    socket.emit('strobe:updated', { value: dmx.strobe });
-    socket.emit('chase-name:updated', { value: dmx.chaseName });
-    socket.emit('colors:updated', { colors: dmx.colors });
-    socket.emit('bpm:updated', { value: dmx.bpm });
+    socket.emit('bpm:updated', { value: dmx.config.bpm });
+    socket.emit('black:updated', { value: dmx.config.black });
+    socket.emit('master:updated', { value: dmx.config.master });
+    socket.emit('ambient-uv:updated', { value: dmx.config.ambientUV });
+    socket.emit('override-program:updated', {
+      value: dmx.config.overrideProgram,
+    });
+    socket.emit('active-program:updated', { value: dmx.config.activeProgram });
+    socket.emit('active-colors:updated', { colors: dmx.config.activeColors });
 
     socket.on('set:bpm', (args) => {
       dmx.setBpm(args.value);
+    });
+
+    socket.on('set:start', () => {
+      dmx.setStart();
     });
 
     socket.on('set:black', (args) => {
       dmx.setBlack(args.value);
     });
 
-    socket.on('set:strobe', (args) => {
-      dmx.setStrobe(args.value);
-    });
-
     socket.on('set:master', (args) => {
       dmx.setMaster(args.value);
     });
 
-    socket.on('set:chase-name', (args) => {
-      dmx.setChaseName(args.value);
+    socket.on('set:ambient-uv', (args) => {
+      dmx.setAmbientUV(args.value);
     });
 
-    socket.on('set:colors', (args) => {
-      dmx.setColors(args.colors);
+    socket.on('set:override-program', (args) => {
+      dmx.setOverrideProgram(args.value);
+    });
+
+    socket.on('set:active-program', (args) => {
+      dmx.setActiveProgram(args.value);
+    });
+
+    socket.on('set:active-colors', (args) => {
+      dmx.setActiveColors(args.colors);
     });
   });
 

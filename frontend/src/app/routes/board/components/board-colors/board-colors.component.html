@@ -1,6 +1,24 @@
 <div class="flex flex-wrap justify-center">
   <div class="flex flex-wrap">
     <app-pad-button
+      color="bg-gradient-to-br from-purple-500 via-purple-500 to-pink-500"
+      class="m-1"
+      [active]="isColorActive(chaseColorEnum.UV_PINK)"
+      (click)="onClickToggleColor(chaseColorEnum.UV_PINK)"
+    ></app-pad-button>
+    <app-pad-button
+      color="bg-gradient-to-br from-blue-500 via-blue-500 to-cyan-500"
+      class="m-1"
+      [active]="isColorActive(chaseColorEnum.BLUE_CYAN)"
+      (click)="onClickToggleColor(chaseColorEnum.BLUE_CYAN)"
+    ></app-pad-button>
+    <app-pad-button
+      color="bg-gradient-to-br from-red-500 via-red-500 to-yellow-500"
+      class="m-1"
+      [active]="isColorActive(chaseColorEnum.RED_AMBER)"
+      (click)="onClickToggleColor(chaseColorEnum.RED_AMBER)"
+    ></app-pad-button>
+    <!-- <app-pad-button
       color="bg-gradient-to-br from-red-500 via-red-500 to-yellow-500"
       [active]="isColorActive(chaseColorEnum.RED)"
       (click)="onClickToggleColor(chaseColorEnum.RED)"
@@ -19,25 +37,28 @@
       [active]="isColorActive(chaseColorEnum.GREEN)"
       (click)="onClickToggleColor(chaseColorEnum.GREEN)"
     ></app-pad-button>
-  </div>
-  <div class="flex flex-wrap">
-    <app-pad-button
-      color="bg-gradient-to-br from-white via-white-500 to-red-500"
-      class="m-1"
-      [active]="isColorActive(chaseColorEnum.WHITE)"
-      (click)="onClickToggleColor(chaseColorEnum.WHITE)"
-    ></app-pad-button>
-    <app-pad-button
-      color="bg-gradient-to-br from-purple-500 via-purple-500 to-pink-500"
-      class="m-1"
-      [active]="isColorActive(chaseColorEnum.UV)"
-      (click)="onClickToggleColor(chaseColorEnum.UV)"
-    ></app-pad-button>
-    <app-pad-button
+  </div>-->
+    <div class="flex flex-wrap">
+      <app-pad-button
+        color="bg-gradient-to-br from-green-500 via-green-500 to-cyan-500"
+        class="m-1"
+        [active]="isColorActive(chaseColorEnum.GREEN_CYAN)"
+        (click)="onClickToggleColor(chaseColorEnum.GREEN_CYAN)"
+      ></app-pad-button>
+
+      <app-pad-button
+        color="bg-gradient-to-br from-red-500 via-red-500 to-white"
+        class="m-1"
+        [active]="isColorActive(chaseColorEnum.RED_WHITE)"
+        (click)="onClickToggleColor(chaseColorEnum.RED_WHITE)"
+      ></app-pad-button>
+
+      <!-- <app-pad-button
       color="bg-gradient-to-br from-yellow-500 via-yellow-500 to-red-500"
       class="m-1"
       [active]="isColorActive(chaseColorEnum.AMBER)"
       (click)="onClickToggleColor(chaseColorEnum.AMBER)"
-    ></app-pad-button>
+    ></app-pad-button> -->
+    </div>
   </div>
 </div>
