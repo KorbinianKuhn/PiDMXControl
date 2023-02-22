@@ -40,15 +40,18 @@ export class AdjSaberSpot extends Device {
         case 'w':
           channels[4].value = value;
           break;
-        case 'a':
+        case 'a': {
           const factor = value / 255;
           channels[1].value = Math.round(255 * factor);
           channels[2].value = Math.round(64 * factor);
           break;
-        case 'uv':
+        }
+        case 'uv': {
+          const factor = value / 255;
           channels[1].value = Math.round(64 * factor);
           channels[3].value = Math.round(127 * factor);
           break;
+        }
         case 'master':
           channels[5].value = value;
           channels[0].value = 255; // Set strobe channel to static value
