@@ -69,4 +69,33 @@ export class FunGenerationLedDiamondDome extends Device {
 
     return channels;
   }
+
+  animationRotate(numSteps: number): Array<ChannelState[]> {
+    const panMin = 0;
+    const panMax = 255;
+
+    const panStepValue = (panMax - panMin) / (numSteps / 2);
+
+    const steps: Array<ChannelState[]> = [];
+
+    for (let i = 0; i < numSteps / 2; i++) {
+      steps.push([
+        {
+          address: this.address + 7,
+          value: Math.round(panMin + i * panStepValue),
+        },
+      ]);
+    }
+
+    for (let i = 0; i < numSteps / 2; i++) {
+      steps.push([
+        {
+          address: this.address + 7,
+          value: Math.round(panMax - i * panStepValue),
+        },
+      ]);
+    }
+
+    return steps;
+  }
 }

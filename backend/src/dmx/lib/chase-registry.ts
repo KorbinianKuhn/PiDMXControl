@@ -1,5 +1,6 @@
 import { Logger } from '../../utils/logger';
 import { createChaseClub } from '../chase-builder/chase-club';
+import { createChaseMirrorBall } from '../chase-builder/chase-mirror-ball';
 import { createChaseMoody } from '../chase-builder/chase-moody';
 import { createChaseOn } from '../chase-builder/chase-on';
 import { Chase, ChaseColor } from './chase';
@@ -20,6 +21,7 @@ export class ChaseRegistry {
 
     for (const color of Object.values(ChaseColor)) {
       this.chases.push(createChaseOn(this.devices, color));
+      this.chases.push(createChaseMirrorBall(this.devices, color));
       this.chases.push(createChaseMoody(this.devices, color));
       this.chases.push(createChaseClub(this.devices, color));
     }

@@ -66,13 +66,10 @@ export class VarytecHeroWash extends Device {
   }
 
   animationEight(numSteps: number): Array<ChannelState[]> {
-    const panMin = 90;
-    const panMax = 270;
-    const tiltMin = 90;
-    const tiltMax = 270;
-
-    const panSteps = [panMin, panMax, panMin];
-    const tiltSteps = [tiltMax, tiltMin, tiltMax];
+    const panMin = 0;
+    const panMax = 255;
+    const tiltMin = 0;
+    const tiltMax = 255;
 
     const panStepValue = (panMax - panMin) / (numSteps / 2);
     const tiltStepValue = (tiltMax - tiltMin) / (numSteps / 2);
@@ -83,11 +80,11 @@ export class VarytecHeroWash extends Device {
       steps.push([
         {
           address: this.address + 0,
-          value: panMin + i * panStepValue,
+          value: Math.round(panMin + i * panStepValue),
         },
         {
           address: this.address + 2,
-          value: tiltMin + i * tiltStepValue,
+          value: Math.round(tiltMin + i * tiltStepValue),
         },
       ]);
     }
@@ -96,11 +93,11 @@ export class VarytecHeroWash extends Device {
       steps.push([
         {
           address: this.address + 0,
-          value: panMax - i * panStepValue,
+          value: Math.round(panMax - i * panStepValue),
         },
         {
           address: this.address + 2,
-          value: tiltMax + i * tiltStepValue,
+          value: Math.round(tiltMax + i * tiltStepValue),
         },
       ]);
     }

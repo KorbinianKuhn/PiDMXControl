@@ -12,9 +12,10 @@ export enum OverrideProgramName {
 
 export enum ActiveProgramName {
   ON = 'on',
-  FADE = 'fade',
+  MIRROR_BALL = 'mirror-ball',
   MOODY = 'moody',
   CLUB = 'club',
+  WILD = 'wild',
 }
 
 export class Program {

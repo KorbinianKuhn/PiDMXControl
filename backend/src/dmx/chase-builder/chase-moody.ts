@@ -190,6 +190,11 @@ const createBallPattern = (
     steps.push(off);
   }
 
+  const animationDome = dome.animationRotate(steps.length);
+  for (let i = 0; i < steps.length; i++) {
+    steps[i].push(...animationDome[i]);
+  }
+
   return steps;
 };
 
@@ -260,9 +265,9 @@ const createHeadPattern = (
     }
   }
 
-  const animationLeft = left.animationEight(96);
-  const animationRight = right.animationEight(96);
-  for (let i = 0; i < 96; i++) {
+  const animationLeft = left.animationEight(steps.length);
+  const animationRight = right.animationEight(steps.length);
+  for (let i = 0; i < steps.length; i++) {
     steps[i].push(...animationLeft[i], ...animationRight[i]);
   }
 
