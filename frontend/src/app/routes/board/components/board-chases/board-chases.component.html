@@ -9,17 +9,17 @@
   <app-pad-button
     color="bg-cyan-500"
     class="m-1"
+    (click)="onClickChase(programs.MIRROR_BALL)"
+    [active]="isChaseActive(programs.MIRROR_BALL)"
+    >Kugel</app-pad-button
+  >
+  <app-pad-button
+    color="bg-cyan-500"
+    class="m-1"
     (click)="onClickChase(programs.MOODY)"
     [active]="isChaseActive(programs.MOODY)"
     >Moody</app-pad-button
   >
-  <!-- <app-pad-button
-    color="bg-gray-500"
-    class="m-1"
-    (click)="onClickChase(programs.DISCO)"
-    [active]="isChaseActive(programs.DISCO)"
-    >Disco</app-pad-button
-  > -->
   <app-pad-button
     color="bg-cyan-500"
     class="m-1"
@@ -27,11 +27,11 @@
     [active]="isChaseActive(programs.CLUB)"
     >Club</app-pad-button
   >
-  <!-- <app-pad-button
-    color="bg-gray-500"
+  <app-pad-button
+    color="bg-cyan-500"
     class="m-1"
-    (click)="onClickChase(programs.FLASHY)"
-    [active]="isChaseActive(programs.FLASHY)"
-    >Flashy</app-pad-button
-  > -->
+    (click)="onClickChase(programs.WILD)"
+    [active]="isChaseActive(programs.WILD)"
+    >Wild</app-pad-button
+  >
 </div>

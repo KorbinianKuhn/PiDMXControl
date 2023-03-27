@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { map, Subject } from 'rxjs';
 import { WSService } from '../../services/ws.service';
+import { BpmModalComponent } from './bpm-modal/bpm-modal.component';
 
 @Component({
   selector: 'app-bpm',
@@ -19,9 +21,7 @@ export class BpmComponent implements OnInit, OnDestroy {
     })
   );
 
-  private taps: number[] = [];
-
-  constructor(private wsService: WSService) {}
+  constructor(private wsService: WSService, private matDialog: MatDialog) {}
 
   ngOnInit(): void {
     // this.tap$.pipe(takeUntil(this.destroy$$), ).subscribe();
@@ -31,37 +31,7 @@ export class BpmComponent implements OnInit, OnDestroy {
     this.destroy$$.next();
   }
 
-  onClickStart() {
-    this.wsService.setStart();
-  }
-
-  onClickTap() {
-    const now = Date.now();
-    const length = this.taps.length;
-
-    if (length === 0) {
-      this.taps.push(now);
-      return;
-    }
-
-    const latest = this.taps[length - 1];
-    if (now - latest > 2000) {
-      this.taps = [now];
-      return;
-    }
-
-    if (length > 5) {
-      this.taps.shift();
-    }
-    this.taps.push(now);
-
-    let sum = 0;
-    for (let i = 1; i < this.taps.length; i++) {
-      sum += this.taps[i] - this.taps[i - 1];
-    }
-
-    const bpm = 60000 / (sum / (this.taps.length - 1));
-
-    this.wsService.setBpm(bpm);
+  onClick() {
+    this.matDialog.open(BpmModalComponent);
   }
 }

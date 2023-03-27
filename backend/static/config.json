@@ -1,11 +1,12 @@
 {
-  "bpm": 128,
+  "bpm": 147.9,
   "black": false,
-  "master": "0.55",
-  "ambientUV": 0,
+  "master": "1",
+  "ambientUV": "48",
   "overrideProgram": null,
   "activeProgram": "moody",
   "activeColors": [
-    "uv-pink"
+    "blue-cyan",
+    "red-amber"
   ]
 }

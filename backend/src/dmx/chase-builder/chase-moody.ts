@@ -260,5 +260,11 @@ const createHeadPattern = (
     }
   }
 
+  const animationLeft = left.animationEight(96);
+  const animationRight = right.animationEight(96);
+  for (let i = 0; i < 96; i++) {
+    steps[i].push(...animationLeft[i], ...animationRight[i]);
+  }
+
   return steps;
 };

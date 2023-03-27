@@ -27,4 +27,6 @@ export class BoardOverridesComponent {
   }
 
   onClickStrobe() {}
+
+  onClickDisco() {}
 }
