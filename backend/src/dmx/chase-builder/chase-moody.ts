@@ -191,11 +191,8 @@ const createBallPattern = (
   }
 
   const animationDome = dome.animationRotate(steps.length);
-  for (let i = 0; i < steps.length; i++) {
-    steps[i].push(...animationDome[i]);
-  }
 
-  return steps;
+  return mergeDevicePatterns(steps, animationDome);
 };
 
 const createHeadPattern = (
@@ -267,9 +264,6 @@ const createHeadPattern = (
 
   const animationLeft = left.animationEight(steps.length);
   const animationRight = right.animationEight(steps.length);
-  for (let i = 0; i < steps.length; i++) {
-    steps[i].push(...animationLeft[i], ...animationRight[i]);
-  }
 
-  return steps;
+  return mergeDevicePatterns(steps, animationLeft, animationRight);
 };

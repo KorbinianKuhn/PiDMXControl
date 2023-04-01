@@ -53,9 +53,6 @@ const createBallPattern = (
   }
 
   const animationDome = dome.animationRotate(steps.length);
-  for (let i = 0; i < steps.length; i++) {
-    steps[i].push(...animationDome[i]);
-  }
 
-  return steps;
+  return mergeDevicePatterns(steps, animationDome);
 };

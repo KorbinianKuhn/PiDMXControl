@@ -1,3 +1,4 @@
+import { ChannelAnimation } from '../lib/chase';
 import {
   ChannelState,
   ChannelType,
@@ -65,7 +66,7 @@ export class VarytecHeroWash extends Device {
     return channels;
   }
 
-  animationEight(numSteps: number): Array<ChannelState[]> {
+  animationEight(numSteps: number): ChannelAnimation {
     const panMin = 0;
     const panMax = 255;
     const tiltMin = 0;
@@ -74,7 +75,7 @@ export class VarytecHeroWash extends Device {
     const panStepValue = (panMax - panMin) / (numSteps / 2);
     const tiltStepValue = (tiltMax - tiltMin) / (numSteps / 2);
 
-    const steps: Array<ChannelState[]> = [];
+    const steps: ChannelAnimation = [];
 
     for (let i = 0; i < numSteps / 2; i++) {
       steps.push([
@@ -97,7 +98,7 @@ export class VarytecHeroWash extends Device {
         },
         {
           address: this.address + 2,
-          value: Math.round(tiltMax + i * tiltStepValue),
+          value: Math.round(tiltMax - i * tiltStepValue),
         },
       ]);
     }

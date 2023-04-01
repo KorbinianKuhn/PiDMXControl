@@ -45,27 +45,10 @@ export const getChaseColorValues = (color: ChaseColor): Colors => {
       a = { g: 255 };
       b = { g: 255, b: 255 };
       break;
-
     case ChaseColor.RED_WHITE:
       a = { r: 255 };
       b = { w: 255 };
       break;
-    // case ChaseColor.GREEN:
-    //   a = { g: 255 };
-    //   b = { g: 127, b: 127 };
-    //   break;
-    // case ChaseColor.BLUE:
-    //   a = { b: 255 };
-    //   b = { g: 127, b: 127 };
-    //   break;
-    // case ChaseColor.WHITE:
-    //   a = { w: 255 };
-    //   b = { r: 127, w: 127 };
-    //   break;
-    // case ChaseColor.AMBER:
-    //   a = { a: 255 };
-    //   b = { r: 127, a: 127 };
-    //   break;
     default:
       throw new Error('Undefined chases colors');
   }
@@ -79,28 +62,44 @@ export const flattenChannelStates = (
   const flatten: ChannelState[] = [];
 
   for (const state of states) {
-    flatten.push(...state);
+    for (const channel of state) {
+      const item = flatten.find((o) => o.address === channel.address);
+      if (item) {
+        item.value = channel.value;
+      } else {
+        flatten.push({ ...channel });
+      }
+    }
   }
 
   return flatten;
 };
 
 export const mergeDevicePatterns = (
-  ...patterns: ChannelAnimation[]
+  ...animations: ChannelAnimation[]
 ): ChannelAnimation => {
-  const length = patterns[0].length;
+  const length = animations[0].length;
   const steps: ChannelAnimation = new Array(length).fill(null);
 
-  for (const pattern of patterns) {
-    if (pattern.length !== length) {
+  for (const animation of animations) {
+    if (animation.length !== length) {
       throw new Error('Pattern lengths are not equal');
     }
   }
 
   for (let i = 0; i < length; i++) {
     steps[i] = [];
-    for (const pattern of patterns) {
-      steps[i].push(...pattern[i]);
+    for (const animation of animations) {
+      const step = animation[i];
+
+      for (const channel of step) {
+        const item = steps[i].find((o) => o.address === channel.address);
+        if (item) {
+          item.value = channel.value;
+        } else {
+          steps[i].push({ ...channel });
+        }
+      }
     }
   }
 

@@ -5,5 +5,7 @@
   "ambientUV": "48",
   "overrideProgram": null,
   "activeProgram": "moody",
-  "activeColors": []
+  "activeColors": [
+    "green-cyan"
+  ]
 }

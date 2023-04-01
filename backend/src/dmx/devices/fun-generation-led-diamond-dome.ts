@@ -1,3 +1,4 @@
+import { ChannelAnimation } from '../lib/chase';
 import {
   ChannelState,
   ChannelType,
@@ -70,13 +71,13 @@ export class FunGenerationLedDiamondDome extends Device {
     return channels;
   }
 
-  animationRotate(numSteps: number): Array<ChannelState[]> {
+  animationRotate(numSteps: number): ChannelAnimation {
     const panMin = 0;
     const panMax = 255;
 
     const panStepValue = (panMax - panMin) / (numSteps / 2);
 
-    const steps: Array<ChannelState[]> = [];
+    const steps: ChannelAnimation = [];
 
     for (let i = 0; i < numSteps / 2; i++) {
       steps.push([
