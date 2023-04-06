@@ -1,20 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FaderComponent } from './fader.component';
+import { BeamerComponent } from './beamer.component';
 
-describe('FaderComponent', () => {
-  let component: FaderComponent;
-  let fixture: ComponentFixture<FaderComponent>;
+describe('BeamerComponent', () => {
+  let component: BeamerComponent;
+  let fixture: ComponentFixture<BeamerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FaderComponent ]
+      declarations: [ BeamerComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(FaderComponent);
+    fixture = TestBed.createComponent(BeamerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

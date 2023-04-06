@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { AccordionModule } from '../../components/accordion/accordion.module';
 
+import { MatExpansionModule } from '@angular/material/expansion';
 import { DeviceTesterModule } from '../../components/device-tester/device-tester.module';
 import { SettingsRoutingModule } from './settings-routing.module';
 import { SettingsComponent } from './settings.component';
@@ -12,7 +12,7 @@ import { SettingsComponent } from './settings.component';
     CommonModule,
     SettingsRoutingModule,
     DeviceTesterModule,
-    AccordionModule,
+    MatExpansionModule,
   ],
 })
 export class SettingsModule {}

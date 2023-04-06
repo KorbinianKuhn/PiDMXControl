@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AccordionComponent } from './accordion.component';
+import { VisualsComponent } from './visuals.component';
 
-describe('AccordionComponent', () => {
-  let component: AccordionComponent;
-  let fixture: ComponentFixture<AccordionComponent>;
+describe('VisualsComponent', () => {
+  let component: VisualsComponent;
+  let fixture: ComponentFixture<VisualsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AccordionComponent ]
+      declarations: [ VisualsComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AccordionComponent);
+    fixture = TestBed.createComponent(VisualsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

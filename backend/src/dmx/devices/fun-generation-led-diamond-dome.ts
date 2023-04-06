@@ -1,4 +1,4 @@
-import { ChannelAnimation } from '../lib/chase';
+import { Config } from '../lib/config';
 import {
   ChannelState,
   ChannelType,
@@ -18,15 +18,22 @@ const CHANNEL_ORDER: ChannelType[] = [
   null, // sound mode
 ];
 
+interface FunGenerationLedDiamondDomeDeviceStateValues
+  extends DeviceStateValues {
+  movement?: number;
+}
+
 export class FunGenerationLedDiamondDome extends Device {
   public strobeMin = 10;
   public strobeMax = 255;
+  public movementMin = 127;
+  public movementMax = 255;
 
-  constructor(address: number, id: string) {
-    super(address, id, CHANNEL_ORDER);
+  constructor(address: number, id: string, config: Config) {
+    super(address, id, CHANNEL_ORDER, config);
   }
 
-  state(values: DeviceStateValues): ChannelState[] {
+  state(values: FunGenerationLedDiamondDomeDeviceStateValues): ChannelState[] {
     const channels = this._cloneState();
 
     const sortedKeys = Object.keys(values).sort(
@@ -37,22 +44,22 @@ export class FunGenerationLedDiamondDome extends Device {
       const value = values[key];
       switch (key) {
         case 'r':
-          channels[0].value = value;
+          channels[0].value += value;
           break;
         case 'g':
-          channels[1].value = value;
+          channels[1].value += value;
           break;
         case 'b':
-          channels[2].value = value;
+          channels[2].value += value;
           break;
         case 'w':
-          channels[3].value = value;
+          channels[3].value += value;
           break;
         case 'a':
-          channels[4].value = value;
+          channels[4].value += value;
           break;
         case 'uv':
-          channels[5].value = value;
+          channels[5].value += value;
           break;
         case 'master':
           for (let i = 0; i < 6; i++) {
@@ -63,40 +70,17 @@ export class FunGenerationLedDiamondDome extends Device {
           channels[6].value = this._normalizeStrobeValue(value);
           break;
         case 'movement':
-          channels[7].value = value;
+          if (value === 0) {
+            channels[7].value = 0;
+          } else {
+            const steps = value / 255;
+            channels[7].value =
+              (this.movementMax - this.movementMin) * steps + this.movementMin;
+          }
           break;
       }
     });
 
     return channels;
-  }
-
-  animationRotate(numSteps: number): ChannelAnimation {
-    const panMin = 0;
-    const panMax = 255;
-
-    const panStepValue = (panMax - panMin) / (numSteps / 2);
-
-    const steps: ChannelAnimation = [];
-
-    for (let i = 0; i < numSteps / 2; i++) {
-      steps.push([
-        {
-          address: this.address + 7,
-          value: Math.round(panMin + i * panStepValue),
-        },
-      ]);
-    }
-
-    for (let i = 0; i < numSteps / 2; i++) {
-      steps.push([
-        {
-          address: this.address + 7,
-          value: Math.round(panMax - i * panStepValue),
-        },
-      ]);
-    }
-
-    return steps;
   }
 }

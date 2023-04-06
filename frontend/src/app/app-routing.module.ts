@@ -13,6 +13,11 @@ const routes: Routes = [
       import('./routes/settings/settings.module').then((m) => m.SettingsModule),
   },
   {
+    path: 'visuals',
+    loadChildren: () =>
+      import('./routes/visuals/visuals.module').then((m) => m.VisualsModule),
+  },
+  {
     path: '**',
     redirectTo: 'board',
   },

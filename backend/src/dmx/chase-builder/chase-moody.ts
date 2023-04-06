@@ -19,8 +19,9 @@ export const createChaseMoody = (
   const hex = createHexPattern(devices, colors);
   const ball = createBallPattern(devices, colors);
   const head = createHeadPattern(devices, colors);
+  const beamer = createBeamerPattern(devices, colors);
 
-  const steps = mergeDevicePatterns(bar, hex, ball, head);
+  const steps = mergeDevicePatterns(bar, hex, ball, head, beamer);
 
   chase.addSteps(steps);
 
@@ -152,12 +153,12 @@ const createBallPattern = (
     spot.state({ master: 0 }),
   );
   const a = flattenChannelStates(
-    dome.state({ master: 255, ...colors.a }),
+    dome.state({ master: 255, ...colors.a, movement: 127 }),
     spot.state({ master: 255, ...colors.a }),
   );
 
   const b = flattenChannelStates(
-    dome.state({ master: 255, ...colors.b }),
+    dome.state({ master: 255, ...colors.b, movement: 127 }),
     spot.state({ master: 255, ...colors.b }),
   );
 
@@ -190,9 +191,7 @@ const createBallPattern = (
     steps.push(off);
   }
 
-  const animationDome = dome.animationRotate(steps.length);
-
-  return mergeDevicePatterns(steps, animationDome);
+  return steps;
 };
 
 const createHeadPattern = (
@@ -266,4 +265,55 @@ const createHeadPattern = (
   const animationRight = right.animationEight(steps.length);
 
   return mergeDevicePatterns(steps, animationLeft, animationRight);
+};
+
+const createBeamerPattern = (
+  devices: DeviceRegistry,
+  colors: Colors,
+): ChannelAnimation => {
+  const steps: ChannelAnimation = [];
+
+  const beamer = devices.object().beamer;
+
+  const off = beamer.state({ master: 0 });
+  const a = beamer.state({ master: 255, ...colors.a });
+  const b = beamer.state({ master: 255, ...colors.b });
+
+  // 1-32: Random
+  for (let i = 0; i < 16; i++) {
+    steps.push(a);
+  }
+  for (let i = 0; i < 16; i++) {
+    steps.push(b);
+  }
+
+  // 33-64: Blink
+  for (let i = 0; i < 8; i++) {
+    steps.push(a);
+  }
+  for (let i = 0; i < 8; i++) {
+    steps.push(b);
+  }
+  for (let i = 0; i < 8; i++) {
+    steps.push(a);
+  }
+  for (let i = 0; i < 8; i++) {
+    steps.push(b);
+  }
+
+  // 65-96: Blink / Pause
+  for (let i = 0; i < 8; i++) {
+    steps.push(a);
+  }
+  for (let i = 0; i < 8; i++) {
+    steps.push(b);
+  }
+  for (let i = 0; i < 8; i++) {
+    steps.push(a);
+  }
+  for (let i = 0; i < 8; i++) {
+    steps.push(b);
+  }
+
+  return steps;
 };

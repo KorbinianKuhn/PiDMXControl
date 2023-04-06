@@ -1,3 +1,4 @@
+import { Config } from '../lib/config';
 import {
   ChannelState,
   ChannelType,
@@ -25,8 +26,8 @@ interface SegmentStateValues extends DeviceStateValues {
 }
 
 export class EuroliteLedPixBar extends Device {
-  constructor(address: number, id: string) {
-    super(address, id, CHANNEL_ORDER);
+  constructor(address: number, id: string, config: Config) {
+    super(address, id, CHANNEL_ORDER, config);
   }
 
   state(...chunks: SegmentStateValues[]): ChannelState[] {
@@ -73,29 +74,29 @@ export class EuroliteLedPixBar extends Device {
       const value = values[key];
       switch (key) {
         case 'r':
-          channels[2 + offset].value = value;
+          channels[2 + offset].value += value;
           break;
         case 'g':
-          channels[3 + offset].value = value;
+          channels[3 + offset].value += value;
           break;
         case 'b':
-          channels[4 + offset].value = value;
+          channels[4 + offset].value += value;
           break;
         case 'w':
-          channels[2 + offset].value = value;
-          channels[3 + offset].value = value;
-          channels[4 + offset].value = value;
+          channels[2 + offset].value += value;
+          channels[3 + offset].value += value;
+          channels[4 + offset].value += value;
           break;
         case 'a': {
           const factor = value / 255;
-          channels[2 + offset].value = Math.round(255 * factor);
-          channels[3 + offset].value = Math.round(64 * factor);
+          channels[2 + offset].value += 255 * factor;
+          channels[3 + offset].value += 64 * factor;
           break;
         }
         case 'uv': {
           const factor = value / 255;
-          channels[2 + offset].value = Math.round(64 * factor);
-          channels[4 + offset].value = Math.round(127 * factor);
+          channels[2 + offset].value += 64 * factor;
+          channels[4 + offset].value += 127 * factor;
           break;
         }
         case 'master':

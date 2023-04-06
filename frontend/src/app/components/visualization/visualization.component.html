@@ -1,8 +1,14 @@
-<div class="flex flex-col m-4">
+<div class="flex flex-col relative">
   <!-- Front -->
   <div class="flex justify-center items-end">
     <app-varytec-hero-wash class="mr-2" [address]="114"></app-varytec-hero-wash>
-    <app-eurolite-led-pix-bar [address]="50"></app-eurolite-led-pix-bar>
+    <div class="flex flex-col items-center">
+      <app-beamer [address]="146"></app-beamer>
+      <app-eurolite-led-pix-bar
+        [address]="50"
+        class="translate-y-2"
+      ></app-eurolite-led-pix-bar>
+    </div>
     <app-varytec-hero-wash class="ml-2" [address]="130"></app-varytec-hero-wash>
   </div>
   <!-- Middle -->
@@ -10,12 +16,12 @@
     <!-- Left -->
     <div class="flex flex-col items-center justify-center">
       <app-varytec-gigabar-hex
-        class="m-2"
+        class="m-1"
         [vertical]="true"
         [address]="1"
       ></app-varytec-gigabar-hex>
       <app-varytec-gigabar-hex
-        class="m-2"
+        class="m-1"
         [vertical]="true"
         [address]="20"
       ></app-varytec-gigabar-hex>
@@ -31,19 +37,19 @@
     <!-- Right -->
     <div class="flex flex-col items-center justify-center">
       <app-varytec-gigabar-hex
-        class="m-2"
+        class="m-1"
         [vertical]="true"
         [address]="10"
       ></app-varytec-gigabar-hex>
       <app-varytec-gigabar-hex
-        class="m-2"
+        class="m-1"
         [vertical]="true"
         [address]="30"
       ></app-varytec-gigabar-hex>
     </div>
   </div>
   <!-- Back -->
-  <div class="flex justify-center">
+  <div class="flex w-full justify-center absolute bottom-0">
     <app-varytec-gigabar-hex [address]="40"></app-varytec-gigabar-hex>
   </div>
 </div>

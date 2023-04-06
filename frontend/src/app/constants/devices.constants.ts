@@ -9,7 +9,7 @@ const GIGABAR_HEX_CHANNELS: ChannelType[] = [
   ChannelType.UV,
   ChannelType.MASTER,
   ChannelType.STROBE,
-  ChannelType.OTHER, // sound mode]
+  ChannelType.SOUND_MODE, // sound mode]
 ];
 
 const EUROLITE_BAR_SEGMENT_CHANNEL_ORDER: ChannelType[] = [
@@ -18,7 +18,7 @@ const EUROLITE_BAR_SEGMENT_CHANNEL_ORDER: ChannelType[] = [
   ChannelType.RED,
   ChannelType.GREEN,
   ChannelType.BLUE,
-  ChannelType.OTHER,
+  ChannelType.OTHER, // other
 ];
 
 const EUROLITE_BAR_CHANNELS = new Array(6 * 8)
@@ -34,7 +34,7 @@ const DIAMOND_DOME_CHANNELS: ChannelType[] = [
   ChannelType.UV,
   ChannelType.STROBE,
   ChannelType.MOVEMENT,
-  ChannelType.OTHER, // sound mode
+  ChannelType.SOUND_MODE, // sound mode
 ];
 
 const SABER_SPOT_CHANNELS: ChannelType[] = [
@@ -47,11 +47,11 @@ const SABER_SPOT_CHANNELS: ChannelType[] = [
 ];
 
 const HERO_WASH_CHANNELS: ChannelType[] = [
-  ChannelType.OTHER, //pan
-  ChannelType.OTHER, // pan fine
-  ChannelType.OTHER, // tilt
-  ChannelType.OTHER, // tilt fine
-  ChannelType.OTHER, // speed pan tilt
+  ChannelType.PAN, //pan
+  ChannelType.PAN_FINE, // pan fine
+  ChannelType.TILT, // tilt
+  ChannelType.TILT_FINE, // tilt fine
+  ChannelType.SPEED, // speed pan tilt
   ChannelType.MASTER,
   ChannelType.STROBE, // 10-250
   ChannelType.RED,
@@ -61,8 +61,16 @@ const HERO_WASH_CHANNELS: ChannelType[] = [
   ChannelType.AMBER,
   ChannelType.UV,
   ChannelType.OTHER, // color temperature
-  ChannelType.OTHER, // color macros
-  ChannelType.OTHER, // auto programs
+  ChannelType.COLOR_MACRO, // color macros
+  ChannelType.AUTO, // auto programs
+];
+
+const BEAMER_CHANNELS: ChannelType[] = [
+  ChannelType.RED,
+  ChannelType.GREEN,
+  ChannelType.BLUE,
+  ChannelType.MASTER,
+  ChannelType.STROBE,
 ];
 
 export const DEVICES: Device[] = [
@@ -115,5 +123,10 @@ export const DEVICES: Device[] = [
     name: 'Varytec Hero Wash (2)',
     address: 130,
     channels: HERO_WASH_CHANNELS,
+  },
+  {
+    name: 'Beamer',
+    address: 146,
+    channels: BEAMER_CHANNELS,
   },
 ];

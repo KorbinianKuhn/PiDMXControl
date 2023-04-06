@@ -30,7 +30,7 @@ export class Chase {
   addStep(channels: ChannelState[]) {
     const data = Buffer.alloc(512 + 1, 0);
     for (const channel of channels) {
-      data[channel.address] = channel.value;
+      data[channel.address] = Math.round(channel.value);
     }
     this.steps.push(data);
   }

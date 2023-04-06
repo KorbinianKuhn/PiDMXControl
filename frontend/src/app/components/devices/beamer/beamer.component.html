@@ -1,0 +1,16 @@
+<div class="flex bg-gray-900">
+  <div
+    class="w-20 h-10 m-1 flex overflow-hidden relative"
+    [style.background]="color"
+    [ngClass]="strobe"
+    [style.animation-duration]="duration"
+  >
+    <video
+      class="mix-blend-luminosity min-h-full min-w-full object-cover"
+      src="http://localhost:3000/static/visuals/amanda-darling.mp4"
+      [autoplay]="true"
+      [muted]="true"
+      [loop]="true"
+    ></video>
+  </div>
+</div>

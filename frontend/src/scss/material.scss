@@ -1,0 +1,24 @@
+.cdk-overlay-dark-backdrop {
+  background: rgba(20, 20, 20, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-color: #000;
+}
+
+.mdc-slider__value-indicator {
+  --mdc-slider-label-container-color: #000;
+}
+
+.mat-mdc-slider .mdc-slider__value-indicator {
+  --mdc-slider-label-label-text-color: #fff;
+}
+
+.mat-expansion-panel {
+  background: #000;
+}
+
+mat-slider {
+  width: 100% !important;
+}

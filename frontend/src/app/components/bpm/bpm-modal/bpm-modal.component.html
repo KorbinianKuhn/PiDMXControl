@@ -1,11 +1,19 @@
-<div class="flex justify-between mt-2">
-  <app-pad-button
-    color="bg-gray-900 mr-8"
-    [active]="true"
-    (click)="onClickStart()"
-    >Start</app-pad-button
-  >
-  <app-pad-button color="bg-gray-900" [active]="true" (click)="onClickTap()"
-    >Tap</app-pad-button
-  >
+<div class="flex flex-col p-5 border border-cyan-700 rounded-sm" tabindex="0">
+  <app-bpm-number></app-bpm-number>
+
+  <div class="flex justify-between mt-2">
+    <app-pad-button
+      color="bg-gray-900 mr-8"
+      [active]="true"
+      (click)="onClickStart()"
+      >Start</app-pad-button
+    >
+    <app-pad-button color="bg-gray-900" [active]="true" (click)="onClickTap()"
+      >Tap</app-pad-button
+    >
+  </div>
+
+  <mat-slider [min]="60" [max]="240" [step]="0.5" discrete>
+    <input matSliderThumb [value]="bpm" (dragEnd)="onSliderChange($event)" />
+  </mat-slider>
 </div>

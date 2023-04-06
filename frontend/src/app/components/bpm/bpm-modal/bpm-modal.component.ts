@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { WSService } from '../../../services/ws.service';
 
 @Component({
@@ -6,10 +7,23 @@ import { WSService } from '../../../services/ws.service';
   templateUrl: './bpm-modal.component.html',
   styleUrls: ['./bpm-modal.component.scss'],
 })
-export class BpmModalComponent {
+export class BpmModalComponent implements OnInit, OnDestroy {
   private taps: number[] = [];
+  private destroy$$ = new Subject<void>();
+
+  public bpm: number = this.wsService.bpm$.getValue();
 
   constructor(private wsService: WSService) {}
+
+  ngOnInit(): void {
+    this.wsService.bpm$
+      .pipe(takeUntil(this.destroy$$))
+      .subscribe((value) => (this.bpm = value));
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$$.next();
+  }
 
   onClickStart() {
     this.wsService.setStart();
@@ -43,5 +57,9 @@ export class BpmModalComponent {
     const bpm = 60000 / (sum / (this.taps.length - 1));
 
     this.wsService.setBpm(bpm);
+  }
+
+  onSliderChange(event: any) {
+    this.wsService.setBpm(event.value);
   }
 }

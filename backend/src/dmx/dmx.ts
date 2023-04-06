@@ -12,8 +12,9 @@ export class DMX {
   private serial =
     process.env.CONFIG === 'pi' ? new UartSerial() : new DummySerial();
 
-  private devices = new DeviceRegistry();
   public config = new Config(this.io);
+
+  private devices = new DeviceRegistry(this.config);
   private clock = new Clock(this.io, this.config);
 
   private chases = new ChaseRegistry(this.config, this.devices);
@@ -85,9 +86,13 @@ export class DMX {
     }
 
     // Master override
-    if (this.config.master !== 1) {
-      for (const address of this.devices.masterChannels) {
-        data[address] *= this.config.master;
+    for (const device of this.devices.masterChannels) {
+      const master = this.config.getDeviceConfig(device.deviceId).master;
+      const multiplier = this.config.master * master;
+      if (multiplier !== 1) {
+        for (const channel of device.channels) {
+          data[channel] = Math.round(data[channel] * multiplier);
+        }
       }
     }
 

@@ -1,0 +1,32 @@
+<div
+  class="fixed flex"
+  [style.left.%]="(crop$ | async).left"
+  [style.top.%]="(crop$ | async).top"
+  [style.bottom.%]="(crop$ | async).bottom"
+  [style.right.%]="(crop$ | async).right"
+>
+  <div
+    class="relative w-full h-full overflow-hidden"
+    [style.background]="color"
+    [ngClass]="strobe"
+    [style.animation-duration]="duration"
+  >
+    <video
+      class="mix-blend-luminosity min-h-full min-w-full object-cover"
+      src="http://localhost:3000/static/visuals/amanda-darling.mp4"
+      [autoplay]="true"
+      [muted]="true"
+      [loop]="true"
+    ></video>
+    <div
+      *ngIf="text"
+      class="absolute inset-0 flex items-center justify-center p-10"
+      [style.opacity]="text.opacity"
+      [style.transform]="text.transform"
+    >
+      <p class="text">
+        {{ text.message }}
+      </p>
+    </div>
+  </div>
+</div>

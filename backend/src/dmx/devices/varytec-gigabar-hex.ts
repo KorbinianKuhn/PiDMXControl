@@ -1,3 +1,4 @@
+import { Config } from '../lib/config';
 import {
   ChannelState,
   ChannelType,
@@ -18,8 +19,8 @@ const CHANNEL_ORDER: ChannelType[] = [
 ];
 
 export class VarytecGigabarHex extends Device {
-  constructor(address: number, id: string) {
-    super(address, id, CHANNEL_ORDER);
+  constructor(address: number, id: string, config: Config) {
+    super(address, id, CHANNEL_ORDER, config);
   }
 
   state(values: DeviceStateValues): ChannelState[] {
@@ -29,22 +30,22 @@ export class VarytecGigabarHex extends Device {
       const value = values[key];
       switch (key) {
         case 'r':
-          channels[0].value = value;
+          channels[0].value += value;
           break;
         case 'g':
-          channels[1].value = value;
+          channels[1].value += value;
           break;
         case 'b':
-          channels[2].value = value;
+          channels[2].value += value;
           break;
         case 'w':
-          channels[3].value = value;
+          channels[3].value += value;
           break;
         case 'a':
-          channels[4].value = value;
+          channels[4].value += value;
           break;
         case 'uv':
-          channels[5].value = value;
+          channels[5].value += value;
           break;
         case 'master':
           channels[6].value = value;

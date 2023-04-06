@@ -8,8 +8,17 @@
   </button>
 </div>
 
-<app-accordion>
-  <app-accordion-item *ngFor="let device of devices" [label]="device.name">
+<mat-accordion>
+  <mat-expansion-panel
+    *ngFor="let device of devices"
+    class="border-t border-cyan-900"
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ device.name }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
     <app-device-tester [device]="device"></app-device-tester>
-  </app-accordion-item>
-</app-accordion>
+  </mat-expansion-panel>
+</mat-accordion>

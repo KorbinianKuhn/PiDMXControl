@@ -2,16 +2,18 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { BpmModule } from '../../components/bpm/bpm.module';
 
+import { FormsModule } from '@angular/forms';
+import { MatSliderModule } from '@angular/material/slider';
 import { PadButtonModule } from '../../components/pad-button/pad-button.module';
 import { PanelGroupModule } from '../../components/panel-group/panel-group.module';
 import { ToggleButtonModule } from '../../components/toggle-button/toggle-button.module';
 import { VisualizationModule } from '../../components/visualization/visualization.module';
 import { BoardRoutingModule } from './board-routing.module';
 import { BoardComponent } from './board.component';
+import { BoardBuildupsComponent } from './components/board-buildups/board-buildups.component';
 import { BoardChasesComponent } from './components/board-chases/board-chases.component';
 import { BoardColorsComponent } from './components/board-colors/board-colors.component';
 import { BoardOverridesComponent } from './components/board-overrides/board-overrides.component';
-import { BoardBuildupsComponent } from './components/board-buildups/board-buildups.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,8 @@ import { BoardBuildupsComponent } from './components/board-buildups/board-buildu
     BpmModule,
     VisualizationModule,
     PanelGroupModule,
+    MatSliderModule,
+    FormsModule,
   ],
 })
 export class BoardModule {}

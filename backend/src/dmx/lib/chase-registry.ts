@@ -42,6 +42,11 @@ export class ChaseRegistry {
     );
   }
 
+  update() {
+    this.chases = [];
+    this._createChases();
+  }
+
   active(name: ActiveProgramName): Chase[] {
     return this._filter(name);
   }

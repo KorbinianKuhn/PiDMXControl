@@ -18,9 +18,6 @@ export const createChaseClub = (
   const bar = createBarPattern(devices, colors);
   const hex = createHexPattern(devices, colors);
 
-  console.log(bar.length);
-  console.log(hex.length);
-
   const steps = mergeDevicePatterns(bar, hex);
 
   chase.addSteps(steps);

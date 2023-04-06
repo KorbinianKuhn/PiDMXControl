@@ -1,10 +1,11 @@
-<table class="mx-4">
+<table class="mx-4 w-full">
   <thead>
     <tr>
       <th>CH</th>
       <th>Addr</th>
       <th>Type</th>
       <th>Value</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -13,11 +14,15 @@
       <td class="w-10">{{ index + device.address }}</td>
       <td class="w-15">{{ channel }}</td>
       <td>
-        <app-range-slider
-          [(value)]="values[index]"
-          (valueChange)="onValueChange(index + device.address, $event)"
-        ></app-range-slider>
+        <mat-slider [min]="0" [max]="255" [step]="1" discrete>
+          <input
+            matSliderThumb
+            [value]="values[index]"
+            (valueChange)="onValueChange(index + device.address, $event)"
+          />
+        </mat-slider>
       </td>
+      <td class="w-10">{{ values[index] }}</td>
     </tr>
   </tbody>
 </table>

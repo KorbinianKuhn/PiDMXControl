@@ -1,0 +1,16 @@
+:host {
+  flex: 1;
+  height: 100vh;
+}
+
+.text {
+  padding: 1vw 2vw;
+  font-weight: 900;
+  font-size: 8vw;
+  line-height: 9vw;
+  text-transform: uppercase;
+  text-align: center;
+  background: #fff;
+  color: #000;
+  mix-blend-mode: overlay;
+}

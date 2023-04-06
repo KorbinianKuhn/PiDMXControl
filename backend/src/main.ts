@@ -1,4 +1,7 @@
+import * as cors from 'cors';
+import * as express from 'express';
 import { createServer } from 'http';
+import { join } from 'path';
 import { Server } from 'socket.io';
 import { DMX } from './dmx/dmx';
 import {
@@ -7,13 +10,23 @@ import {
 } from './server/events.interfaces';
 import { Logger } from './utils/logger';
 
+const PORT = 3000;
 const logger = new Logger('main');
 
 const main = async () => {
-  const httpServer = createServer((req, res) => {
-    res.write('hello\n');
-    res.end();
-  });
+  const app = express();
+  app.set('port', PORT);
+
+  app.use(
+    cors({
+      origin: '*',
+    }),
+  );
+
+  app.use('/static', express.static(join(__dirname, '..', 'static')));
+
+  const httpServer = createServer(app);
+
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(
     httpServer,
     {
@@ -83,8 +96,9 @@ const main = async () => {
     });
   });
 
-  logger.info(`Listen on port 3000`);
-  io.listen(3000);
+  httpServer.listen(PORT, () => {
+    logger.info(`Listen on port ${PORT}`);
+  });
 };
 
 logger.info('setup');

@@ -72,6 +72,8 @@ $dmx-frontend-theme: mat.define-dark-theme(
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+@import "scss/material.scss";
+
 button {
   touch-action: manipulation;
 }

@@ -1,7 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { map, Subject } from 'rxjs';
-import { WSService } from '../../services/ws.service';
 import { BpmModalComponent } from './bpm-modal/bpm-modal.component';
 
 @Component({
@@ -9,27 +7,10 @@ import { BpmModalComponent } from './bpm-modal/bpm-modal.component';
   templateUrl: './bpm.component.html',
   styleUrls: ['./bpm.component.scss'],
 })
-export class BpmComponent implements OnInit, OnDestroy {
-  private destroy$$ = new Subject<void>();
+export class BpmComponent implements OnInit {
+  constructor(private matDialog: MatDialog) {}
 
-  public bpm$ = this.wsService.bpm$;
-  public bars$ = this.wsService.tick$.pipe(
-    map((value) => {
-      const values = [false, false, false, false];
-      values[value] = true;
-      return values;
-    })
-  );
-
-  constructor(private wsService: WSService, private matDialog: MatDialog) {}
-
-  ngOnInit(): void {
-    // this.tap$.pipe(takeUntil(this.destroy$$), ).subscribe();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$$.next();
-  }
+  ngOnInit(): void {}
 
   onClick() {
     this.matDialog.open(BpmModalComponent);

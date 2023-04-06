@@ -33,12 +33,12 @@ const createBallPattern = (
   const { dome, spot } = devices.object();
 
   const a = flattenChannelStates(
-    dome.state({ master: 255, ...colors.a }),
+    dome.state({ master: 255, ...colors.a, movement: 127 }),
     spot.state({ master: 255, ...colors.a }),
   );
 
   const b = flattenChannelStates(
-    dome.state({ master: 255, ...colors.b }),
+    dome.state({ master: 255, ...colors.b, movement: 127 }),
     spot.state({ master: 255, ...colors.b }),
   );
 
@@ -52,7 +52,5 @@ const createBallPattern = (
     steps.push(b);
   }
 
-  const animationDome = dome.animationRotate(steps.length);
-
-  return mergeDevicePatterns(steps, animationDome);
+  return steps;
 };

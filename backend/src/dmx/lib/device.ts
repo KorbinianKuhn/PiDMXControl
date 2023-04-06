@@ -1,3 +1,5 @@
+import { Config, DeviceConfig } from './config';
+
 export enum ChannelType {
   MASTER = 'master',
   STROBE = 'strobe',
@@ -49,8 +51,14 @@ export abstract class Device {
 
   public strobeMin = 0;
   public strobeMax = 255;
+  public config: DeviceConfig;
 
-  constructor(public address: number, public id: string, order: ChannelType[]) {
+  constructor(
+    public address: number,
+    public id: string,
+    order: ChannelType[],
+    config: Config,
+  ) {
     this.channels = order.map((type, i) => ({
       address: this.address + i,
       type,
@@ -58,6 +66,8 @@ export abstract class Device {
       min: type === ChannelType.STROBE ? this.strobeMin : 0,
       max: type === ChannelType.STROBE ? this.strobeMax : 255,
     }));
+
+    this.config = config.getDeviceConfig(this.id);
   }
 
   _cloneState(): ChannelState[] {

@@ -9,6 +9,14 @@ import { ActiveProgramName, OverrideProgramName } from './program';
 
 const CONFIG_PATH = join(__dirname, '../../..', 'static/config.json');
 
+export interface DeviceConfig {
+  id: string;
+  master: number;
+  minPan?: number;
+  maxPan?: number;
+  minTilt?: number;
+  maxTilt?: number;
+}
 interface ConfigStore {
   bpm: number;
   black: boolean;
@@ -17,8 +25,8 @@ interface ConfigStore {
   overrideProgram: OverrideProgramName;
   activeProgram: ActiveProgramName;
   activeColors: ChaseColor[];
+  devices: DeviceConfig[];
 }
-
 export class Config {
   public bpm: number;
   public speed$ = new BehaviorSubject<number>(null);
@@ -30,6 +38,7 @@ export class Config {
   public activeColors: ChaseColor[];
   public settingsMode = false;
   public settingsData = Buffer.alloc(512 + 1, 0);
+  public devices: DeviceConfig[] = [];
 
   private store$ = new Subject<void>();
   private logger = new Logger('config');
@@ -50,6 +59,7 @@ export class Config {
       overrideProgram: this.overrideProgram,
       activeProgram: this.activeProgram,
       activeColors: this.activeColors,
+      devices: this.devices,
     };
     const content = JSON.stringify(config, null, 2);
     await writeFile(CONFIG_PATH, content);
@@ -67,6 +77,7 @@ export class Config {
     this.overrideProgram = config.overrideProgram;
     this.activeProgram = config.activeProgram;
     this.activeColors = config.activeColors;
+    this.devices = config.devices;
 
     this.speed$.next(60000 / this.bpm);
   }
@@ -122,5 +133,19 @@ export class Config {
   setSettingsChannel(address: number, value: number) {
     this.settingsData[address] = value;
     this.io.emit('settings-data:updated', { buffer: [...this.settingsData] });
+  }
+
+  getDeviceConfig(id: string): DeviceConfig {
+    return this.devices.find((o) => o.id === id) || { id, master: 1 };
+  }
+
+  setDeviceConfig(id: string, config: DeviceConfig) {
+    const index = this.devices.findIndex((o) => o.id === id);
+    if (index === -1) {
+      this.devices.push({ ...config });
+    } else {
+      this.devices[index] = { ...config };
+    }
+    this.store$.next();
   }
 }
