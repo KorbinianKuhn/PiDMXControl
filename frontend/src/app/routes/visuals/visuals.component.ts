@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subject, map, takeUntil } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { ColorService } from '../../services/color.service';
 import {
   AnimatedText,
@@ -32,6 +33,7 @@ export class VisualsComponent implements OnInit, OnDestroy {
   });
 
   public text!: AnimatedText;
+  public src = `${environment.baseRestApi}/static/visuals/amanda-darling.mp4`;
 
   constructor(
     private wsService: WSService,

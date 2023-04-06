@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 import { ColorService } from '../../../services/color.service';
 import { WSService } from '../../../services/ws.service';
 
@@ -17,6 +18,7 @@ export class BeamerComponent {
   public color: string = 'rgba(0,0,0,1)';
   public duration!: string;
   public strobe!: string;
+  public src = `${environment.baseRestApi}/static/visuals/amanda-darling.mp4`;
 
   constructor(
     private wsService: WSService,
