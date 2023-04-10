@@ -12,7 +12,7 @@ export class BpmNumberComponent {
   public bars$ = this.wsService.tick$.pipe(
     map((value) => {
       const values = [false, false, false, false];
-      values[value] = true;
+      values[Math.floor(value / 4)] = true;
       return values;
     })
   );

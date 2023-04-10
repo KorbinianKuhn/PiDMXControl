@@ -6,6 +6,8 @@ import {
   flattenChannelStates,
   getChaseColorValues,
   mergeDevicePatterns,
+  repeat,
+  warp,
 } from './chase-utils';
 
 export const createChaseClub = (
@@ -17,10 +19,19 @@ export const createChaseClub = (
 
   const bar = createBarPattern(devices, colors);
   const hex = createHexPattern(devices, colors);
+  const ball = createBallPattern(devices, colors);
+  const head = createHeadPattern(devices, colors);
+  const beamer = createBeamerPattern(devices, colors);
 
-  const steps = mergeDevicePatterns(bar, hex);
+  const steps = mergeDevicePatterns(bar, hex, ball, head, beamer);
 
-  chase.addSteps(steps);
+  const warped = warp(steps, 4);
+
+  const animations = devices
+    .object()
+    .head.all.map((o) => repeat(o.animationNodding(steps.length), 4));
+
+  chase.addSteps(mergeDevicePatterns(warped, ...animations));
 
   return chase;
 };
@@ -149,6 +160,96 @@ const createBarPattern = (
           { segments, master: 255, ...color },
         ),
       );
+    }
+  }
+
+  return steps;
+};
+
+const createBallPattern = (
+  devices: DeviceRegistry,
+  colors: Colors,
+): ChannelAnimation => {
+  const steps: ChannelAnimation = [];
+
+  const { dome, spot } = devices.object();
+
+  for (const color of [colors.a, colors.b]) {
+    for (let i = 0; i < 16; i++) {
+      steps.push(flattenChannelStates(spot.state({}), dome.state({})));
+      steps.push(
+        flattenChannelStates(
+          spot.state({ master: 255, ...color }),
+          dome.state({ master: 255, ...color }),
+        ),
+      );
+    }
+  }
+
+  return steps;
+};
+
+const createHeadPattern = (
+  devices: DeviceRegistry,
+  colors: Colors,
+): ChannelAnimation => {
+  const steps: ChannelAnimation = [];
+
+  const { left, right } = devices.object().head;
+
+  for (let i = 0; i < 32; i++) {
+    if (i % 2) {
+      steps.push(
+        flattenChannelStates(
+          left.state({ master: 255, ...colors.a }),
+          right.state({}),
+        ),
+      );
+    } else {
+      steps.push(
+        flattenChannelStates(
+          left.state({}),
+          right.state({ master: 255, ...colors.a }),
+        ),
+      );
+    }
+  }
+
+  for (let i = 0; i < 32; i++) {
+    if (i % 2) {
+      steps.push(
+        flattenChannelStates(
+          left.state({ master: 255, ...colors.b }),
+          right.state({}),
+        ),
+      );
+    } else {
+      steps.push(
+        flattenChannelStates(
+          left.state({}),
+          right.state({ master: 255, ...colors.b }),
+        ),
+      );
+    }
+  }
+
+  return steps;
+};
+
+const createBeamerPattern = (
+  devices: DeviceRegistry,
+  colors: Colors,
+): ChannelAnimation => {
+  const steps: ChannelAnimation = [];
+
+  const beamer = devices.object().beamer;
+  const off = beamer.state({ master: 0 });
+  const a = beamer.state({ master: 255, ...colors.a });
+  const b = beamer.state({ master: 255, ...colors.b });
+
+  for (const color of [a, b]) {
+    for (let i = 0; i < 16; i++) {
+      steps.push(color, off);
     }
   }
 

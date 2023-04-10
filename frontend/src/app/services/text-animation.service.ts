@@ -30,8 +30,8 @@ export class TextAnimationService {
 
   constructor() {
     combineLatest([
-      timer(0, 5000).pipe(map(() => Math.random() > 0.5)),
-      timer(0, 10000).pipe(
+      timer(0, 30000).pipe(map((i) => i % 2)),
+      timer(0, 60000).pipe(
         map((i) => {
           const message = this.messages[i % this.messages.length];
           return message;
@@ -45,7 +45,7 @@ export class TextAnimationService {
     ]).subscribe(([show, message]) => {
       this.text$.next({
         message,
-        opacity: show ? 1 : 0,
+        opacity: show ? 0 : 1,
         transform: '',
       });
     });

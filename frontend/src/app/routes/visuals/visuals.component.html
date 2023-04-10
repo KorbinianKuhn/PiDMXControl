@@ -1,32 +1,31 @@
-<div
-  class="fixed flex"
-  [style.left.%]="(crop$ | async).left"
-  [style.top.%]="(crop$ | async).top"
-  [style.bottom.%]="(crop$ | async).bottom"
-  [style.right.%]="(crop$ | async).right"
->
+<ng-container *ngrxLet="video$ as video">
   <div
-    class="relative w-full h-full overflow-hidden"
-    [style.background]="color"
-    [ngClass]="strobe"
-    [style.animation-duration]="duration"
+    class="relative flex-1 flex justify-center items-center"
+    [style.opacity]="video.opacity"
+    [ngClass]="video.strobe.classes"
+    [style.animation-duration]="video.strobe.duration"
   >
     <video
-      class="mix-blend-luminosity min-h-full min-w-full object-cover"
-      [src]="src"
+      [src]="video.src"
       [autoplay]="true"
       [muted]="true"
       [loop]="true"
     ></video>
     <div
-      *ngIf="text"
-      class="absolute inset-0 flex items-center justify-center p-10"
-      [style.opacity]="text.opacity"
-      [style.transform]="text.transform"
+      [style.background-color]="video.color"
+      class="absolute inset-0 mix-blend-color"
+    ></div>
+    <div
+      *ngrxLet="text$ as text"
+      class="absolute inset-0 flex items-center justify-center"
     >
-      <p class="text">
+      <p
+        class="text-overlay"
+        [style.-webkit-text-stroke]="'2px ' + video.color"
+        [style.opacity]="text.opacity"
+      >
         {{ text.message }}
       </p>
     </div>
   </div>
-</div>
+</ng-container>

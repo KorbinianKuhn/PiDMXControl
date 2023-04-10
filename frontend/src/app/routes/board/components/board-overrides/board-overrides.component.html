@@ -7,10 +7,25 @@
     Black
   </app-toggle-button>
   <div class="flex flex-1"></div>
-  <app-toggle-button (click)="onClickDisco()" class="m-1">
+  <app-toggle-button
+    [active]="isChaseActive(programs.FADE)"
+    (click)="onClickFade()"
+    class="m-1"
+  >
+    Fade
+  </app-toggle-button>
+  <app-toggle-button
+    (click)="onClickDisco()"
+    class="m-1"
+    [active]="isChaseActive(programs.DISCO)"
+  >
     Disco
   </app-toggle-button>
-  <app-toggle-button (click)="onClickStrobe()" class="m-1">
+  <app-toggle-button
+    (click)="onClickStrobe()"
+    class="m-1"
+    [active]="isChaseActive(programs.STROBE)"
+  >
     Strobe
   </app-toggle-button>
 </div>

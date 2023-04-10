@@ -1,5 +1,23 @@
 <div class="flex flex-wrap">
-  <app-toggle-button class="m-1"> 4 </app-toggle-button>
-  <app-toggle-button class="m-1"> 8 </app-toggle-button>
-  <app-toggle-button class="m-1"> 16 </app-toggle-button>
+  <app-toggle-button
+    class="m-1"
+    (click)="onClickChase(programs.BUILDUP_4)"
+    [active]="isChaseActive(programs.BUILDUP_4)"
+  >
+    4
+  </app-toggle-button>
+  <app-toggle-button
+    class="m-1"
+    (click)="onClickChase(programs.BUILDUP_8)"
+    [active]="isChaseActive(programs.BUILDUP_8)"
+  >
+    8
+  </app-toggle-button>
+  <app-toggle-button
+    class="m-1"
+    (click)="onClickChase(programs.BUILDUP_16)"
+    [active]="isChaseActive(programs.BUILDUP_16)"
+  >
+    16
+  </app-toggle-button>
 </div>

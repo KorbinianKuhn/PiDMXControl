@@ -22,10 +22,22 @@ export class Chase {
     return `${this.programName}-${this.color}`;
   }
 
+  public loop = true;
+
   constructor(
     public programName: ActiveProgramName | OverrideProgramName,
     public color: ChaseColor,
-  ) {}
+  ) {
+    if (
+      [
+        OverrideProgramName.BUILDUP_4,
+        OverrideProgramName.BUILDUP_8,
+        OverrideProgramName.BUILDUP_16,
+      ].includes(programName as any)
+    ) {
+      this.loop = false;
+    }
+  }
 
   addStep(channels: ChannelState[]) {
     const data = Buffer.alloc(512 + 1, 0);

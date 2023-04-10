@@ -6,6 +6,7 @@ export class Clock {
   private timer: NodeJS.Timer;
 
   public tick$ = new Subject<void>();
+  public beat$ = new Subject<void>();
   public counter = 0;
 
   constructor(private io: TypedServer, private config: Config) {
@@ -17,12 +18,12 @@ export class Clock {
       clearInterval(this.timer);
     }
     this.counter = -1;
-    this.timer = setInterval(() => this._next(), speed);
+    this.timer = setInterval(() => this._next(), speed / 4);
   }
 
   _next() {
     this.tick$.next();
-    this.counter = this.counter === 3 ? 0 : this.counter + 1;
+    this.counter = this.counter === 15 ? 0 : this.counter + 1;
     this.io.emit('tick:updated', { value: this.counter });
   }
 

@@ -1,16 +1,34 @@
-<div class="flex bg-gray-900">
-  <div
-    class="w-20 h-10 m-1 flex overflow-hidden relative"
-    [style.background]="color"
-    [ngClass]="strobe"
-    [style.animation-duration]="duration"
-  >
-    <video
-      class="mix-blend-luminosity min-h-full min-w-full object-cover"
-      [src]="src"
-      [autoplay]="true"
-      [muted]="true"
-      [loop]="true"
-    ></video>
-  </div>
+<div class="relative flex bg-gray-900 p-1 w-20 h-10">
+  <ng-container *ngrxLet="video$ as video">
+    <div
+      class="relative flex-1 flex justify-center items-center overflow-hidden"
+      [style.opacity]="video.opacity"
+      [ngClass]="video.strobe.classes"
+      [style.animation-duration]="video.strobe.duration"
+    >
+      <video
+        class="w-20 h-10 max-w-none"
+        [src]="video.src"
+        [autoplay]="true"
+        [muted]="true"
+        [loop]="true"
+      ></video>
+      <div
+        [style.background-color]="video.color"
+        class="absolute inset-0 mix-blend-color"
+      ></div>
+      <div
+        *ngrxLet="text$ as text"
+        class="absolute inset-0 flex items-center justify-center"
+      >
+        <p
+          class="text-overlay"
+          [style.-webkit-text-stroke]="'2px ' + video.color"
+          [style.opacity]="text.opacity"
+        >
+          {{ text.message }}
+        </p>
+      </div>
+    </div>
+  </ng-container>
 </div>

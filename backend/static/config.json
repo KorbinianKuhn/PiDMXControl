@@ -1,11 +1,14 @@
 {
   "bpm": 127.5,
   "black": false,
-  "master": 0.3,
-  "ambientUV": 24,
+  "master": 1,
+  "ambientUV": 0,
   "overrideProgram": null,
-  "activeProgram": "moody",
+  "activeProgram": "club",
   "activeColors": [
+    "green-cyan",
+    "red-white",
+    "blue-cyan",
     "uv-pink"
   ],
   "devices": []

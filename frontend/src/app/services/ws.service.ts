@@ -6,6 +6,7 @@ import {
   ActiveProgramName,
   ChaseColor,
   ClientToServerEvents,
+  OverrideProgramName,
   ServerToClientEvents,
 } from './ws.interfaces';
 
@@ -28,6 +29,9 @@ export class WSService {
   public activeColors$ = new BehaviorSubject<ChaseColor[]>([
     ChaseColor.RED_WHITE,
   ]);
+  public overrideProgramName$ = new BehaviorSubject<OverrideProgramName | null>(
+    null
+  );
   public settingsMode$ = new BehaviorSubject<boolean>(false);
   public settingsData$ = new BehaviorSubject<number[]>([]);
 
@@ -80,7 +84,7 @@ export class WSService {
     });
 
     this.socket.on('override-program:updated', (data) => {
-      // console.log(data.value);
+      this.overrideProgramName$.next(data.value);
     });
 
     this.socket.on('active-program:updated', (data) => {
@@ -122,6 +126,10 @@ export class WSService {
 
   setMaster(value: number) {
     this.socket.emit('set:master', { value });
+  }
+
+  setOverrideProgramName(value: OverrideProgramName | null) {
+    this.socket.emit('set:override-program', { value });
   }
 
   setActiveProgramName(value: ActiveProgramName) {

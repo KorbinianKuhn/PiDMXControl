@@ -6,6 +6,7 @@ import {
   flattenChannelStates,
   getChaseColorValues,
   mergeDevicePatterns,
+  warp,
 } from './chase-utils';
 
 export const createChaseMirrorBall = (
@@ -19,7 +20,9 @@ export const createChaseMirrorBall = (
 
   const steps = mergeDevicePatterns(ball);
 
-  chase.addSteps(steps);
+  const warped = warp(steps, 4);
+
+  chase.addSteps(warped);
 
   return chase;
 };
@@ -42,13 +45,13 @@ const createBallPattern = (
     spot.state({ master: 255, ...colors.b }),
   );
 
-  // 1 - 32
-  for (let i = 0; i < 32; i++) {
+  // 1 - 16
+  for (let i = 0; i < 16; i++) {
     steps.push(a);
   }
 
-  // 33 - 64
-  for (let i = 0; i < 32; i++) {
+  // 17 - 32
+  for (let i = 0; i < 16; i++) {
     steps.push(b);
   }
 

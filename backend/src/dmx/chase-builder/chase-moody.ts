@@ -6,6 +6,8 @@ import {
   flattenChannelStates,
   getChaseColorValues,
   mergeDevicePatterns,
+  repeat,
+  warp,
 } from './chase-utils';
 
 export const createChaseMoody = (
@@ -23,7 +25,13 @@ export const createChaseMoody = (
 
   const steps = mergeDevicePatterns(bar, hex, ball, head, beamer);
 
-  chase.addSteps(steps);
+  const warped = warp(steps, 4);
+
+  const animations = devices
+    .object()
+    .head.all.map((o) => repeat(o.animationEight(steps.length), 4));
+
+  chase.addSteps(mergeDevicePatterns(warped, ...animations));
 
   return chase;
 };
@@ -261,10 +269,7 @@ const createHeadPattern = (
     }
   }
 
-  const animationLeft = left.animationEight(steps.length);
-  const animationRight = right.animationEight(steps.length);
-
-  return mergeDevicePatterns(steps, animationLeft, animationRight);
+  return steps;
 };
 
 const createBeamerPattern = (

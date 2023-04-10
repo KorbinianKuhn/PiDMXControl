@@ -1,0 +1,20 @@
+<div
+  class="relative flex-1 flex justify-center items-center"
+  [style.opacity]="opacity"
+>
+  <video [src]="src" [autoplay]="true" [muted]="true" [loop]="true"></video>
+  <div
+    [style.background-color]="color"
+    class="absolute inset-0 mix-blend-color"
+  ></div>
+  <div class="absolute inset-0 flex items-center justify-center">
+    <p
+      class="text-overlay"
+      [style.font-size.px]="fontSize"
+      [style.-webkit-text-stroke]="strokeWidth + 'px ' + color"
+      [style.opacity]="text.opacity"
+    >
+      {{ text.message }}
+    </p>
+  </div>
+</div>

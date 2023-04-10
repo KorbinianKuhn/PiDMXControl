@@ -19,8 +19,8 @@ export class DMX {
 
   private chases = new ChaseRegistry(this.config, this.devices);
 
-  private activeProgram = new Program(this.io, this.clock);
-  private overrideProgram = new Program(this.io, this.clock);
+  private activeProgram = new Program(this.io, this.clock, this.config);
+  private overrideProgram = new Program(this.io, this.clock, this.config);
 
   constructor(private io: TypedServer) {}
 
@@ -48,7 +48,9 @@ export class DMX {
     if (value === null) {
       this.overrideProgram.reset();
     } else {
-      this.overrideProgram.setChases(this.chases.override(value));
+      this.overrideProgram.setChases(
+        this.chases.override(value, this.activeProgram.currentChase()?.color),
+      );
     }
   }
 

@@ -1,3 +1,4 @@
+import { mergeDevicePatterns } from '../chase-builder/chase-utils';
 import { ChannelAnimation } from '../lib/chase';
 import { Config } from '../lib/config';
 import {
@@ -67,11 +68,30 @@ export class VarytecHeroWash extends Device {
     return channels;
   }
 
+  animationTop(numSteps: number): ChannelAnimation {
+    const steps: ChannelAnimation = [];
+
+    for (let i = 0; i < numSteps; i++) {
+      steps.push([
+        {
+          address: this.address + 0,
+          value: 0,
+        },
+        {
+          address: this.address + 2,
+          value: 127,
+        },
+      ]);
+    }
+
+    return steps;
+  }
+
   animationEight(numSteps: number): ChannelAnimation {
-    const panMin = this.config.minPan ?? 0;
-    const panMax = this.config.maxPan ?? 255;
-    const tiltMin = this.config.minTilt ?? 0;
-    const tiltMax = this.config.maxTilt ?? 255;
+    const panMin = this.config.minPan ?? 127;
+    const panMax = this.config.maxPan ?? 212;
+    const tiltMin = this.config.minTilt ?? 25;
+    const tiltMax = this.config.maxTilt ?? 127;
 
     const panStepValue = (panMax - panMin) / (numSteps / 2);
     const tiltStepValue = (tiltMax - tiltMin) / (numSteps / 2);
@@ -105,5 +125,57 @@ export class VarytecHeroWash extends Device {
     }
 
     return steps;
+  }
+
+  animationNodding(numSteps: number): ChannelAnimation {
+    const panMin = this.config.minPan ?? 127;
+    const panMax = this.config.maxPan ?? 212;
+    const tiltMin = this.config.minTilt ?? 25;
+    const tiltMax = this.config.maxTilt ?? 127;
+
+    const panStepValue = (panMax - panMin) / (numSteps / 2);
+    const tiltStepValue = (tiltMax - tiltMin) / (numSteps / 8);
+
+    const panSteps: ChannelAnimation = [];
+    const tiltSteps: ChannelAnimation = [];
+
+    for (let i = 0; i < numSteps / 2; i++) {
+      panSteps.push([
+        {
+          address: this.address + 0,
+          value: panMin + i * panStepValue,
+        },
+      ]);
+    }
+
+    for (let i = 0; i < numSteps / 2; i++) {
+      panSteps.push([
+        {
+          address: this.address + 0,
+          value: panMax - i * panStepValue,
+        },
+      ]);
+    }
+
+    for (let i = 0; i < 4; i++) {
+      for (let i2 = 0; i2 < numSteps / 8; i2++) {
+        tiltSteps.push([
+          {
+            address: this.address + 2,
+            value: panMin + i * tiltStepValue,
+          },
+        ]);
+      }
+      for (let i2 = 0; i2 < numSteps / 8; i2++) {
+        tiltSteps.push([
+          {
+            address: this.address + 2,
+            value: panMax - i2 * tiltStepValue,
+          },
+        ]);
+      }
+    }
+
+    return mergeDevicePatterns(panSteps, tiltSteps);
   }
 }

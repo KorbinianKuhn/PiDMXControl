@@ -1,7 +1,14 @@
 import { ChannelAnimation, ChaseColor } from '../lib/chase';
 import { ChannelState, DeviceStateValues } from '../lib/device';
 
-export const warp = (steps: ChannelState[], factor: number): ChannelState[] => {
+export const random = (min: number, max: number): number => {
+  return Math.round(Math.random() * (max - min) + min);
+};
+
+export const warp = (
+  steps: ChannelAnimation,
+  factor: number,
+): ChannelAnimation => {
   const warped = new Array(steps.length * factor);
 
   let index = 0;
@@ -16,9 +23,15 @@ export const warp = (steps: ChannelState[], factor: number): ChannelState[] => {
 };
 
 export const repeat = (
-  states: ChannelState[],
+  steps: ChannelAnimation,
   times: number,
-): Array<ChannelState> => new Array(times).fill(states);
+): ChannelAnimation => {
+  const array = [];
+  for (let i = 0; i < times; i++) {
+    array.push(...steps);
+  }
+  return array;
+};
 
 export interface Colors {
   a: DeviceStateValues;

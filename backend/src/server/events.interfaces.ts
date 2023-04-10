@@ -8,7 +8,9 @@ export interface ClientToServerEvents {
   'set:black': (payload: { value: boolean }) => void;
   'set:master': (payload: { value: number }) => void;
   'set:ambient-uv': (payload: { value: number }) => void;
-  'set:override-program': (payload: { value: OverrideProgramName }) => void;
+  'set:override-program': (payload: {
+    value: OverrideProgramName | null;
+  }) => void;
   'set:active-program': (payload: { value: ActiveProgramName }) => void;
   'set:active-colors': (payload: { colors: ChaseColor[] }) => void;
   'set:settings-mode': (payload: { value: boolean }) => void;
