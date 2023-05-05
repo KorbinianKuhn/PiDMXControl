@@ -33,6 +33,7 @@ export class Chase {
         OverrideProgramName.BUILDUP_4,
         OverrideProgramName.BUILDUP_8,
         OverrideProgramName.BUILDUP_16,
+        OverrideProgramName.SHORT_STROBE,
       ].includes(programName as any)
     ) {
       this.loop = false;

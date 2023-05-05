@@ -20,4 +20,14 @@
   >
     16
   </app-toggle-button>
+
+  <div class="flex-1"></div>
+
+  <app-toggle-button
+    class="m-1"
+    (click)="onClickChase(programs.SHORT_STROBE)"
+    [active]="isChaseActive(programs.SHORT_STROBE)"
+  >
+    Short Strobe
+  </app-toggle-button>
 </div>

@@ -21,7 +21,7 @@
       </app-panel-group>
       <app-panel-group>
         <div class="flex flex-1 justify-center h-16 my-1">
-          <button class="text-cyan-600 mr-4">
+          <button class="text-cyan-600 mr-4" (click)="onOpenSettingsModal()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="32"
@@ -50,34 +50,6 @@
         </div>
       </app-panel-group>
     </div>
-    <app-panel-group label="Global">
-      <div class="flex flex-col flex-1">
-        <div class="flex items-center">
-          <span class="w-32 text-cyan-400 font-thin text-sm tracking-wider mr-2"
-            >Brightness</span
-          >
-          <mat-slider [min]="0" [max]="1" [step]="0.05" discrete>
-            <input
-              matSliderThumb
-              [value]="master$ | async"
-              (valueChange)="onMasterChange($event)"
-            />
-          </mat-slider>
-        </div>
-        <div class="flex items-center">
-          <span class="w-32 text-cyan-400 font-thin text-sm tracking-wider mr-2"
-            >Ambient UV</span
-          >
-          <mat-slider [min]="0" [max]="255" [step]="1" discrete>
-            <input
-              matSliderThumb
-              [value]="ambientUV$ | async"
-              (valueChange)="onAmbientUVChange($event)"
-            />
-          </mat-slider>
-        </div>
-      </div>
-    </app-panel-group>
     <app-panel-group label="Visualization">
       <app-visualization></app-visualization>
     </app-panel-group>

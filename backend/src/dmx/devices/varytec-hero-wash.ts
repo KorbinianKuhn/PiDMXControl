@@ -104,10 +104,10 @@ export class VarytecHeroWash extends Device {
           address: this.address + 0,
           value: panMin + i * panStepValue,
         },
-        {
-          address: this.address + 2,
-          value: tiltMin + i * tiltStepValue,
-        },
+        // {
+        //   address: this.address + 2,
+        //   value: tiltMin + i * tiltStepValue,
+        // },
       ]);
     }
 
@@ -117,10 +117,10 @@ export class VarytecHeroWash extends Device {
           address: this.address + 0,
           value: panMax - i * panStepValue,
         },
-        {
-          address: this.address + 2,
-          value: tiltMax - i * tiltStepValue,
-        },
+        // {
+        //   address: this.address + 2,
+        //   value: tiltMax - i * tiltStepValue,
+        // },
       ]);
     }
 
@@ -176,6 +176,6 @@ export class VarytecHeroWash extends Device {
       }
     }
 
-    return mergeDevicePatterns(panSteps, tiltSteps);
+    return mergeDevicePatterns(panSteps);
   }
 }

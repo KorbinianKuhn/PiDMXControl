@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { WSService } from '../../services/ws.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
 
 @Component({
   selector: 'app-board',
@@ -7,18 +8,14 @@ import { WSService } from '../../services/ws.service';
   styleUrls: ['./board.component.scss'],
 })
 export class BoardComponent implements OnInit {
-  public master$ = this.wsService.master$;
-  public ambientUV$ = this.wsService.ambientUV$;
-
-  constructor(private wsService: WSService) {}
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {}
 
-  onMasterChange(value: any) {
-    this.wsService.setMaster(value);
-  }
-
-  onAmbientUVChange(value: any) {
-    this.wsService.setAmbientUV(value);
+  onOpenSettingsModal() {
+    this.dialog.open(SettingsModalComponent, {
+      width: '100vw',
+      height: '100vh',
+    });
   }
 }

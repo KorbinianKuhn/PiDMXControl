@@ -11,6 +11,7 @@ export enum OverrideProgramName {
   BUILDUP_4 = 'buildup-4',
   BUILDUP_8 = 'buildup-8',
   BUILDUP_16 = 'buildup-16',
+  SHORT_STROBE = 'short-strobe',
   STROBE = 'strobe',
   DISCO = 'disco',
 }

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { BpmModule } from '../../components/bpm/bpm.module';
 
 import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatSliderModule } from '@angular/material/slider';
 import { PadButtonModule } from '../../components/pad-button/pad-button.module';
 import { PanelGroupModule } from '../../components/panel-group/panel-group.module';
@@ -14,6 +15,7 @@ import { BoardBuildupsComponent } from './components/board-buildups/board-buildu
 import { BoardChasesComponent } from './components/board-chases/board-chases.component';
 import { BoardColorsComponent } from './components/board-colors/board-colors.component';
 import { BoardOverridesComponent } from './components/board-overrides/board-overrides.component';
+import { SettingsModalModule } from './components/settings-modal/settings-modal.module';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,8 @@ import { BoardOverridesComponent } from './components/board-overrides/board-over
     PanelGroupModule,
     MatSliderModule,
     FormsModule,
+    MatDialogModule,
+    SettingsModalModule,
   ],
 })
 export class BoardModule {}
