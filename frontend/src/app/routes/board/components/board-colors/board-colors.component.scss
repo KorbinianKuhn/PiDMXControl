@@ -1,1 +1,9 @@
+mat-spinner {
+  display: none;
+}
 
+app-pad-button.active {
+  mat-spinner {
+    display: block;
+  }
+}

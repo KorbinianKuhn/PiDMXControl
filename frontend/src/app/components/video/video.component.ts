@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, ElementRef } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { BehaviorSubject, Subject, map, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ColorService } from '../../services/color.service';
@@ -6,6 +13,7 @@ import {
   AnimatedText,
   TextAnimationService,
 } from '../../services/text-animation.service';
+import { Visuals } from '../../services/ws.interfaces';
 import { WSService } from '../../services/ws.service';
 
 @Component({
@@ -13,7 +21,9 @@ import { WSService } from '../../services/ws.service';
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss'],
 })
-export class VideoComponent implements AfterViewInit {
+export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('video') video!: ElementRef<HTMLVideoElement>;
+
   private address = 146;
   private destroy$$ = new Subject<void>();
   private numChannels = 5;
@@ -60,6 +70,10 @@ export class VideoComponent implements AfterViewInit {
     if (this.fontSize < 20) {
       this.strokeWidth = 1;
     }
+
+    this.wsService.visuals$.pipe(takeUntil(this.destroy$$)).subscribe((v) => {
+      this.setVideo(v);
+    });
   }
 
   ngOnDestroy() {
@@ -80,5 +94,19 @@ export class VideoComponent implements AfterViewInit {
 
     this.strobe = classes;
     this.duration = duration;
+  }
+
+  setVideo(v: Visuals) {
+    if (v.currentIndex < 0) {
+      this.video.nativeElement.setAttribute('src', '');
+    } else {
+      const src = `${environment.baseRestApi}/static/visuals/${
+        v.sources[v.currentIndex]
+      }`;
+      this.video.nativeElement.setAttribute('src', src);
+    }
+  }
+  onLoadedMetadata() {
+    console.log('onloadedmetadata');
   }
 }

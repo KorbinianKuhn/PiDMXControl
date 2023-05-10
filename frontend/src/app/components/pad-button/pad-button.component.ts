@@ -9,6 +9,8 @@ export class PadButtonComponent implements OnInit {
   @Input() color!: string;
   @Input() active: boolean = true;
   @Input() current: boolean | null = false;
+  @Input() size: 'small' | 'normal' = 'normal';
+  @Input() progress: number = 0;
 
   get opacity(): number {
     if (this.current) {

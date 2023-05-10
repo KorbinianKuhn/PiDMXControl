@@ -11,6 +11,7 @@ export class BoardOverridesComponent {
   public black$ = this.wsService.black$;
   public overrideProgramName$ = this.wsService.overrideProgramName$;
   public programs = OverrideProgramName;
+  public current$ = this.wsService.currentOverrideProgram$;
 
   constructor(private wsService: WSService) {}
 

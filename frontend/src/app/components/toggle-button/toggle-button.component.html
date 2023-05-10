@@ -1,3 +1,7 @@
-<app-pad-button [color]="active ? colorOn : colorOff">
+<app-pad-button
+  [color]="active ? colorOn : colorOff"
+  [current]="current"
+  [progress]="progress"
+>
   <ng-content></ng-content>
 </app-pad-button>

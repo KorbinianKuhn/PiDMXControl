@@ -19,8 +19,8 @@ export class DMX {
 
   private chases = new ChaseRegistry(this.config, this.devices);
 
-  private activeProgram = new Program(this.io, this.clock, this.config);
-  private overrideProgram = new Program(this.io, this.clock, this.config);
+  private activeProgram = new Program(this.io, this.clock, this.config, false);
+  private overrideProgram = new Program(this.io, this.clock, this.config, true);
 
   constructor(private io: TypedServer) {}
 
@@ -73,9 +73,24 @@ export class DMX {
       return Buffer.alloc(512 + 1, 0);
     }
 
-    const data = this.config.overrideProgram
-      ? this.overrideProgram.data()
-      : this.activeProgram.data();
+    let data: Buffer;
+
+    if (this.config.overrideProgram) {
+      data = this.overrideProgram.data();
+      this.io.emit('override-program:progress', {
+        ...this.overrideProgram.progress(),
+      });
+    } else {
+      data = this.activeProgram.data();
+      this.io.emit('override-program:progress', {
+        programName: '',
+        color: '',
+        progress: 0,
+      });
+    }
+    this.io.emit('active-program:progress', {
+      ...this.activeProgram.progress(),
+    });
 
     // UV override
     if (this.config.ambientUV !== 0) {

@@ -19,8 +19,9 @@ export const createChaseOn = (
   const heads = d.head.all.map((head) =>
     head.state({ master: 255, ...colors.a }),
   );
+  const beamer = d.beamer.state({ master: 255, ...colors.a });
 
-  const state = flattenChannelStates(...hex, bar, dome, spot, ...heads);
+  const state = flattenChannelStates(...hex, bar, dome, spot, ...heads, beamer);
 
   const steps: ChannelAnimation = [];
   for (let i = 0; i < 16; i++) {

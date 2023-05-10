@@ -100,27 +100,27 @@ export class VarytecHeroWash extends Device {
 
     for (let i = 0; i < numSteps / 2; i++) {
       steps.push([
-        {
-          address: this.address + 0,
-          value: panMin + i * panStepValue,
-        },
         // {
-        //   address: this.address + 2,
-        //   value: tiltMin + i * tiltStepValue,
+        //   address: this.address + 0,
+        //   value: panMin + i * panStepValue,
         // },
+        {
+          address: this.address + 2,
+          value: tiltMin + i * tiltStepValue,
+        },
       ]);
     }
 
     for (let i = 0; i < numSteps / 2; i++) {
       steps.push([
-        {
-          address: this.address + 0,
-          value: panMax - i * panStepValue,
-        },
         // {
-        //   address: this.address + 2,
-        //   value: tiltMax - i * tiltStepValue,
+        //   address: this.address + 0,
+        //   value: panMax - i * panStepValue,
         // },
+        {
+          address: this.address + 2,
+          value: tiltMax - i * tiltStepValue,
+        },
       ]);
     }
 
@@ -139,23 +139,23 @@ export class VarytecHeroWash extends Device {
     const panSteps: ChannelAnimation = [];
     const tiltSteps: ChannelAnimation = [];
 
-    for (let i = 0; i < numSteps / 2; i++) {
-      panSteps.push([
-        {
-          address: this.address + 0,
-          value: panMin + i * panStepValue,
-        },
-      ]);
-    }
+    // for (let i = 0; i < numSteps / 2; i++) {
+    //   panSteps.push([
+    //     {
+    //       address: this.address + 0,
+    //       value: panMin + i * panStepValue,
+    //     },
+    //   ]);
+    // }
 
-    for (let i = 0; i < numSteps / 2; i++) {
-      panSteps.push([
-        {
-          address: this.address + 0,
-          value: panMax - i * panStepValue,
-        },
-      ]);
-    }
+    // for (let i = 0; i < numSteps / 2; i++) {
+    //   panSteps.push([
+    //     {
+    //       address: this.address + 0,
+    //       value: panMax - i * panStepValue,
+    //     },
+    //   ]);
+    // }
 
     for (let i = 0; i < 4; i++) {
       for (let i2 = 0; i2 < numSteps / 8; i2++) {
@@ -176,6 +176,6 @@ export class VarytecHeroWash extends Device {
       }
     }
 
-    return mergeDevicePatterns(panSteps);
+    return mergeDevicePatterns(tiltSteps);
   }
 }

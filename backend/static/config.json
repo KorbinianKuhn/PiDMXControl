@@ -4,12 +4,58 @@
   "master": 1,
   "ambientUV": 0,
   "overrideProgram": null,
-  "activeProgram": "moody",
+  "activeProgram": "club",
   "activeColors": [
-    "green-cyan",
-    "red-white",
     "blue-cyan",
-    "uv-pink"
+    "red-amber",
+    "green-cyan",
+    "pink-teal",
+    "teal-red"
   ],
-  "devices": []
+  "devices": [
+    {
+      "id": "hex-1",
+      "master": 1
+    },
+    {
+      "id": "hex-2",
+      "master": 1
+    },
+    {
+      "id": "hex-3",
+      "master": 1
+    },
+    {
+      "id": "hex-4",
+      "master": 1
+    },
+    {
+      "id": "hex-5",
+      "master": 1
+    },
+    {
+      "id": "bar",
+      "master": 1
+    },
+    {
+      "id": "dome",
+      "master": 1
+    },
+    {
+      "id": "spot",
+      "master": 1
+    },
+    {
+      "id": "head-left",
+      "master": 1
+    },
+    {
+      "id": "head-right",
+      "master": 1
+    },
+    {
+      "id": "beamer",
+      "master": 1
+    }
+  ]
 }

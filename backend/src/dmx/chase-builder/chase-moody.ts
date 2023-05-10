@@ -280,7 +280,6 @@ const createBeamerPattern = (
 
   const beamer = devices.object().beamer;
 
-  const off = beamer.state({ master: 0 });
   const a = beamer.state({ master: 255, ...colors.a });
   const b = beamer.state({ master: 255, ...colors.b });
 

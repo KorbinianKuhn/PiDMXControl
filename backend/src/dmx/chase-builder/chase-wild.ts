@@ -21,9 +21,9 @@ export const createChaseWild = (
   const hex = createHexPattern(devices, colors);
   const ball = createBallPattern(devices, colors);
   const head = createHeadPattern(devices, colors);
-  //   const beamer = createBeamerPattern(devices, colors);
+  const beamer = repeat(createBeamerPattern(devices, colors), 4);
 
-  const steps = mergeDevicePatterns(bar, hex, head, ball);
+  const steps = mergeDevicePatterns(bar, hex, head, ball, beamer);
 
   const warped = warp(steps, 1);
 
@@ -234,13 +234,12 @@ const createBeamerPattern = (
   const steps: ChannelAnimation = [];
 
   const beamer = devices.object().beamer;
-  const off = beamer.state({ master: 0 });
   const a = beamer.state({ master: 255, ...colors.a });
   const b = beamer.state({ master: 255, ...colors.b });
 
   for (const color of [a, b]) {
-    for (let i = 0; i < 16; i++) {
-      steps.push(color, off);
+    for (let i = 0; i < 64; i++) {
+      steps.push(color);
     }
   }
 

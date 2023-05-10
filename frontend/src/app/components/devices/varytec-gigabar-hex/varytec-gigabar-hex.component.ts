@@ -1,7 +1,16 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ColorService } from '../../../services/color.service';
+import { ConfigService } from '../../../services/config.service';
 import { WSService } from '../../../services/ws.service';
+import { DeviceConfigModalComponent } from '../../device-config-modal/device-config-modal.component';
 
 @Component({
   selector: 'app-varytec-gigabar-hex',
@@ -11,6 +20,7 @@ import { WSService } from '../../../services/ws.service';
 export class VarytecGigabarHexComponent implements OnInit, OnDestroy {
   @Input() vertical = false;
   @Input() address!: number;
+  @Input() id!: string;
 
   private destroy$$ = new Subject<void>();
   private numChannels = 9;
@@ -22,7 +32,9 @@ export class VarytecGigabarHexComponent implements OnInit, OnDestroy {
 
   constructor(
     private wsService: WSService,
-    private colorService: ColorService
+    private colorService: ColorService,
+    private dialog: MatDialog,
+    private configService: ConfigService
   ) {}
 
   ngOnInit(): void {
@@ -39,6 +51,13 @@ export class VarytecGigabarHexComponent implements OnInit, OnDestroy {
   }
 
   updateColor(channels: number[]) {
+    if (!this.configService.visualisation$.getValue()) {
+      this.color = '#000';
+      this.strobe = '';
+      this.duration = '';
+      return;
+    }
+
     const [r, g, b, w, a, uv, master, strobe] = channels;
 
     this.color = this.colorService.toRGB(master, r, g, b, w, a, uv);
@@ -51,5 +70,14 @@ export class VarytecGigabarHexComponent implements OnInit, OnDestroy {
 
     this.strobe = classes;
     this.duration = duration;
+  }
+
+  @HostListener('click')
+  onClick() {
+    this.dialog.open(DeviceConfigModalComponent, {
+      data: {
+        id: this.id,
+      },
+    });
   }
 }

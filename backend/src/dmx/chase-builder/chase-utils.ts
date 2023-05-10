@@ -41,6 +41,7 @@ export interface Colors {
 export const getChaseColorValues = (color: ChaseColor): Colors => {
   let a: DeviceStateValues = {};
   let b: DeviceStateValues = {};
+
   switch (color) {
     case ChaseColor.UV_PINK:
       a = { uv: 255 };
@@ -54,12 +55,36 @@ export const getChaseColorValues = (color: ChaseColor): Colors => {
       a = { r: 255 };
       b = { a: 255 };
       break;
+    case ChaseColor.TEAL_RED:
+      a = { g: 255, b: 200 };
+      b = { r: 255 };
+      break;
     case ChaseColor.GREEN_CYAN:
       a = { g: 255 };
       b = { g: 255, b: 255 };
       break;
+    case ChaseColor.PINK_TEAL:
+      a = { r: 255, b: 200 };
+      b = { g: 255, b: 200 };
+      break;
     case ChaseColor.RED_WHITE:
       a = { r: 255 };
+      b = { w: 255 };
+      break;
+    case ChaseColor.BLUE_WHITE:
+      a = { b: 255 };
+      b = { w: 255 };
+      break;
+    case ChaseColor.TEAL_WHITE:
+      a = { g: 255, b: 200 };
+      b = { w: 255 };
+      break;
+    case ChaseColor.PINK_WHITE:
+      a = { r: 255, b: 200 };
+      b = { w: 255 };
+      break;
+    case ChaseColor.UV_WHITE:
+      a = { uv: 255 };
       b = { w: 255 };
       break;
     default:
@@ -96,7 +121,9 @@ export const mergeDevicePatterns = (
 
   for (const animation of animations) {
     if (animation.length !== length) {
-      throw new Error('Pattern lengths are not equal');
+      throw new Error(
+        `Pattern lengths are not equal: ${length} and ${animation.length}`,
+      );
     }
   }
 

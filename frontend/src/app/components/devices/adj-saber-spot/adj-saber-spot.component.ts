@@ -1,7 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ColorService } from '../../../services/color.service';
+import { ConfigService } from '../../../services/config.service';
 import { WSService } from '../../../services/ws.service';
+import { DeviceConfigModalComponent } from '../../device-config-modal/device-config-modal.component';
 
 @Component({
   selector: 'app-adj-saber-spot',
@@ -10,6 +13,7 @@ import { WSService } from '../../../services/ws.service';
 })
 export class AdjSaberSpotComponent implements OnInit {
   @Input() address!: number;
+  @Input() id!: string;
 
   private destroy$$ = new Subject<void>();
   private numChannels = 6;
@@ -20,7 +24,9 @@ export class AdjSaberSpotComponent implements OnInit {
 
   constructor(
     private wsService: WSService,
-    private colorService: ColorService
+    private colorService: ColorService,
+    private configService: ConfigService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +43,13 @@ export class AdjSaberSpotComponent implements OnInit {
   }
 
   updateColor(channels: number[]) {
+    if (!this.configService.visualisation$.getValue()) {
+      this.color = '#000';
+      this.strobe = '';
+      this.duration = '';
+      return;
+    }
+
     const [strobe, r, g, b, w, master] = channels;
 
     this.color = this.colorService.toRGB(master, r, g, b, w, 0, 0);
@@ -49,5 +62,14 @@ export class AdjSaberSpotComponent implements OnInit {
 
     this.strobe = classes;
     this.duration = duration;
+  }
+
+  @HostListener('click')
+  onClick() {
+    this.dialog.open(DeviceConfigModalComponent, {
+      data: {
+        id: this.id,
+      },
+    });
   }
 }

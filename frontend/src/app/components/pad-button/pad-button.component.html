@@ -1,7 +1,11 @@
 <button
-  class="relative w-16 h-16 rounded-md"
+  class="relative rounded-md overflow-hidden"
   [ngClass]="color"
   (click)="onClick()"
+  [class.w-16]="size === 'normal'"
+  [class.h-16]="size === 'normal'"
+  [class.w-12]="size === 'small'"
+  [class.h-12]="size === 'small'"
 >
   <div
     class="absolute inset-0 bg-black"
@@ -9,7 +13,10 @@
     [class.opacity-70]="!active"
     [class.animate-pulse]="current"
   ></div>
-  <div class="relative">
+  <div class="relative flex justify-center items-center">
     <ng-content> </ng-content>
+  </div>
+  <div class="progress" *ngIf="current">
+    <div class="progress-current" [style.width.%]="progress"></div>
   </div>
 </button>

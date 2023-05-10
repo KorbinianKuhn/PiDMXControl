@@ -11,6 +11,7 @@ export class BoardChasesComponent {
   public programs = ActiveProgramName;
 
   public activeProgramName$ = this.wsService.activeProgramName$;
+  public current$ = this.wsService.currentActiveProgram$;
 
   constructor(private wsService: WSService) {}
 

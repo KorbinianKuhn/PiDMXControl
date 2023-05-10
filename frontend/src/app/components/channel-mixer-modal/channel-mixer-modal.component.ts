@@ -4,11 +4,11 @@ import { Device } from '../../interfaces/general.interfaces';
 import { WSService } from '../../services/ws.service';
 
 @Component({
-  selector: 'app-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss'],
+  selector: 'app-channel-mixer-modal',
+  templateUrl: './channel-mixer-modal.component.html',
+  styleUrls: ['./channel-mixer-modal.component.scss'],
 })
-export class SettingsComponent {
+export class ChannelMixerModalComponent {
   public devices: Device[] = DEVICES;
 
   public enabled = this.wsService.settingsMode$;

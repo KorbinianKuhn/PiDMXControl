@@ -5,6 +5,7 @@ import { Clock } from './clock';
 import { Config } from './config';
 
 export enum OverrideProgramName {
+  BUILDUP_INFINITE = 'buildup-inifite',
   BUILDUP_4 = 'buildup-4',
   BUILDUP_8 = 'buildup-8',
   BUILDUP_16 = 'buildup-16',
@@ -36,6 +37,7 @@ export class Program {
     private io: TypedServer,
     private clock: Clock,
     private config: Config,
+    private isOverride: boolean,
   ) {
     this.clock.tick$.subscribe(() => this._next());
   }
@@ -98,5 +100,21 @@ export class Program {
     }
 
     return buffer;
+  }
+
+  progress(): { programName: string; color: string; progress: number } {
+    const chase = this.chases[this.chaseIndex];
+
+    if (!chase) {
+      return { programName: '', color: '', progress: 0 };
+    }
+
+    const progress = Math.round((this.stepIndex / chase.length) * 100);
+
+    return {
+      programName: chase.programName,
+      color: chase.color,
+      progress,
+    };
   }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ChannelMixerModalComponent } from '../../components/channel-mixer-modal/channel-mixer-modal.component';
 import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
 
 @Component({
@@ -14,8 +15,14 @@ export class BoardComponent implements OnInit {
 
   onOpenSettingsModal() {
     this.dialog.open(SettingsModalComponent, {
-      width: '100vw',
-      height: '100vh',
+      width: '90vw',
+    });
+  }
+
+  onOpenChannelMixerModal() {
+    this.dialog.open(ChannelMixerModalComponent, {
+      width: '90vw',
+      height: '90vh',
     });
   }
 }

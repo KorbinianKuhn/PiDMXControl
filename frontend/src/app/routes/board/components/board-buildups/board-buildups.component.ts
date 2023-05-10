@@ -10,6 +10,7 @@ import { WSService } from '../../../../services/ws.service';
 export class BoardBuildupsComponent {
   public overrideProgramName$ = this.wsService.overrideProgramName$;
   public programs = OverrideProgramName;
+  public current$ = this.wsService.currentOverrideProgram$;
 
   constructor(private wsService: WSService) {}
 
@@ -19,5 +20,18 @@ export class BoardBuildupsComponent {
 
   onClickChase(name: OverrideProgramName) {
     this.wsService.setOverrideProgramName(name);
+  }
+
+  onClickInfinite() {
+    if (
+      this.current$.getValue().programName ===
+      OverrideProgramName.BUILDUP_INFINITE
+    ) {
+      this.wsService.setOverrideProgramName(null);
+    } else {
+      this.wsService.setOverrideProgramName(
+        OverrideProgramName.BUILDUP_INFINITE
+      );
+    }
   }
 }

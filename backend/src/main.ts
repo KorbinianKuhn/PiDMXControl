@@ -54,6 +54,13 @@ const main = async () => {
     socket.emit('settings-data:updated', {
       buffer: [...dmx.config.settingsData],
     });
+    for (const device of dmx.config.devices) {
+      socket.emit('device-config:updated', {
+        id: device.id,
+        config: dmx.config.getDeviceConfig(device.id),
+      });
+    }
+    socket.emit('visuals:updated', dmx.config.visuals);
 
     socket.on('set:bpm', (args) => {
       dmx.config.setBpm(args.value);
@@ -93,6 +100,14 @@ const main = async () => {
 
     socket.on('set:settings-channel', (args) => {
       dmx.config.setSettingsChannel(args.address, args.value);
+    });
+
+    socket.on('set:device-config', (args) => {
+      dmx.config.setDeviceConfig(args.id, args.config);
+    });
+
+    socket.on('set:visuals', (args) => {
+      dmx.config.setVisualSource(args.id);
     });
   });
 

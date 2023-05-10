@@ -6,10 +6,10 @@
     [style.animation-duration]="video.strobe.duration"
   >
     <video
-      [src]="video.src"
-      [autoplay]="true"
       [muted]="true"
       [loop]="true"
+      (loadedmetadata)="onLoadedMetadata()"
+      #videoElement
     ></video>
     <div
       [style.background-color]="video.color"

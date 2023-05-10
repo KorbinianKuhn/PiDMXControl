@@ -61,6 +61,19 @@ const getBuildupSteps = (
   return steps.slice(steps.length - 16 - length);
 };
 
+export const createChaseBuildupInfinite = (
+  devices: DeviceRegistry,
+  color: ChaseColor,
+): Chase => {
+  const chase = new Chase(OverrideProgramName.BUILDUP_INFINITE, color);
+
+  const steps = getBuildupSteps(32, devices, color).slice(0, 16);
+
+  chase.addSteps(steps);
+
+  return chase;
+};
+
 export const createChaseBuildup4 = (
   devices: DeviceRegistry,
   color: ChaseColor,

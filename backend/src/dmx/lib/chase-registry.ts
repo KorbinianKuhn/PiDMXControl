@@ -8,6 +8,7 @@ import {
   createChaseBuildup16,
   createChaseBuildup4,
   createChaseBuildup8,
+  createChaseBuildupInfinite,
 } from '../chase-builder/override-buildup';
 import { createChaseDisco } from '../chase-builder/override-disco';
 import { createChaseFade } from '../chase-builder/override-fade';
@@ -40,6 +41,7 @@ export class ChaseRegistry {
       this.chases.push(createChaseDisco(this.devices, color));
       this.chases.push(createChaseStrobe(this.devices, color));
       this.chases.push(createChaseFade(this.devices, color));
+      this.chases.push(createChaseBuildupInfinite(this.devices, color));
       this.chases.push(createChaseBuildup4(this.devices, color));
       this.chases.push(createChaseBuildup8(this.devices, color));
       this.chases.push(createChaseBuildup16(this.devices, color));

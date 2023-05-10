@@ -9,6 +9,8 @@ export class ToggleButtonComponent implements OnInit {
   @Input() colorOff: string = 'bg-gray-900';
   @Input() colorOn: string = 'bg-cyan-500';
   @Input() active: boolean | null = false;
+  @Input() current: boolean = false;
+  @Input() progress: number = 0;
 
   constructor() {}
 

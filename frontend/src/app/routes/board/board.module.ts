@@ -5,6 +5,8 @@ import { BpmModule } from '../../components/bpm/bpm.module';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSliderModule } from '@angular/material/slider';
+import { LetModule } from '@ngrx/component';
+import { ChannelMixerModalModule } from '../../components/channel-mixer-modal/channel-mixer-modal.module';
 import { PadButtonModule } from '../../components/pad-button/pad-button.module';
 import { PanelGroupModule } from '../../components/panel-group/panel-group.module';
 import { ToggleButtonModule } from '../../components/toggle-button/toggle-button.module';
@@ -16,7 +18,6 @@ import { BoardChasesComponent } from './components/board-chases/board-chases.com
 import { BoardColorsComponent } from './components/board-colors/board-colors.component';
 import { BoardOverridesComponent } from './components/board-overrides/board-overrides.component';
 import { SettingsModalModule } from './components/settings-modal/settings-modal.module';
-
 @NgModule({
   declarations: [
     BoardComponent,
@@ -37,6 +38,8 @@ import { SettingsModalModule } from './components/settings-modal/settings-modal.
     FormsModule,
     MatDialogModule,
     SettingsModalModule,
+    LetModule,
+    ChannelMixerModalModule,
   ],
 })
 export class BoardModule {}

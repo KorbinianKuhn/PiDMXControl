@@ -16,13 +16,13 @@ export const createChaseMirrorBall = (
   const chase = new Chase(ActiveProgramName.MIRROR_BALL, color);
   const colors = getChaseColorValues(color);
 
-  const ball = createBallPattern(devices, colors);
+  const bar = createBarPattern(devices, colors);
+  const ball = warp(createBallPattern(devices, colors), 4);
+  const beamer = createBeamerPattern(devices, colors);
 
-  const steps = mergeDevicePatterns(ball);
+  const steps = mergeDevicePatterns(bar, ball, beamer);
 
-  const warped = warp(steps, 4);
-
-  chase.addSteps(warped);
+  chase.addSteps(steps);
 
   return chase;
 };
@@ -52,6 +52,79 @@ const createBallPattern = (
 
   // 17 - 32
   for (let i = 0; i < 16; i++) {
+    steps.push(b);
+  }
+
+  return steps;
+};
+
+const createBarPattern = (
+  devices: DeviceRegistry,
+  colors: Colors,
+): ChannelAnimation => {
+  const steps: ChannelAnimation = [];
+
+  const { bar } = devices.object();
+
+  const fadeIn = new Array(16).fill(null).map((o, i) => (i / 16) * 240 + 15);
+  const fadeOut = fadeIn.slice().reverse();
+
+  const animation = [
+    ...fadeIn,
+    ...fadeOut,
+    ...fadeIn,
+    ...fadeOut,
+    ...fadeIn,
+    ...fadeOut,
+    ...fadeIn,
+    ...fadeOut,
+  ];
+
+  const getOffsetAnimation = (offset: number): number[] => {
+    return [...animation.slice(offset), ...animation.slice(0, offset)];
+  };
+
+  const segments = [
+    getOffsetAnimation(0),
+    getOffsetAnimation(14),
+    getOffsetAnimation(6),
+    getOffsetAnimation(10),
+    getOffsetAnimation(4),
+    getOffsetAnimation(15),
+    getOffsetAnimation(9),
+    getOffsetAnimation(13),
+  ];
+
+  for (let i = 0; i < 128; i++) {
+    const state = bar.state(
+      ...new Array(8).fill(null).map((o, i2) => ({
+        segments: i2,
+        master: segments[i2][i],
+        ...(i < 64 ? colors.a : colors.b),
+      })),
+    );
+
+    steps.push(state);
+  }
+
+  return steps;
+};
+
+const createBeamerPattern = (
+  devices: DeviceRegistry,
+  colors: Colors,
+): ChannelAnimation => {
+  const steps: ChannelAnimation = [];
+
+  const beamer = devices.object().beamer;
+
+  const a = beamer.state({ master: 255, ...colors.a });
+  const b = beamer.state({ master: 255, ...colors.b });
+
+  for (let i = 0; i < 64; i++) {
+    steps.push(a);
+  }
+  for (let i = 0; i < 64; i++) {
     steps.push(b);
   }
 

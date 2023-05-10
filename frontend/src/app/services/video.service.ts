@@ -11,7 +11,6 @@ export interface AnimatedText {
 }
 
 export interface VideoState {
-  src: string;
   color: string;
   opacity: number;
   strobe: {
@@ -71,7 +70,6 @@ export class VideoService {
         );
 
         this.video$.next({
-          src: `${environment.baseRestApi}/static/visuals/amanda-darling.mp4`,
           color,
           opacity,
           strobe: {
@@ -102,5 +100,32 @@ export class VideoService {
         transform: '',
       });
     });
+  }
+
+  setVideoElement(element: HTMLVideoElement) {
+    const visuals = this.wsService.visuals$.getValue();
+
+    element.pause();
+    if (visuals.currentIndex < 0) {
+      element.removeAttribute('src');
+    } else {
+      const src = `${environment.baseRestApi}/static/visuals/${
+        visuals.sources[visuals.currentIndex].url
+      }`;
+      element.setAttribute('src', src);
+      element.setAttribute('type', 'video/mp4');
+    }
+    element.load();
+  }
+
+  onVideoElementMetadataLoaded(element: HTMLVideoElement) {
+    const visuals = this.wsService.visuals$.getValue();
+    if (visuals.currentIndex >= 0) {
+      const timeElapsed =
+        (new Date().valueOf() - new Date(visuals.startedAt).valueOf()) / 1000;
+      const currentTime = timeElapsed % element.duration;
+      element.currentTime = currentTime;
+      element.play();
+    }
   }
 }

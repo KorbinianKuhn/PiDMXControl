@@ -22,3 +22,7 @@
 mat-slider {
   width: 100% !important;
 }
+
+.mat-mdc-progress-bar {
+  --mdc-linear-progress-active-indicator-color: #fff;
+}

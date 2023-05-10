@@ -1,5 +1,6 @@
 import { Server } from 'socket.io';
 import { ChaseColor } from '../dmx/lib/chase';
+import { DeviceConfig, Visuals } from '../dmx/lib/config';
 import { ActiveProgramName, OverrideProgramName } from '../dmx/lib/program';
 
 export interface ClientToServerEvents {
@@ -15,6 +16,8 @@ export interface ClientToServerEvents {
   'set:active-colors': (payload: { colors: ChaseColor[] }) => void;
   'set:settings-mode': (payload: { value: boolean }) => void;
   'set:settings-channel': (payload: { address: number; value: number }) => void;
+  'set:device-config': (payload: { id: string; config: DeviceConfig }) => void;
+  'set:visuals': (payload: { id: number }) => void;
 }
 
 export interface ServerToClientEvents {
@@ -24,13 +27,28 @@ export interface ServerToClientEvents {
   'master:updated': (payload: { value: number }) => void;
   'ambient-uv:updated': (payload: { value: number }) => void;
   'override-program:updated': (payload: { value: OverrideProgramName }) => void;
+  'override-program:progress': (payload: {
+    programName: string;
+    color: string;
+    progress: number;
+  }) => void;
   'active-program:updated': (payload: { value: ActiveProgramName }) => void;
+  'active-program:progress': (payload: {
+    programName: string;
+    color: string;
+    progress: number;
+  }) => void;
   'active-colors:updated': (payload: { colors: ChaseColor[] }) => void;
   // 'chase:updated': (payload: { value: number }) => void;
   // 'step:updated': (payload: { value: number }) => void;
   'dmx:write': (payload: { buffer: number[] }) => void;
   'settings-mode:updated': (payload: { value: boolean }) => void;
   'settings-data:updated': (payload: { buffer: number[] }) => void;
+  'device-config:updated': (payload: {
+    id: string;
+    config: DeviceConfig;
+  }) => void;
+  'visuals:updated': (payload: Visuals) => void;
 }
 
 export type TypedServer = Server<ClientToServerEvents, ServerToClientEvents>;

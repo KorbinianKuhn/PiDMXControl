@@ -6,8 +6,10 @@ import {
   ActiveProgramName,
   ChaseColor,
   ClientToServerEvents,
+  DeviceConfig,
   OverrideProgramName,
   ServerToClientEvents,
+  Visuals,
 } from './ws.interfaces';
 
 @Injectable({
@@ -26,14 +28,31 @@ export class WSService {
   public activeProgramName$ = new BehaviorSubject<ActiveProgramName>(
     ActiveProgramName.MOODY
   );
+  public currentActiveProgram$ = new BehaviorSubject<{
+    programName: string;
+    color: string;
+    progress: number;
+  }>({ programName: '', color: '', progress: 0 });
   public activeColors$ = new BehaviorSubject<ChaseColor[]>([
     ChaseColor.RED_WHITE,
   ]);
   public overrideProgramName$ = new BehaviorSubject<OverrideProgramName | null>(
     null
   );
+  public currentOverrideProgram$ = new BehaviorSubject<{
+    programName: string;
+    color: string;
+    progress: number;
+  }>({ programName: '', color: '', progress: 0 });
   public settingsMode$ = new BehaviorSubject<boolean>(false);
   public settingsData$ = new BehaviorSubject<number[]>([]);
+
+  public devices$ = new BehaviorSubject<DeviceConfig[]>([]);
+  public visuals$ = new BehaviorSubject<Visuals>({
+    sources: [],
+    currentIndex: -1,
+    startedAt: '',
+  });
 
   constructor() {
     this.createSocket();
@@ -87,8 +106,16 @@ export class WSService {
       this.overrideProgramName$.next(data.value);
     });
 
+    this.socket.on('override-program:progress', (data) => {
+      this.currentOverrideProgram$.next(data);
+    });
+
     this.socket.on('active-program:updated', (data) => {
       this.activeProgramName$.next(data.value);
+    });
+
+    this.socket.on('active-program:progress', (data) => {
+      this.currentActiveProgram$.next(data);
     });
 
     this.socket.on('active-colors:updated', (data) => {
@@ -105,6 +132,15 @@ export class WSService {
 
     this.socket.on('dmx:write', (data) => {
       this.dmx$.next(data.buffer);
+    });
+
+    this.socket.on('device-config:updated', (data) => {
+      const devices = this.devices$.getValue().filter((o) => o.id !== data.id);
+      devices.push(data.config);
+      this.devices$.next(devices);
+    });
+    this.socket.on('visuals:updated', (data) => {
+      this.visuals$.next(data);
     });
   }
 
@@ -146,5 +182,13 @@ export class WSService {
 
   setSettingsChannel(address: number, value: number) {
     this.socket.emit('set:settings-channel', { address, value });
+  }
+
+  setDeviceConfig(id: string, config: DeviceConfig) {
+    this.socket.emit('set:device-config', { id, config });
+  }
+
+  setVisualSource(id: number) {
+    this.socket.emit('set:visuals', { id });
   }
 }

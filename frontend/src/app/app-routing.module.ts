@@ -8,11 +8,6 @@ const routes: Routes = [
       import('./routes/board/board.module').then((m) => m.BoardModule),
   },
   {
-    path: 'settings',
-    loadChildren: () =>
-      import('./routes/settings/settings.module').then((m) => m.SettingsModule),
-  },
-  {
     path: 'visuals',
     loadChildren: () =>
       import('./routes/visuals/visuals.module').then((m) => m.VisualsModule),

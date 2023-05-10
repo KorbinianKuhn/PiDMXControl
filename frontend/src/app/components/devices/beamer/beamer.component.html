@@ -1,34 +1,39 @@
-<div class="relative flex bg-gray-900 p-1 w-20 h-10">
-  <ng-container *ngrxLet="video$ as video">
-    <div
-      class="relative flex-1 flex justify-center items-center overflow-hidden"
-      [style.opacity]="video.opacity"
-      [ngClass]="video.strobe.classes"
-      [style.animation-duration]="video.strobe.duration"
-    >
-      <video
-        class="w-20 h-10 max-w-none"
-        [src]="video.src"
-        [autoplay]="true"
-        [muted]="true"
-        [loop]="true"
-      ></video>
+<div
+  class="relative flex bg-gray-900 p-1 w-20 h-10"
+  *ngrxLet="visualisation$ as visualisation"
+>
+  <ng-container *ngIf="visualisation">
+    <ng-container *ngrxLet="video$ as video">
       <div
-        [style.background-color]="video.color"
-        class="absolute inset-0 mix-blend-color"
-      ></div>
-      <div
-        *ngrxLet="text$ as text"
-        class="absolute inset-0 flex items-center justify-center"
+        class="relative flex-1 flex justify-center items-center overflow-hidden"
+        [style.opacity]="video.opacity"
+        [ngClass]="video.strobe.classes"
+        [style.animation-duration]="video.strobe.duration"
       >
-        <p
-          class="text-overlay"
-          [style.-webkit-text-stroke]="'2px ' + video.color"
-          [style.opacity]="text.opacity"
+        <video
+          class="w-20 h-10 max-w-none"
+          [muted]="true"
+          [loop]="true"
+          (loadedmetadata)="onLoadedMetadata()"
+          #videoElement
+        ></video>
+        <div
+          [style.background-color]="video.color"
+          class="absolute inset-0 mix-blend-color"
+        ></div>
+        <div
+          *ngrxLet="text$ as text"
+          class="absolute inset-0 flex items-center justify-center"
         >
-          {{ text.message }}
-        </p>
+          <p
+            class="text-overlay"
+            [style.-webkit-text-stroke]="'2px ' + video.color"
+            [style.opacity]="text.opacity"
+          >
+            {{ text.message }}
+          </p>
+        </div>
       </div>
-    </div>
+    </ng-container>
   </ng-container>
 </div>

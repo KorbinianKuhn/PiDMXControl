@@ -1,8 +1,18 @@
-<div class="flex flex-wrap">
+<div class="flex flex-wrap" *ngrxLet="current$ as current">
+  <app-toggle-button
+    class="m-1"
+    (click)="onClickInfinite()"
+    [active]="isChaseActive(programs.BUILDUP_INFINITE)"
+    [current]="programs.BUILDUP_INFINITE === current.programName"
+  >
+    Infinite
+  </app-toggle-button>
   <app-toggle-button
     class="m-1"
     (click)="onClickChase(programs.BUILDUP_4)"
     [active]="isChaseActive(programs.BUILDUP_4)"
+    [current]="programs.BUILDUP_4 === current.programName"
+    [progress]="current.progress"
   >
     4
   </app-toggle-button>
@@ -10,6 +20,8 @@
     class="m-1"
     (click)="onClickChase(programs.BUILDUP_8)"
     [active]="isChaseActive(programs.BUILDUP_8)"
+    [current]="programs.BUILDUP_8 === current.programName"
+    [progress]="current.progress"
   >
     8
   </app-toggle-button>
@@ -17,6 +29,8 @@
     class="m-1"
     (click)="onClickChase(programs.BUILDUP_16)"
     [active]="isChaseActive(programs.BUILDUP_16)"
+    [current]="programs.BUILDUP_16 === current.programName"
+    [progress]="current.progress"
   >
     16
   </app-toggle-button>
@@ -27,6 +41,8 @@
     class="m-1"
     (click)="onClickChase(programs.SHORT_STROBE)"
     [active]="isChaseActive(programs.SHORT_STROBE)"
+    [current]="programs.SHORT_STROBE === current.programName"
+    [progress]="current.progress"
   >
     Short Strobe
   </app-toggle-button>

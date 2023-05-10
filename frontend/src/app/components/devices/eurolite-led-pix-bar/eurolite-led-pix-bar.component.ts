@@ -1,7 +1,16 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { map, Subject, takeUntil } from 'rxjs';
+import {
+  Component,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ColorService } from '../../../services/color.service';
+import { ConfigService } from '../../../services/config.service';
 import { WSService } from '../../../services/ws.service';
+import { DeviceConfigModalComponent } from '../../device-config-modal/device-config-modal.component';
 
 @Component({
   selector: 'app-eurolite-led-pix-bar',
@@ -10,6 +19,7 @@ import { WSService } from '../../../services/ws.service';
 })
 export class EuroliteLedPixBarComponent implements OnInit, OnDestroy {
   @Input() address!: number;
+  @Input() id!: string;
 
   private destroy$$ = new Subject<void>();
   private numChannels = 8 * 6;
@@ -20,7 +30,9 @@ export class EuroliteLedPixBarComponent implements OnInit, OnDestroy {
 
   constructor(
     private wsService: WSService,
-    private colorService: ColorService
+    private colorService: ColorService,
+    private configService: ConfigService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +49,13 @@ export class EuroliteLedPixBarComponent implements OnInit, OnDestroy {
   }
 
   updateColor(channels: number[]) {
+    if (!this.configService.visualisation$.getValue()) {
+      this.colors = new Array(8).fill('#000');
+      this.strobe = new Array(8).fill(null);
+      this.duration = new Array(8).fill(null);
+      return;
+    }
+
     for (let segment = 0; segment < 8; segment++) {
       const offset = segment * 6;
       const [master, strobe, r, g, b] = channels.slice(offset, offset + 6);
@@ -52,5 +71,14 @@ export class EuroliteLedPixBarComponent implements OnInit, OnDestroy {
       this.strobe[segment] = classes;
       this.duration[segment] = duration;
     }
+  }
+
+  @HostListener('click')
+  onClick() {
+    this.dialog.open(DeviceConfigModalComponent, {
+      data: {
+        id: this.id,
+      },
+    });
   }
 }

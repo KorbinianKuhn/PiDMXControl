@@ -2,7 +2,12 @@
   class="relative flex-1 flex justify-center items-center"
   [style.opacity]="opacity"
 >
-  <video [src]="src" [autoplay]="true" [muted]="true" [loop]="true"></video>
+  <video
+    [muted]="true"
+    [loop]="true"
+    (loadedmetadata)="onLoadedMetadata()"
+    #video
+  ></video>
   <div
     [style.background-color]="color"
     class="absolute inset-0 mix-blend-color"
