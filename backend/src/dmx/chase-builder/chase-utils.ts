@@ -47,6 +47,7 @@ const COLORS = {
   cyan: { b: 255, g: 255 },
   pink: { r: 255, b: 200 },
   teal: { g: 255, b: 200 },
+  white: { w: 255 },
 };
 
 export const getChaseColorValues = (color: ChaseColor): Colors => {

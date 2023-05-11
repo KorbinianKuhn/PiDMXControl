@@ -13,7 +13,7 @@ export enum ChaseColor {
   RED_TEAL = 'red-teal',
   BLUE_PINK = 'blue-pink',
   UV_RED = 'uv-red',
-  TEAL_CYAN = 'teal-cyan',
+  RED_WHITE = 'red-white',
 }
 
 export type ChannelAnimation = Array<ChannelState[]>;

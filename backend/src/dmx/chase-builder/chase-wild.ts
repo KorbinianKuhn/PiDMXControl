@@ -19,19 +19,19 @@ export const createChaseWild = (
 
   const bar = createBarPattern(devices, colors);
   const hex = createHexPattern(devices, colors);
-  const ball = createBallPattern(devices, colors);
+  // const ball = createBallPattern(devices, colors);
   const head = createHeadPattern(devices, colors);
-  const beamer = repeat(createBeamerPattern(devices, colors), 4);
+  const beamer = repeat(createBeamerPattern(devices, colors), 2);
 
-  const steps = mergeDevicePatterns(bar, hex, head, ball, beamer);
+  const steps = mergeDevicePatterns(bar, hex, head, beamer);
 
   const warped = warp(steps, 1);
 
-  //   const animations = devices
-  //     .object()
-  //     .head.all.map((o) => repeat(o.animationNodding(steps.length), 4));
+  const animations = devices
+    .object()
+    .head.all.map((o) => repeat(o.animationNodding(steps.length / 8), 8));
 
-  chase.addSteps(mergeDevicePatterns(warped));
+  chase.addSteps(mergeDevicePatterns(warped, ...animations));
 
   return chase;
 };
@@ -62,20 +62,6 @@ const createHexPattern = (
     }
   }
 
-  // Random 1
-  for (const color of [colors.a, colors.b]) {
-    for (let i = 0; i < 8; i++) {
-      steps.push(flattenChannelStates(off, a.state({ master: 255, ...color })));
-      steps.push(off);
-      steps.push(flattenChannelStates(off, d.state({ master: 255, ...color })));
-      steps.push(off);
-      steps.push(flattenChannelStates(off, b.state({ master: 255, ...color })));
-      steps.push(off);
-      steps.push(flattenChannelStates(off, c.state({ master: 255, ...color })));
-      steps.push(flattenChannelStates(off, e.state({ master: 255, ...color })));
-    }
-  }
-
   // Right
   for (const color of [colors.a, colors.b]) {
     for (let i = 0; i < 8; i++) {
@@ -87,20 +73,6 @@ const createHexPattern = (
       steps.push(off);
       steps.push(off);
       steps.push(off);
-    }
-  }
-
-  // Random 2
-  for (const color of [colors.a, colors.b]) {
-    for (let i = 0; i < 8; i++) {
-      steps.push(flattenChannelStates(off, c.state({ master: 255, ...color })));
-      steps.push(off);
-      steps.push(flattenChannelStates(off, b.state({ master: 255, ...color })));
-      steps.push(off);
-      steps.push(flattenChannelStates(off, a.state({ master: 255, ...color })));
-      steps.push(off);
-      steps.push(flattenChannelStates(off, d.state({ master: 255, ...color })));
-      steps.push(flattenChannelStates(off, e.state({ master: 255, ...color })));
     }
   }
 
@@ -119,57 +91,63 @@ const createBarPattern = (
 
   // Left
   for (const color of [colors.a, colors.b]) {
-    for (let i = 0; i < 8; i++) {
-      steps.push(off);
-      steps.push(off);
-      steps.push(off);
-      steps.push(off);
-      steps.push(off);
-      steps.push(bar.state({ segments: [6, 7], master: 255, ...color }));
-      steps.push(bar.state({ segments: [3, 4], master: 255, ...color }));
-      steps.push(bar.state({ segments: [0, 1], master: 255, ...color }));
-    }
-  }
+    steps.push(
+      bar.state({ segments: 'all', master: 255, w: 255, strobe: 240 }),
+    );
+    steps.push(
+      bar.state({ segments: 'all', master: 255, w: 255, strobe: 240 }),
+    );
+    steps.push(
+      bar.state({ segments: 'all', master: 255, w: 255, strobe: 240 }),
+    );
+    steps.push(
+      bar.state({ segments: 'all', master: 255, w: 255, strobe: 240 }),
+    );
+    steps.push(off);
+    steps.push(off);
+    steps.push(off);
+    steps.push(off);
 
-  // Random 1
-  for (const color of [colors.a, colors.b]) {
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 7; i++) {
       steps.push(off);
-      steps.push(bar.state({ segments: [3, 4], master: 255, ...color }));
       steps.push(off);
-      steps.push(bar.state({ segments: [0, 1], master: 255, ...color }));
+      steps.push(off);
+      steps.push(off);
       steps.push(off);
       steps.push(bar.state({ segments: [6, 7], master: 255, ...color }));
-      steps.push(off);
-      steps.push(off);
+      steps.push(bar.state({ segments: [3, 4], master: 255, ...color }));
+      steps.push(bar.state({ segments: [0, 1], master: 255, ...color }));
     }
   }
 
   // Right
   for (const color of [colors.a, colors.b]) {
-    for (let i = 0; i < 8; i++) {
-      steps.push(off);
-      steps.push(off);
-      steps.push(off);
-      steps.push(off);
-      steps.push(off);
-      steps.push(bar.state({ segments: [0, 1], master: 255, ...color }));
-      steps.push(bar.state({ segments: [3, 4], master: 255, ...color }));
-      steps.push(bar.state({ segments: [6, 7], master: 255, ...color }));
-    }
-  }
+    steps.push(
+      bar.state({ segments: 'all', master: 255, w: 255, strobe: 240 }),
+    );
+    steps.push(
+      bar.state({ segments: 'all', master: 255, w: 255, strobe: 240 }),
+    );
+    steps.push(
+      bar.state({ segments: 'all', master: 255, w: 255, strobe: 240 }),
+    );
+    steps.push(
+      bar.state({ segments: 'all', master: 255, w: 255, strobe: 240 }),
+    );
+    steps.push(off);
+    steps.push(off);
+    steps.push(off);
+    steps.push(off);
 
-  // Random 2
-  for (const color of [colors.a, colors.b]) {
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 7; i++) {
       steps.push(off);
-      steps.push(bar.state({ segments: [6, 7], master: 255, ...color }));
+      steps.push(off);
+      steps.push(off);
+      steps.push(off);
       steps.push(off);
       steps.push(bar.state({ segments: [0, 1], master: 255, ...color }));
-      steps.push(off);
       steps.push(bar.state({ segments: [3, 4], master: 255, ...color }));
-      steps.push(off);
-      steps.push(off);
+      steps.push(bar.state({ segments: [6, 7], master: 255, ...color }));
     }
   }
 
@@ -224,7 +202,7 @@ const createHeadPattern = (
     );
   }
 
-  return warp(steps, 4);
+  return warp(steps, 2);
 };
 
 const createBeamerPattern = (

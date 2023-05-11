@@ -2,10 +2,28 @@ import { Component } from '@angular/core';
 import { ChaseColor } from '../../../../services/ws.interfaces';
 import { WSService } from '../../../../services/ws.service';
 
-const COLORS: { [key: string]: string } = {
-  uv: 'purple-500',
-  amber: 'yellow-500',
-  white: 'white',
+const COLORS_FROM: { [key: string]: string } = {
+  red: 'from-red-500',
+  green: 'from-green-500',
+  blue: 'from-blue-500',
+  cyan: 'from-cyan-500',
+  teal: 'from-teal-500',
+  pink: 'from-pink-500',
+  uv: 'from-purple-500',
+  amber: 'from-yellow-500',
+  white: 'from-white',
+};
+
+const COLORS_TO: { [key: string]: string } = {
+  red: 'to-red-500',
+  green: 'to-green-500',
+  blue: 'to-blue-500',
+  cyan: 'to-cyan-500',
+  teal: 'to-teal-500',
+  pink: 'to-pink-500',
+  uv: 'to-purple-500',
+  amber: 'to-yellow-500',
+  white: 'to-white',
 };
 @Component({
   selector: 'app-board-colors',
@@ -24,12 +42,10 @@ export class BoardColorsComponent {
     b: string;
   }> = Object.values(ChaseColor).map((color) => {
     const [a, b] = color.split('-');
-    const colorA = COLORS[a] ?? `${a}-500`;
-    const colorB = COLORS[b] ?? `${b}-500`;
 
     return {
       color,
-      gradient: `bg-gradient-to-br from-${colorA} from-30% to-${colorB} to-70%`,
+      gradient: `bg-gradient-to-br ${COLORS_FROM[a]} from-30% ${COLORS_TO[b]} to-70%`,
       a,
       b,
     };
