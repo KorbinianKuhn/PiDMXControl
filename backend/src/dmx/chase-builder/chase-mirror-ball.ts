@@ -18,14 +18,47 @@ export const createChaseMirrorBall = (
   const colors = getChaseColorValues(color);
 
   const bar = createBarPattern(devices, colors);
+  const hex = createHexPattern(devices, colors);
   const ball = warp(createBallPattern(devices, colors), 4);
   const beamer = createBeamerPattern(devices, colors);
 
-  const steps = mergeDevicePatterns(bar, ball, beamer);
+  const steps = mergeDevicePatterns(bar, hex, ball, beamer);
 
-  chase.addSteps(steps);
+  const animations = devices
+    .object()
+    .head.all.map((o) => o.animationTop(steps.length));
+
+  chase.addSteps(mergeDevicePatterns(steps, ...animations));
 
   return chase;
+};
+
+const createHexPattern = (
+  devices: DeviceRegistry,
+  colors: Colors,
+): ChannelAnimation => {
+  const steps: ChannelAnimation = [];
+
+  const { a, b, c, d, e, all } = devices.object().hex;
+
+  const hex = [a, b, c, d, e];
+
+  const fadeIn = new Array(8).fill(null).map((o, i) => (i / 8) * 240 + 15);
+  const fadeOut = fadeIn.slice().reverse();
+  const animation = [...fadeIn, ...fadeOut];
+
+  for (let i = 0; i < 8; i++) {
+    const color = i % 2 ? colors.b : colors.a;
+    for (let i2 = 0; i2 < animation.length; i2++) {
+      const state = flattenChannelStates(
+        ...all.map((o) => o.state({})),
+        hex[i % 5].state({ master: animation[i2], ...color }),
+      );
+      steps.push(state);
+    }
+  }
+
+  return steps;
 };
 
 const createBallPattern = (

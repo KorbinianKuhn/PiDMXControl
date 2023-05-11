@@ -1,7 +1,11 @@
 import { ChannelAnimation, Chase, ChaseColor } from '../lib/chase';
 import { DeviceRegistry } from '../lib/device-registry';
 import { OverrideProgramName } from '../lib/program';
-import { flattenChannelStates, getChaseColorValues } from './chase-utils';
+import {
+  flattenChannelStates,
+  getChaseColorValues,
+  mergeDevicePatterns,
+} from './chase-utils';
 
 const getBuildupSteps = (
   length: number,
@@ -58,7 +62,13 @@ const getBuildupSteps = (
     }
   }
 
-  return steps.slice(steps.length - 16 - length);
+  const animations = devices
+    .object()
+    .head.all.map((o) => o.animationTop(steps.length));
+
+  const merged = mergeDevicePatterns(steps, ...animations);
+
+  return merged.slice(merged.length - 16 - length);
 };
 
 export const createChaseBuildupInfinite = (

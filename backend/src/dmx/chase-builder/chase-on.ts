@@ -1,7 +1,12 @@
 import { ChannelAnimation, Chase, ChaseColor } from '../lib/chase';
 import { DeviceRegistry } from '../lib/device-registry';
 import { ActiveProgramName } from '../lib/program';
-import { flattenChannelStates, getChaseColorValues, warp } from './chase-utils';
+import {
+  flattenChannelStates,
+  getChaseColorValues,
+  mergeDevicePatterns,
+  warp,
+} from './chase-utils';
 
 export const createChaseOn = (
   devices: DeviceRegistry,
@@ -30,7 +35,11 @@ export const createChaseOn = (
 
   const warped = warp(steps, 4);
 
-  chase.addSteps(warped);
+  const animations = devices
+    .object()
+    .head.all.map((o) => o.animationTop(warped.length));
+
+  chase.addSteps(mergeDevicePatterns(warped, ...animations));
 
   return chase;
 };

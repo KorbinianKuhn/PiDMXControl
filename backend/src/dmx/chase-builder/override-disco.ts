@@ -7,6 +7,7 @@ import {
   flattenChannelStates,
   getChaseColorValues,
   mergeDevicePatterns,
+  repeat,
   warp,
 } from './chase-utils';
 
@@ -21,12 +22,17 @@ export const createChaseDisco = (
   const bar = createBarPattern(devices, colors);
   const hex = createHexPattern(devices, colors);
   const ball = createBallPattern(devices, colors);
+  const head = createHeadPattern(devices, colors);
 
-  const steps = mergeDevicePatterns(hex, bar, ball);
+  const steps = mergeDevicePatterns(hex, bar, ball, head);
 
   const warped = warp(steps, 2);
 
-  chase.addSteps(warped);
+  const animations = devices
+    .object()
+    .head.all.map((o) => repeat(o.animationNodding(warped.length / 8), 8));
+
+  chase.addSteps(mergeDevicePatterns(warped, ...animations));
 
   return chase;
 };
@@ -155,4 +161,39 @@ const createBallPattern = (
   }
 
   return warp(steps, 2);
+};
+
+const createHeadPattern = (
+  devices: DeviceRegistry,
+  colors: Colors,
+): ChannelAnimation => {
+  const steps: ChannelAnimation = [];
+
+  const { left, right } = devices.object().head;
+
+  const green: DeviceStateValues = { master: 255, g: 255, strobe: 30 };
+  const pink: DeviceStateValues = { master: 255, r: 255, b: 255, strobe: 30 };
+  const yellow: DeviceStateValues = {
+    master: 255,
+    r: 255,
+    g: 255,
+    strobe: 30,
+  };
+  const cyan: DeviceStateValues = { master: 255, g: 255, b: 255, strobe: 30 };
+
+  const colorStatesLeft = [green, yellow, pink, cyan];
+  const colorStatesRight = colorStatesLeft.slice().reverse();
+
+  for (let i = 0; i < 16; i++) {
+    for (let i2 = 0; i2 < 8; i2++) {
+      steps.push(
+        flattenChannelStates(
+          left.state(i % 2 ? {} : colorStatesLeft[i2 % 4]),
+          right.state(i % 2 ? colorStatesRight[i2 % 4] : {}),
+        ),
+      );
+    }
+  }
+
+  return steps;
 };
