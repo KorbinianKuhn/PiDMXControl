@@ -4,6 +4,7 @@ import { BpmModule } from '../../components/bpm/bpm.module';
 
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { LetModule } from '@ngrx/component';
 import { ChannelMixerModalModule } from '../../components/channel-mixer-modal/channel-mixer-modal.module';
@@ -40,6 +41,7 @@ import { SettingsModalModule } from './components/settings-modal/settings-modal.
     SettingsModalModule,
     LetModule,
     ChannelMixerModalModule,
+    MatIconModule,
   ],
 })
 export class BoardModule {}

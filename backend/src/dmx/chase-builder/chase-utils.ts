@@ -38,57 +38,25 @@ export interface Colors {
   b: DeviceStateValues;
 }
 
-export const getChaseColorValues = (color: ChaseColor): Colors => {
-  let a: DeviceStateValues = {};
-  let b: DeviceStateValues = {};
+const COLORS = {
+  red: { r: 255 },
+  green: { g: 255 },
+  blue: { b: 255 },
+  uv: { uv: 255, b: 127 },
+  amber: { a: 255 },
+  cyan: { b: 255, g: 255 },
+  pink: { r: 255, b: 200 },
+  teal: { g: 255, b: 200 },
+};
 
-  switch (color) {
-    case ChaseColor.UV_PINK:
-      a = { uv: 255 };
-      b = { r: 127, uv: 255 };
-      break;
-    case ChaseColor.BLUE_CYAN:
-      a = { b: 255 };
-      b = { b: 255, g: 255 };
-      break;
-    case ChaseColor.RED_AMBER:
-      a = { r: 255 };
-      b = { a: 255 };
-      break;
-    case ChaseColor.TEAL_RED:
-      a = { g: 255, b: 200 };
-      b = { r: 255 };
-      break;
-    case ChaseColor.GREEN_CYAN:
-      a = { g: 255 };
-      b = { g: 255, b: 255 };
-      break;
-    case ChaseColor.PINK_TEAL:
-      a = { r: 255, b: 200 };
-      b = { g: 255, b: 200 };
-      break;
-    case ChaseColor.RED_WHITE:
-      a = { r: 255 };
-      b = { w: 255 };
-      break;
-    case ChaseColor.BLUE_WHITE:
-      a = { b: 255 };
-      b = { w: 255 };
-      break;
-    case ChaseColor.TEAL_WHITE:
-      a = { g: 255, b: 200 };
-      b = { w: 255 };
-      break;
-    case ChaseColor.PINK_WHITE:
-      a = { r: 255, b: 200 };
-      b = { w: 255 };
-      break;
-    case ChaseColor.UV_WHITE:
-      a = { uv: 255 };
-      b = { w: 255 };
-      break;
-    default:
-      throw new Error('Undefined chases colors');
+export const getChaseColorValues = (color: ChaseColor): Colors => {
+  const [first, second] = color.split('-');
+
+  const a: DeviceStateValues = COLORS[first];
+  const b: DeviceStateValues = COLORS[second];
+
+  if (a === undefined || b === undefined) {
+    throw new Error('Undefined chases colors');
   }
 
   return { a, b };

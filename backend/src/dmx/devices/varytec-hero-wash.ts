@@ -1,4 +1,3 @@
-import { mergeDevicePatterns } from '../chase-builder/chase-utils';
 import { ChannelAnimation } from '../lib/chase';
 import { Config } from '../lib/config';
 import {
@@ -88,38 +87,50 @@ export class VarytecHeroWash extends Device {
   }
 
   animationEight(numSteps: number): ChannelAnimation {
+    const steps: ChannelAnimation = [];
+
     const panMin = this.config.minPan ?? 127;
     const panMax = this.config.maxPan ?? 212;
     const tiltMin = this.config.minTilt ?? 25;
     const tiltMax = this.config.maxTilt ?? 127;
 
-    const panStepValue = (panMax - panMin) / (numSteps / 2);
-    const tiltStepValue = (tiltMax - tiltMin) / (numSteps / 2);
+    // PAN
+    const panSteps = numSteps / 2;
+    const panStepValue = (panMax - panMin) / panSteps;
+    const panRight = new Array(panSteps)
+      .fill(null)
+      .map((o, i) => panMin + i * panStepValue);
 
-    const steps: ChannelAnimation = [];
+    const animationPan = [...panRight, ...panRight.slice().reverse()];
 
-    for (let i = 0; i < numSteps / 2; i++) {
+    // TILT
+    const tiltSteps = numSteps / 4;
+    const tiltStepValue = (tiltMax - tiltMin) / tiltSteps;
+    const tiltUp = new Array(tiltSteps)
+      .fill(null)
+      .map((o, i) => tiltMin + i * tiltStepValue);
+    const tiltDown = tiltUp.slice().reverse();
+    const animationTiltUnshifted = [
+      ...tiltUp,
+      ...tiltDown,
+      ...tiltUp,
+      ...tiltDown,
+    ];
+    const animationTilt = [
+      ...animationTiltUnshifted.slice(tiltSteps / 2),
+      ...animationTiltUnshifted.slice(0, tiltSteps / 2),
+    ];
+
+    // ANIMATION
+    for (let i = 0; i < numSteps; i++) {
       steps.push([
-        // {
-        //   address: this.address + 0,
-        //   value: panMin + i * panStepValue,
-        // },
         {
-          address: this.address + 2,
-          value: tiltMin + i * tiltStepValue,
+          address: this.address + 0,
+          value: animationPan[i],
         },
-      ]);
-    }
-
-    for (let i = 0; i < numSteps / 2; i++) {
-      steps.push([
-        // {
-        //   address: this.address + 0,
-        //   value: panMax - i * panStepValue,
-        // },
         {
           address: this.address + 2,
-          value: tiltMax - i * tiltStepValue,
+          value: animationTilt[i],
         },
       ]);
     }
@@ -128,54 +139,54 @@ export class VarytecHeroWash extends Device {
   }
 
   animationNodding(numSteps: number): ChannelAnimation {
+    const steps: ChannelAnimation = [];
+
     const panMin = this.config.minPan ?? 127;
     const panMax = this.config.maxPan ?? 212;
     const tiltMin = this.config.minTilt ?? 25;
     const tiltMax = this.config.maxTilt ?? 127;
 
-    const panStepValue = (panMax - panMin) / (numSteps / 2);
-    const tiltStepValue = (tiltMax - tiltMin) / (numSteps / 8);
+    // PAN
+    const panSteps = numSteps / 2;
+    const panStepValue = (panMax - panMin) / panSteps;
+    const panRight = new Array(panSteps)
+      .fill(null)
+      .map((o, i) => panMin + i * panStepValue);
 
-    const panSteps: ChannelAnimation = [];
-    const tiltSteps: ChannelAnimation = [];
+    const animationPan = [...panRight, ...panRight.slice().reverse()];
 
-    // for (let i = 0; i < numSteps / 2; i++) {
-    //   panSteps.push([
-    //     {
-    //       address: this.address + 0,
-    //       value: panMin + i * panStepValue,
-    //     },
-    //   ]);
-    // }
+    // TILT
+    const tiltSteps = numSteps / 8;
+    const tiltStepValue = (tiltMax - tiltMin) / tiltSteps;
+    const tiltUp = new Array(tiltSteps)
+      .fill(null)
+      .map((o, i) => tiltMin + i * tiltStepValue);
+    const tiltDown = tiltUp.slice().reverse();
+    const animationTiltUnshifted = [
+      ...tiltUp,
+      ...tiltDown,
+      ...tiltUp,
+      ...tiltDown,
+    ];
+    const animationTilt = [
+      ...animationTiltUnshifted.slice(tiltSteps / 2),
+      ...animationTiltUnshifted.slice(0, tiltSteps / 2),
+    ];
 
-    // for (let i = 0; i < numSteps / 2; i++) {
-    //   panSteps.push([
-    //     {
-    //       address: this.address + 0,
-    //       value: panMax - i * panStepValue,
-    //     },
-    //   ]);
-    // }
-
-    for (let i = 0; i < 4; i++) {
-      for (let i2 = 0; i2 < numSteps / 8; i2++) {
-        tiltSteps.push([
-          {
-            address: this.address + 2,
-            value: panMin + i * tiltStepValue,
-          },
-        ]);
-      }
-      for (let i2 = 0; i2 < numSteps / 8; i2++) {
-        tiltSteps.push([
-          {
-            address: this.address + 2,
-            value: panMax - i2 * tiltStepValue,
-          },
-        ]);
-      }
+    // ANIMATION
+    for (let i = 0; i < numSteps; i++) {
+      steps.push([
+        {
+          address: this.address + 0,
+          value: animationPan[i],
+        },
+        {
+          address: this.address + 2,
+          value: animationTilt[i],
+        },
+      ]);
     }
 
-    return mergeDevicePatterns(tiltSteps);
+    return steps;
   }
 }

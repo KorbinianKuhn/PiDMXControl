@@ -5,14 +5,15 @@ export enum ChaseColor {
   UV_PINK = 'uv-pink',
   BLUE_CYAN = 'blue-cyan',
   RED_AMBER = 'red-amber',
-  TEAL_RED = 'teal-red',
   GREEN_CYAN = 'green-cyan',
   PINK_TEAL = 'pink-teal',
-  RED_WHITE = 'red-white',
-  BLUE_WHITE = 'blue-white',
-  TEAL_WHITE = 'teal-white',
-  PINK_WHITE = 'pink-white',
-  UV_WHITE = 'uv-white',
+  RED_PINK = 'red-pink',
+  BLUE_TEAL = 'blue-teal',
+  GREEN_PINK = 'green-pink',
+  RED_TEAL = 'red-teal',
+  BLUE_PINK = 'blue-pink',
+  UV_RED = 'uv-red',
+  TEAL_CYAN = 'teal-cyan',
 }
 
 export type ChannelAnimation = Array<ChannelState[]>;

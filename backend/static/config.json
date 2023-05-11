@@ -4,13 +4,12 @@
   "master": 1,
   "ambientUV": 0,
   "overrideProgram": null,
-  "activeProgram": "club",
+  "activeProgram": "wild",
   "activeColors": [
+    "uv-pink",
     "blue-cyan",
     "red-amber",
-    "green-cyan",
-    "pink-teal",
-    "teal-red"
+    "green-cyan"
   ],
   "devices": [
     {

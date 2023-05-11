@@ -25,4 +25,8 @@ export class BoardComponent implements OnInit {
       height: '90vh',
     });
   }
+
+  onRefreshClick() {
+    location.reload();
+  }
 }

@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { WSService } from './services/ws.service';
 
+const ICONS = ['settings', 'tune', 'refresh'];
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -11,7 +14,21 @@ import { WSService } from './services/ws.service';
 export class AppComponent {
   public board: boolean = true;
 
-  constructor(private wsService: WSService, private router: Router) {
+  constructor(
+    private wsService: WSService,
+    private router: Router,
+    private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer
+  ) {
+    ICONS.map((o) =>
+      this.matIconRegistry.addSvgIcon(
+        o,
+        this.domSanitizer.bypassSecurityTrustResourceUrl(
+          `assets/icons/${o}.svg`
+        )
+      )
+    );
+
     this.wsService.connect();
     router.events
       .pipe(filter((event) => event instanceof NavigationEnd))

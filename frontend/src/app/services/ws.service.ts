@@ -26,16 +26,14 @@ export class WSService {
   public ambientUV$ = new BehaviorSubject<number>(0);
   public dmx$ = new Subject<number[]>();
   public activeProgramName$ = new BehaviorSubject<ActiveProgramName>(
-    ActiveProgramName.MOODY
+    ActiveProgramName.ON
   );
   public currentActiveProgram$ = new BehaviorSubject<{
     programName: string;
     color: string;
     progress: number;
   }>({ programName: '', color: '', progress: 0 });
-  public activeColors$ = new BehaviorSubject<ChaseColor[]>([
-    ChaseColor.RED_WHITE,
-  ]);
+  public activeColors$ = new BehaviorSubject<ChaseColor[]>([]);
   public overrideProgramName$ = new BehaviorSubject<OverrideProgramName | null>(
     null
   );

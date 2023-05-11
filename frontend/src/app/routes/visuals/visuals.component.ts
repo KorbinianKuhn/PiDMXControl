@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  HostListener,
   OnDestroy,
   ViewChild,
 } from '@angular/core';
@@ -24,9 +25,18 @@ export class VisualsComponent implements AfterViewInit, OnDestroy {
   public video$ = this.videoService.video$;
 
   constructor(
+    private elementRef: ElementRef,
     private videoService: VideoService,
     private wsService: WSService
   ) {}
+
+  ngOnInit() {}
+
+  @HostListener('click')
+  onClick() {
+    this.elementRef.nativeElement.requestFullscreen() ||
+      this.elementRef.nativeElement.webkitRequestFullscreen();
+  }
 
   ngAfterViewInit(): void {
     this.wsService.visuals$

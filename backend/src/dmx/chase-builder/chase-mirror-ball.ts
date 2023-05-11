@@ -1,4 +1,5 @@
 import { ChannelAnimation, Chase, ChaseColor } from '../lib/chase';
+import { DeviceStateValues } from '../lib/device';
 import { DeviceRegistry } from '../lib/device-registry';
 import { ActiveProgramName } from '../lib/program';
 import {
@@ -97,11 +98,19 @@ const createBarPattern = (
 
   for (let i = 0; i < 128; i++) {
     const state = bar.state(
-      ...new Array(8).fill(null).map((o, i2) => ({
-        segments: i2,
-        master: segments[i2][i],
-        ...(i < 64 ? colors.a : colors.b),
-      })),
+      ...new Array(8).fill(null).map((o, i2) => {
+        let color: DeviceStateValues;
+        if (i2 % 2) {
+          color = i < 64 ? colors.a : colors.b;
+        } else {
+          color = i < 64 ? colors.b : colors.a;
+        }
+        return {
+          segments: i2,
+          master: segments[i2][i],
+          ...color,
+        };
+      }),
     );
 
     steps.push(state);
