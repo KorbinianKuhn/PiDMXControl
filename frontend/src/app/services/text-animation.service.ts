@@ -13,17 +13,24 @@ export interface AnimatedText {
 export class TextAnimationService {
   public messages: string[] = [
     `Wonderland`,
-    `Have I gone mad?`,
-    `Imagine`,
-    `Who in the world am I?`,
-    `Belief`,
-    `We are all crazy!`,
-    `Reality`,
+    `Is this a Dream?`,
+    `Have We gone mad?`,
+    `We're all mad here!`,
+    `Who in the world are We?`,
+    `Is this Wonderland or Reality?`,
+    `Normality was never an option!`,
+    `Would you like an adventure now?`,
+    `Shall we have our tea first?`,
+    `All the best people are crazy.`,
+    `We can't go back to yesterday.`,
     `Not all who wander are lost.`,
-    `Dream`,
-    `I'm not all there myself.`,
-    `Existence`,
+    `Our reality is just different than yours.`,
+    `We're not quite there either.`,
+    'All the best people are crazy',
     `Curiouser and curiouser!`,
+    `There is a place like no place on earth.`,
+    `A land full of wonder, mystery & danger.`,
+    `Enter the rabbithole!`,
   ];
 
   public text$ = new Subject<AnimatedText>();

@@ -117,6 +117,15 @@ const main = async () => {
 };
 
 logger.info('setup');
+
+process.on('uncaughtException', function (error) {
+  process.exit(1);
+});
+
+process.on('unhandledRejection', function (reason, p) {
+  process.exit(1);
+});
+
 main()
   .then(() => logger.info('started'))
   .catch((err) => logger.error(err.message, err));
