@@ -43,27 +43,31 @@ export class Program {
   }
 
   _next() {
-    if (this.chases.length === 0) {
-      return;
-    }
-
-    if (this.chaseIndex >= this.chases.length) {
-      this.chaseIndex = 0;
-    }
-
-    const chase = this.chases[this.chaseIndex];
-
-    if (this.stepIndex >= chase.length - 1) {
-      if (!this.chases[this.chaseIndex].loop) {
-        this.config.setOverrideProgram(null);
+    try {
+      if (this.chases.length === 0) {
+        return;
       }
 
-      this.chaseIndex =
-        this.chases.length - 1 === this.chaseIndex ? 0 : this.chaseIndex + 1;
-      this.stepIndex = -1;
-    }
+      if (this.chaseIndex >= this.chases.length) {
+        this.chaseIndex = 0;
+      }
 
-    this.stepIndex++;
+      const chase = this.chases[this.chaseIndex];
+
+      if (this.stepIndex >= chase.length - 1) {
+        if (!this.chases[this.chaseIndex].loop) {
+          this.config.setOverrideProgram(null);
+        }
+
+        this.chaseIndex =
+          this.chases.length - 1 === this.chaseIndex ? 0 : this.chaseIndex + 1;
+        this.stepIndex = -1;
+      }
+
+      this.stepIndex++;
+    } catch (err) {
+      this.logger.error(err.message, err);
+    }
   }
 
   start() {
@@ -78,7 +82,9 @@ export class Program {
 
   setChases(chases: Chase[]) {
     this.chases = chases;
-    this.start();
+    if (this.isOverride) {
+      this.start();
+    }
   }
 
   currentChase(): Chase {
@@ -92,11 +98,15 @@ export class Program {
       return buffer;
     }
 
-    const data = this.chase.data(this.stepIndex);
-    if (data) {
-      for (let i = 0; i < buffer.length; i++) {
-        buffer[i] = data[i];
+    try {
+      const data = this.chase?.data(this.stepIndex);
+      if (data) {
+        for (let i = 0; i < buffer.length; i++) {
+          buffer[i] = data[i];
+        }
       }
+    } catch (err) {
+      this.logger.error(err.message, err);
     }
 
     return buffer;

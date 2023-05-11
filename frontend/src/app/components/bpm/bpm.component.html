@@ -1,1 +1,9 @@
-<app-bpm-number class="cursor-pointer" (click)="onClick()"></app-bpm-number>
+<div class="flex items-center justify-center">
+  <app-bpm-number class="cursor-pointer" (click)="onClick()"></app-bpm-number>
+  <app-pad-button
+    (click)="onClickStart()"
+    color="bg-gray-900 ml-4"
+    [active]="true"
+    >Start</app-pad-button
+  >
+</div>
