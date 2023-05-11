@@ -1,10 +1,9 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ColorService } from '../../../services/color.service';
 import { ConfigService } from '../../../services/config.service';
 import { WSService } from '../../../services/ws.service';
-import { DeviceConfigModalComponent } from '../../device-config-modal/device-config-modal.component';
 
 @Component({
   selector: 'app-varytec-hero-wash',
@@ -78,12 +77,12 @@ export class VarytecHeroWashComponent implements OnInit {
     this.duration = duration;
   }
 
-  @HostListener('click')
-  onClick() {
-    this.dialog.open(DeviceConfigModalComponent, {
-      data: {
-        id: this.id,
-      },
-    });
-  }
+  // @HostListener('click')
+  // onClick() {
+  //   this.dialog.open(DeviceConfigModalComponent, {
+  //     data: {
+  //       id: this.id,
+  //     },
+  //   });
+  // }
 }

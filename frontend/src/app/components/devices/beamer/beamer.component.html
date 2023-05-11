@@ -16,6 +16,7 @@
           [loop]="true"
           (loadedmetadata)="onLoadedMetadata()"
           #videoElement
+          [class.hidden]="!(showVideo$ | async)"
         ></video>
         <div
           [style.background-color]="video.color"

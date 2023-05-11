@@ -10,7 +10,7 @@ import { Subject, combineLatest, debounceTime, filter } from 'rxjs';
 import { ConfigService } from '../../../services/config.service';
 import { VideoService } from '../../../services/video.service';
 import { WSService } from '../../../services/ws.service';
-import { DeviceConfigModalComponent } from '../../device-config-modal/device-config-modal.component';
+import { BeamerSettingsModalComponent } from '../../beamer-settings-modal/beamer-settings-modal.component';
 
 @Component({
   selector: 'app-beamer',
@@ -28,6 +28,7 @@ export class BeamerComponent {
   public text$ = this.videoService.text$;
   public video$ = this.videoService.video$;
   public visualisation$ = this.configService.visualisation$;
+  public showVideo$ = this.configService.video$;
 
   constructor(
     private videoService: VideoService,
@@ -55,11 +56,7 @@ export class BeamerComponent {
 
   @HostListener('click')
   onClick() {
-    this.dialog.open(DeviceConfigModalComponent, {
-      data: {
-        id: this.id,
-      },
-    });
+    this.dialog.open(BeamerSettingsModalComponent);
   }
 
   updateVideo() {

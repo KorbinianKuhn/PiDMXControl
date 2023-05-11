@@ -5,7 +5,15 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { WSService } from './services/ws.service';
 
-const ICONS = ['settings', 'tune', 'refresh'];
+const ICONS = [
+  'settings',
+  'tune',
+  'refresh',
+  'brightness',
+  'visibility',
+  'visibility_off',
+  'movie',
+];
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

@@ -24,27 +24,46 @@
       <app-visualization></app-visualization>
     </app-panel-group>
     <app-panel-group>
-      <div class="flex flex-1 justify-center h-16 my-1">
+      <div class="flex flex-1 justify-center items-center h-16 my-1">
         <button
-          class="text-cyan-600 m-4"
+          class="text-cyan-600"
           mat-icon-button
-          (click)="onOpenSettingsModal()"
+          (click)="onOpenBrightnessModal()"
         >
-          <mat-icon svgIcon="settings"></mat-icon>
+          <mat-icon svgIcon="brightness"></mat-icon>
         </button>
         <button
-          class="text-cyan-600 m-4"
+          class="text-cyan-600"
           mat-icon-button
-          (click)="onRefreshClick()"
+          (click)="onVisualisationToggle()"
+          *ngrxLet="visualisation$ as visualisation"
         >
-          <mat-icon svgIcon="refresh"></mat-icon>
+          <mat-icon
+            [svgIcon]="visualisation ? 'visibility' : 'visibility_off'"
+          ></mat-icon>
         </button>
         <button
-          class="text-cyan-600 m-4"
+          mat-icon-button
+          (click)="onVideoToggle()"
+          *ngrxLet="video$ as video"
+          [color]="video ? 'primary' : null"
+        >
+          <mat-icon svgIcon="movie"></mat-icon>
+        </button>
+        <button
+          class="text-cyan-600"
           mat-icon-button
           (click)="onOpenChannelMixerModal()"
         >
           <mat-icon svgIcon="tune"></mat-icon>
+        </button>
+
+        <button
+          class="text-cyan-600"
+          mat-icon-button
+          (click)="onRefreshClick()"
+        >
+          <mat-icon svgIcon="refresh"></mat-icon>
         </button>
       </div>
     </app-panel-group>

@@ -25,31 +25,16 @@
           </mat-slider>
         </td>
       </tr>
-      <tr>
-        <td>Video</td>
-        <td *ngrxLet="visuals$ as visuals">
-          <mat-select
-            [value]="visuals.currentIndex"
-            (selectionChange)="onVisualChange($event)"
-          >
-            <mat-option
-              *ngFor="let source of visuals.sources; index as index"
-              [value]="index"
-              >{{
-                source.url.replace(".mp4", "").replaceAll("-", " ") | titlecase
-              }}</mat-option
-            >
-          </mat-select>
-        </td>
-      </tr>
-      <tr>
-        <td>Visualisation</td>
+      <tr *ngFor="let control of controls">
+        <td>{{ control.id }}</td>
         <td>
-          <mat-slide-toggle
-            [checked]="visualisation$ | async"
-            (toggleChange)="onToggleVisualisation()"
-            color="primary"
-          ></mat-slide-toggle>
+          <mat-slider [min]="0" [max]="1" [step]="0.05" discrete>
+            <input
+              matSliderThumb
+              [value]="control.value"
+              (valueChange)="onValueChange(control, $event)"
+            />
+          </mat-slider>
         </td>
       </tr>
     </table>

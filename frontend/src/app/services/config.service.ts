@@ -7,10 +7,15 @@ import { environment } from '../../environments/environment';
 })
 export class ConfigService {
   public visualisation$ = new BehaviorSubject<boolean>(!environment.production);
+  public video$ = new BehaviorSubject<boolean>(!environment.production);
 
   constructor() {}
 
   toggleVisualisation() {
     this.visualisation$.next(!this.visualisation$.getValue());
+  }
+
+  toggleVideo() {
+    this.video$.next(!this.video$.getValue());
   }
 }

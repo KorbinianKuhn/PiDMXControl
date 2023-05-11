@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ChannelMixerModalComponent } from '../../components/channel-mixer-modal/channel-mixer-modal.component';
-import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
+import { ConfigService } from '../../services/config.service';
+import { BrightnessModalComponent } from './components/brightness-modal/brightness-modal.component';
 
 @Component({
   selector: 'app-board',
@@ -9,15 +10,15 @@ import { SettingsModalComponent } from './components/settings-modal/settings-mod
   styleUrls: ['./board.component.scss'],
 })
 export class BoardComponent implements OnInit {
-  constructor(private dialog: MatDialog) {}
+  public visualisation$ = this.configService.visualisation$;
+  public video$ = this.configService.video$;
+
+  constructor(
+    private dialog: MatDialog,
+    private configService: ConfigService
+  ) {}
 
   ngOnInit(): void {}
-
-  onOpenSettingsModal() {
-    this.dialog.open(SettingsModalComponent, {
-      width: '90vw',
-    });
-  }
 
   onOpenChannelMixerModal() {
     this.dialog.open(ChannelMixerModalComponent, {
@@ -28,5 +29,19 @@ export class BoardComponent implements OnInit {
 
   onRefreshClick() {
     location.reload();
+  }
+
+  onOpenBrightnessModal() {
+    this.dialog.open(BrightnessModalComponent, {
+      width: '90vw',
+    });
+  }
+
+  onVisualisationToggle() {
+    this.configService.toggleVisualisation();
+  }
+
+  onVideoToggle() {
+    this.configService.toggleVideo();
   }
 }
