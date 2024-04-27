@@ -3,6 +3,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
+import { MqttService } from './services/mqtt.service';
 import { WSService } from './services/ws.service';
 
 const ICONS = [
@@ -24,6 +25,7 @@ export class AppComponent {
 
   constructor(
     private wsService: WSService,
+    private mqttService: MqttService,
     private router: Router,
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer
@@ -38,6 +40,7 @@ export class AppComponent {
     );
 
     this.wsService.connect();
+    this.mqttService.connect();
     router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {

@@ -47,6 +47,7 @@ export class VideoService {
   ];
 
   public text$ = new Subject<AnimatedText>();
+  public enableText = false;
   public video$ = new Subject<VideoState>();
 
   constructor(
@@ -85,21 +86,23 @@ export class VideoService {
         });
       });
 
-    combineLatest([
-      timer(0, 30000).pipe(map((i) => i % 2 !== 0)),
-      timer(0, 60000).pipe(
-        map((i) => {
-          const message = this.messages[i % this.messages.length];
-          return message;
-        })
-      ),
-    ]).subscribe(([show, message]) => {
-      this.text$.next({
-        message,
-        opacity: show ? 1 : 0,
-        transform: '',
+    if (this.enableText) {
+      combineLatest([
+        timer(0, 30000).pipe(map((i) => i % 2 !== 0)),
+        timer(0, 60000).pipe(
+          map((i) => {
+            const message = this.messages[i % this.messages.length];
+            return message;
+          })
+        ),
+      ]).subscribe(([show, message]) => {
+        this.text$.next({
+          message,
+          opacity: show ? 1 : 0,
+          transform: '',
+        });
       });
-    });
+    }
   }
 
   setVideoElement(element: HTMLVideoElement) {

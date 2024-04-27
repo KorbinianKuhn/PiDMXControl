@@ -1,16 +1,123 @@
 <div class="flex flex-row pt-2 flex-wrap">
   <div class="flex flex-col justify-start">
-    <app-panel-group label="Colors">
-      <app-board-colors></app-board-colors>
-    </app-panel-group>
-    <app-panel-group label="Chases">
-      <app-board-chases></app-board-chases>
-    </app-panel-group>
-    <app-panel-group label="Buildups">
-      <app-board-buildups></app-board-buildups>
-    </app-panel-group>
     <app-panel-group label="Overrides">
-      <app-board-overrides></app-board-overrides>
+      <app-toggle-button
+        [active]="black$ | async"
+        (click)="onClickBlack()"
+        class="m-1"
+        size="small"
+        [current]="!!(black$ | async)"
+      >
+        <span class="text-xs tracking-widest">Black</span>
+      </app-toggle-button>
+      <app-override-program-button size="small" [name]="overrideProgram.DAY">
+        <span class="text-xs tracking-widest">Day</span>
+      </app-override-program-button>
+      <app-override-program-button size="small" [name]="overrideProgram.NIGHT">
+        <span class="text-xs tracking-widest">Night</span>
+      </app-override-program-button>
+      <app-override-program-button size="small" [name]="overrideProgram.FADE">
+        <span class="text-xs tracking-widest">Fade</span>
+      </app-override-program-button>
+    </app-panel-group>
+
+    <app-panel-group label="Chases">
+      <ng-container *ngrxLet="currentColor$ as currentColor">
+        <app-pad-button
+          [color]="currentColor.gradient"
+          class="m-1 mr-10"
+          size="small"
+          (click)="onClickOpenColorsModal()"
+          [current]="true"
+          [progress]="currentColor.progress"
+        >
+          <span class="text-xs tracking-widest"
+            >{{ currentColor.a }}<br />{{ currentColor.b }}</span
+          >
+        </app-pad-button>
+      </ng-container>
+
+      <!-- <app-active-program-button
+        size="small"
+        class="mx-4"
+        [name]="activeProgram.ON"
+      >
+        <span class="text-xs tracking-widest">On</span>
+      </app-active-program-button> -->
+
+      <div class="flex flex-wrap justify-end">
+        <app-active-program-button
+          size="small"
+          [name]="activeProgram.MIRROR_BALL"
+        >
+          <span class="text-xs tracking-widest">Ball</span>
+        </app-active-program-button>
+        <app-active-program-button size="small" [name]="activeProgram.MAGIC">
+          <span class="text-xs tracking-widest">Magic</span>
+        </app-active-program-button>
+        <app-active-program-button size="small" [name]="activeProgram.MOODY">
+          <span class="text-xs tracking-widest">Moody</span>
+        </app-active-program-button>
+        <app-active-program-button size="small" [name]="activeProgram.CLUB">
+          <span class="text-xs tracking-widest">Club</span>
+        </app-active-program-button>
+        <app-active-program-button size="small" [name]="activeProgram.PULSE">
+          <span class="text-xs tracking-widest">Pulse</span>
+        </app-active-program-button>
+        <app-active-program-button size="small" [name]="activeProgram.DARK">
+          <span class="text-xs tracking-widest">Dark</span>
+        </app-active-program-button>
+        <app-active-program-button size="small" [name]="activeProgram.WILD">
+          <span class="text-xs tracking-widest">Wild</span>
+        </app-active-program-button>
+        <app-override-program-button
+          size="small"
+          [name]="overrideProgram.DISCO"
+        >
+          <span class="text-xs tracking-widest">Disco</span>
+        </app-override-program-button>
+      </div>
+    </app-panel-group>
+
+    <app-panel-group label="Buildups">
+      <app-override-program-button [name]="overrideProgram.BUILDUP_BRIGHT">
+        <span class="text-xs tracking-widest">Bright</span>
+      </app-override-program-button>
+      <app-override-program-button [name]="overrideProgram.BUILDUP_FADEOUT">
+        <span class="text-xs tracking-widest">Fadeout</span>
+      </app-override-program-button>
+      <app-override-program-button [name]="overrideProgram.BUILDUP_BLINDER">
+        <span class="text-xs tracking-widest">Blinder</span>
+      </app-override-program-button>
+      <app-override-program-button [name]="overrideProgram.BUILDUP_INFINITE">
+        <span class="text-xs tracking-widest">Infinite</span>
+      </app-override-program-button>
+      <app-toggle-button
+        [active]="black$ | async"
+        (click)="onClickBlack()"
+        class="m-1"
+        [current]="!!(black$ | async)"
+      >
+        <span class="text-xs tracking-widest">Black</span>
+      </app-toggle-button>
+    </app-panel-group>
+
+    <app-panel-group label="Strobes">
+      <app-override-program-button [name]="overrideProgram.STROBE_A">
+        <span class="text-xs tracking-widest">Storm</span>
+      </app-override-program-button>
+      <app-override-program-button [name]="overrideProgram.STROBE_B">
+        <span class="text-xs tracking-widest">Slow-Mo</span>
+      </app-override-program-button>
+      <app-override-program-button [name]="overrideProgram.STROBE_C">
+        <span class="text-xs tracking-widest">Color</span>
+      </app-override-program-button>
+      <app-override-program-button [name]="overrideProgram.STROBE_D">
+        <span class="text-xs tracking-widest">White</span>
+      </app-override-program-button>
+      <app-override-program-button [name]="overrideProgram.STROBE_INFINITE">
+        <span class="text-xs tracking-widest">Infinite</span>
+      </app-override-program-button>
     </app-panel-group>
   </div>
 

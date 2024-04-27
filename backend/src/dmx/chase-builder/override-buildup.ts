@@ -5,6 +5,7 @@ import {
   flattenChannelStates,
   getChaseColorValues,
   mergeDevicePatterns,
+  repeat,
 } from './chase-utils';
 
 const getBuildupSteps = (
@@ -84,41 +85,79 @@ export const createChaseBuildupInfinite = (
   return chase;
 };
 
-export const createChaseBuildup4 = (
+export const createChaseBuildupBright = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(OverrideProgramName.BUILDUP_4, color);
+  const chase = new Chase(OverrideProgramName.BUILDUP_BRIGHT, color);
+  const colors = getChaseColorValues(color);
+  const steps: ChannelAnimation = [];
 
-  const steps = getBuildupSteps(16, devices, color);
+  const on = flattenChannelStates(
+    devices.object().bar.state({ segments: 'all', master: 255, ...colors.a }),
+    ...devices
+      .object()
+      .head.all.map((o) => o.state({ master: 255, ...colors.a })),
+    ...devices
+      .object()
+      .hex.all.map((o) => o.state({ master: 255, ...colors.a })),
+  );
+
+  for (let i = 0; i < 8; i++) {
+    steps.push(on);
+  }
+
+  for (let i = 0; i < 8; i++) {
+    steps.push([]);
+  }
 
   chase.addSteps(steps);
 
   return chase;
 };
 
-export const createChaseBuildup8 = (
+export const createChaseBuildupFadeout = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(OverrideProgramName.BUILDUP_8, color);
+  const chase = new Chase(OverrideProgramName.BUILDUP_FADEOUT, color);
 
-  const steps = getBuildupSteps(32, devices, color);
+  const steps = getBuildupSteps(8, devices, color);
 
   chase.addSteps(steps);
 
   return chase;
 };
 
-export const createChaseBuildup16 = (
+export const createChaseBuildupBlinder = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(OverrideProgramName.BUILDUP_16, color);
+  const chase = new Chase(OverrideProgramName.BUILDUP_BLINDER, color);
 
-  const steps = getBuildupSteps(64, devices, color);
+  const colors = getChaseColorValues(color);
 
-  chase.addSteps(steps);
+  let steps: ChannelAnimation = [];
+
+  for (let i = 0; i < 4; i++) {
+    const master = i * 255;
+    steps.push(
+      flattenChannelStates(
+        devices.object().bar.state({ segments: 'all', master, ...colors.a }),
+        ...devices
+          .object()
+          .head.all.map((o) => o.state({ master, ...colors.a })),
+      ),
+    );
+  }
+
+  steps = repeat(steps, 4);
+
+  const animations = devices
+    .object()
+    .head.all.map((o) => o.animationTop(steps.length));
+
+  chase.addSteps(mergeDevicePatterns(steps, ...animations));
 
   return chase;
 };

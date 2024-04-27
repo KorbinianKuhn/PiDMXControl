@@ -1,0 +1,10 @@
+<app-toggle-button
+  *ngrxLet="current$ as current"
+  [active]="current.active"
+  class="m-1"
+  (click)="onClick()"
+  [current]="current.active"
+  [size]="size"
+>
+  <ng-content></ng-content>
+</app-toggle-button>

@@ -8,11 +8,11 @@ import {
   repeat,
 } from './chase-utils';
 
-export const createChaseStrobe = (
+export const createChaseStrobeInfinite = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(OverrideProgramName.STROBE, color);
+  const chase = new Chase(OverrideProgramName.STROBE_INFINITE, color);
 
   const colors = getChaseColorValues(color);
 
@@ -48,11 +48,11 @@ export const createChaseStrobe = (
   return chase;
 };
 
-export const createChaseShortStrobe = (
+export const createChaseStrobeA = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(OverrideProgramName.SHORT_STROBE, color);
+  const chase = new Chase(OverrideProgramName.STROBE_A, color);
 
   const steps: ChannelAnimation = [];
 
@@ -85,6 +85,79 @@ export const createChaseShortStrobe = (
     .head.all.map((o) => repeat(o.animationTop(steps.length), 4));
 
   chase.addSteps(mergeDevicePatterns(warped, ...animations));
+
+  return chase;
+};
+
+export const createChaseStrobeB = (
+  devices: DeviceRegistry,
+  color: ChaseColor,
+): Chase => {
+  const chase = new Chase(OverrideProgramName.STROBE_B, color);
+
+  const steps: ChannelAnimation = [];
+
+  const colors = getChaseColorValues(color);
+
+  const on = flattenChannelStates(
+    ...devices
+      .object()
+      .head.all.map((o) => o.state({ master: 255, ...colors.a, strobe: 100 })),
+  );
+
+  for (let i = 0; i < 16; i++) {
+    steps.push(on);
+  }
+
+  chase.addSteps(steps);
+
+  return chase;
+};
+
+export const createChaseStrobeC = (
+  devices: DeviceRegistry,
+  color: ChaseColor,
+): Chase => {
+  const chase = new Chase(OverrideProgramName.STROBE_C, color);
+  const colors = getChaseColorValues(color);
+  const steps: ChannelAnimation = [];
+
+  const { bar, head } = devices.object();
+
+  for (let i = 0; i < 16; i++) {
+    const state = flattenChannelStates(
+      bar.state({ segments: 'all', master: 255, ...colors.a, strobe: 250 }),
+      ...head.all.map((o) =>
+        o.state({ master: 255, ...colors.a, strobe: 250 }),
+      ),
+    );
+    steps.push(state);
+  }
+
+  chase.addSteps(steps);
+
+  return chase;
+};
+
+export const createChaseStrobeD = (
+  devices: DeviceRegistry,
+  color: ChaseColor,
+): Chase => {
+  const chase = new Chase(OverrideProgramName.STROBE_D, color);
+
+  const steps: ChannelAnimation = [];
+
+  const { bar, head } = devices.object();
+
+  for (let i = 0; i < 16; i++) {
+    const state = flattenChannelStates(
+      bar.state({ segments: 'all', master: 255, w: 255, strobe: 250 }),
+      ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 250 })),
+    );
+    steps.push(state);
+  }
+
+  chase.addSteps(steps);
 
   return chase;
 };

@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { PadButtonModule } from './components/pad-button/pad-button.module';
 import { VisualsModule } from './routes/visuals/visuals.module';
 
 @NgModule({
@@ -17,6 +18,7 @@ import { VisualsModule } from './routes/visuals/visuals.module';
     VisualsModule,
     MatIconModule,
     HttpClientModule,
+    PadButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

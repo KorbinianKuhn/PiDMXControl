@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    hostname: mosquitto
+    container_name: dmx-mosquitto
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+    ports:
+      - 1883:1883 # mqtt
+      - 8883:8883 # websocket
+      - 9001:9001

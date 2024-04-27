@@ -1,0 +1,12 @@
+<app-pad-button
+  *ngrxLet="current$ as current"
+  color="bg-cyan-500"
+  class="m-1"
+  [size]="size"
+  (click)="onClick()"
+  [active]="current.active"
+  [current]="current.active"
+  [progress]="current.progress"
+>
+  <ng-content></ng-content>
+</app-pad-button>

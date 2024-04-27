@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DMX</title>
+    <script></script>
+    <style>
+      body {
+        margin: 0;
+        background: #000;
+        display: flex;
+        width: 100%;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      iframe {
+      }
+    </style>
+  </head>
+  <body></body>
+  <script>
+    const width = Math.min(window.innerWidth, 1280);
+    const height = (width / 16) * 9;
+
+    let scaleX = 1;
+    if (window.innerWidth > width) {
+      scaleX = window.innerWidth / width;
+    }
+
+    let iframeExists = false;
+
+    async function ping() {
+      try {
+        await fetch("http://dmx.local:3000/ping", {
+          method: "OPTIONS",
+        });
+        if (!iframeExists) {
+          iframeExists = true;
+          document.body.innerHTML = `<iframe id="iframe" width="${width}" height="${height}" style="transform: scale(${scaleX}, ${scaleX})" src="http://dmx.local/visuals" frameborder="0"></iframe>`;
+        }
+        setTimeout(() => ping(), 30000);
+      } catch (err) {
+        iframeExists = false;
+        document.body.innerHTML = "";
+        setTimeout(() => ping(), 2000);
+      }
+    }
+
+    ping();
+  </script>
+</html>

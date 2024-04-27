@@ -20,9 +20,14 @@ export type ChannelAnimation = Array<ChannelState[]>;
 
 export class Chase {
   private steps: Array<Buffer> = [];
+  private pixelSteps: Array<Buffer> = [];
 
   get length(): number {
     return this.steps.length;
+  }
+
+  get lengthPixel(): number {
+    return this.pixelSteps.length;
   }
 
   get name(): string {
@@ -37,10 +42,13 @@ export class Chase {
   ) {
     if (
       [
-        OverrideProgramName.BUILDUP_4,
-        OverrideProgramName.BUILDUP_8,
-        OverrideProgramName.BUILDUP_16,
-        OverrideProgramName.SHORT_STROBE,
+        OverrideProgramName.BUILDUP_BRIGHT,
+        OverrideProgramName.BUILDUP_FADEOUT,
+        OverrideProgramName.BUILDUP_BLINDER,
+        OverrideProgramName.STROBE_A,
+        OverrideProgramName.STROBE_B,
+        OverrideProgramName.STROBE_C,
+        OverrideProgramName.STROBE_D,
       ].includes(programName as any)
     ) {
       this.loop = false;
@@ -63,5 +71,20 @@ export class Chase {
 
   data(stepIndex: number): Buffer {
     return this.steps[stepIndex];
+  }
+
+  addPixelSteps(steps: Array<number[]>) {
+    if (steps.length !== this.length * 4) {
+      throw new Error(
+        `Pixel steps length (${
+          steps.length
+        }) does not match chase steps length (${this.length * 4})`,
+      );
+    }
+    this.pixelSteps = steps.map((step) => Buffer.from(step));
+  }
+
+  pixelData(stepIndex: number): Buffer {
+    return this.pixelSteps[stepIndex];
   }
 }

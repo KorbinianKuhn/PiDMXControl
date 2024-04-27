@@ -9,24 +9,24 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { LetModule } from '@ngrx/component';
 import { ChannelMixerModalModule } from '../../components/channel-mixer-modal/channel-mixer-modal.module';
+import { ChaseButtonComponent } from '../../components/chase-button/chase-button.component';
 import { PadButtonModule } from '../../components/pad-button/pad-button.module';
 import { PanelGroupModule } from '../../components/panel-group/panel-group.module';
 import { ToggleButtonModule } from '../../components/toggle-button/toggle-button.module';
 import { VisualizationModule } from '../../components/visualization/visualization.module';
 import { BoardRoutingModule } from './board-routing.module';
 import { BoardComponent } from './board.component';
-import { BoardBuildupsComponent } from './components/board-buildups/board-buildups.component';
-import { BoardChasesComponent } from './components/board-chases/board-chases.component';
-import { BoardColorsComponent } from './components/board-colors/board-colors.component';
-import { BoardOverridesComponent } from './components/board-overrides/board-overrides.component';
+import { ActiveProgramButtonComponent } from './components/active-program-button/active-program-button.component';
+import { BoardColorsModalComponent } from './components/board-colors-modal/board-colors-modal.component';
 import { BrightnessModalModule } from './components/brightness-modal/brightness-modal.module';
+import { OverrideProgramButtonComponent } from './components/override-program-button/override-program-button.component';
 @NgModule({
   declarations: [
     BoardComponent,
-    BoardColorsComponent,
-    BoardChasesComponent,
-    BoardOverridesComponent,
-    BoardBuildupsComponent,
+    BoardColorsModalComponent,
+    ChaseButtonComponent,
+    ActiveProgramButtonComponent,
+    OverrideProgramButtonComponent,
   ],
   imports: [
     CommonModule,

@@ -14,21 +14,29 @@ export enum ChaseColor {
 }
 
 export enum OverrideProgramName {
+  DAY = 'day',
+  NIGHT = 'night',
   FADE = 'fade',
+  BUILDUP_BRIGHT = 'buildup-bright',
+  BUILDUP_FADEOUT = 'buildup-fadeout',
+  BUILDUP_BLINDER = 'buildup-blinder',
   BUILDUP_INFINITE = 'buildup-inifite',
-  BUILDUP_4 = 'buildup-4',
-  BUILDUP_8 = 'buildup-8',
-  BUILDUP_16 = 'buildup-16',
-  SHORT_STROBE = 'short-strobe',
-  STROBE = 'strobe',
+  STROBE_A = 'strobe-a',
+  STROBE_B = 'strobe-b',
+  STROBE_C = 'strobe-c',
+  STROBE_D = 'strobe-d',
   DISCO = 'disco',
+  STROBE_INFINITE = 'strobe-infinite',
 }
 
 export enum ActiveProgramName {
   ON = 'on',
   MIRROR_BALL = 'mirror-ball',
+  MAGIC = 'magic',
   MOODY = 'moody',
   CLUB = 'club',
+  PULSE = 'pulse',
+  DARK = 'dark',
   WILD = 'wild',
 }
 

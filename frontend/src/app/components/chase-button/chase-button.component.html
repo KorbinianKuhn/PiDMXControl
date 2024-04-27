@@ -1,0 +1,12 @@
+<app-pad-button
+  *ngrxLet="current$ as current"
+  color="bg-cyan-500"
+  class="m-1"
+  size="small"
+  (click)="onClick()"
+  [active]="current.active"
+  [current]="current.active"
+  [progress]="current.progress"
+>
+  <span class="text-xs tracking-widest">{{ name | titlecase }}</span>
+</app-pad-button>

@@ -11,6 +11,7 @@ export class ToggleButtonComponent implements OnInit {
   @Input() active: boolean | null = false;
   @Input() current: boolean = false;
   @Input() progress: number = 0;
+  @Input() size: 'small' | 'normal' = 'normal';
 
   constructor() {}
 

@@ -119,10 +119,12 @@ const main = async () => {
 logger.info('setup');
 
 process.on('uncaughtException', function (error) {
+  logger.error(error.message, error.stack);
   process.exit(1);
 });
 
 process.on('unhandledRejection', function (reason, p) {
+  logger.error(reason as any, {});
   process.exit(1);
 });
 

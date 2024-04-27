@@ -4,6 +4,7 @@ import { ChaseRegistry } from './lib/chase-registry';
 import { Clock } from './lib/clock';
 import { Config } from './lib/config';
 import { DeviceRegistry } from './lib/device-registry';
+import { MQTT } from './lib/mqtt/mqtt';
 import { ActiveProgramName, OverrideProgramName, Program } from './lib/program';
 import { DummySerial } from './lib/serial/dummy-serial';
 import { UartSerial } from './lib/serial/uart-serial';
@@ -11,6 +12,7 @@ import { UartSerial } from './lib/serial/uart-serial';
 export class DMX {
   private serial =
     process.env.CONFIG === 'pi' ? new UartSerial() : new DummySerial();
+  private mqtt = new MQTT();
 
   public config = new Config(this.io);
 
@@ -26,10 +28,15 @@ export class DMX {
 
   async init(): Promise<void> {
     await this.serial.init();
+    await this.mqtt.init();
 
     setInterval(async () => {
       this._send();
     }, 46);
+
+    setInterval(() => {
+      this._sendMQTT();
+    }, 10);
 
     this.setActiveProgram(this.config.activeProgram);
   }
@@ -116,9 +123,44 @@ export class DMX {
     return data;
   }
 
+  neopixelData(): { topic: string; message: Buffer }[] {
+    let buffer: Buffer = Buffer.alloc(2 * 150 * 4, 0);
+
+    if (
+      this.config.settingsMode ||
+      this.config.black ||
+      this.config.overrideProgram
+    ) {
+      // Do nothing
+    } else {
+      const data = this.activeProgram.pixelData();
+      if (data?.length > 0) {
+        buffer = data;
+      }
+    }
+
+    return [
+      {
+        topic: 'neopixel-a',
+        message: buffer.slice(0, 150 * 4),
+      },
+      {
+        topic: 'neopixel-b',
+        message: buffer.slice(150 * 4, 2 * 150 * 4),
+      },
+    ];
+  }
+
   async _send() {
     const data = this.data();
     await this.serial.write(data);
     this.io.emit('dmx:write', { buffer: [...data] });
+  }
+
+  async _sendMQTT() {
+    const data = this.neopixelData();
+    for (const device of data) {
+      this.mqtt.send(device.topic, device.message);
+    }
   }
 }

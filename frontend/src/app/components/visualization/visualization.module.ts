@@ -4,6 +4,7 @@ import { AdjSaberSpotModule } from '../devices/adj-saber-spot/adj-saber-spot.mod
 import { BeamerModule } from '../devices/beamer/beamer.module';
 import { EuroliteLedPixBarModule } from '../devices/eurolite-led-pix-bar/eurolite-led-pix-bar.module';
 import { FunGenerationLedDiamondDomeModule } from '../devices/fun-generation-led-diamond-dome/fun-generation-led-diamond-dome.module';
+import { NeopixelStripModule } from '../devices/neopixel-strip/neopixel-strip.module';
 import { VarytecGigabarHexModule } from '../devices/varytec-gigabar-hex/varytec-gigabar-hex.module';
 import { VarytecHeroWashModule } from '../devices/varytec-hero-wash/varytec-hero-wash.module';
 import { ToggleButtonModule } from '../toggle-button/toggle-button.module';
@@ -20,6 +21,7 @@ import { VisualizationComponent } from './visualization.component';
     AdjSaberSpotModule,
     ToggleButtonModule,
     BeamerModule,
+    NeopixelStripModule,
   ],
   exports: [VisualizationComponent],
 })

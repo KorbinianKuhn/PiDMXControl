@@ -5,9 +5,9 @@ import { Config } from './config';
 export class Clock {
   private timer: NodeJS.Timer;
 
-  public tick$ = new Subject<void>();
-  public beat$ = new Subject<void>();
-  public counter = 0;
+  public tick$ = new Subject<number>();
+  public microtick$ = new Subject<number>();
+  public counter = 0; // 0-64
 
   constructor(private io: TypedServer, private config: Config) {
     this.config.speed$.subscribe((speed) => this._start(speed));
@@ -18,13 +18,16 @@ export class Clock {
       clearInterval(this.timer);
     }
     this.counter = -1;
-    this.timer = setInterval(() => this._next(), speed / 4);
+    this.timer = setInterval(() => this._next(), speed / 16);
   }
 
   _next() {
-    this.tick$.next();
-    this.counter = this.counter === 15 ? 0 : this.counter + 1;
-    this.io.emit('tick:updated', { value: this.counter });
+    this.counter = this.counter === 63 ? 0 : this.counter + 1;
+    if (this.counter % 4 === 0) {
+      this.tick$.next(this.counter / 4);
+    }
+    this.microtick$.next(this.counter);
+    this.io.emit('tick:updated', { value: this.counter / 4 });
   }
 
   setStart() {

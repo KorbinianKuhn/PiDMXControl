@@ -1,0 +1,19 @@
+<div
+  *ngrxLet="current$ as current"
+  class="flex flex-wrap p-5 overflow-hidden border border-cyan-700 rounded-sm"
+  tabindex="0"
+>
+  <app-pad-button
+    *ngFor="let button of buttons"
+    [color]="button.gradient"
+    class="m-1"
+    [active]="isColorActive(button.color)"
+    (click)="onClickToggleColor(button.color)"
+    [current]="button.color === current.color"
+    [progress]="current.progress"
+  >
+    <span class="text-xs tracking-widest"
+      >{{ button.a }}<br />{{ button.b }}</span
+    >
+  </app-pad-button>
+</div>

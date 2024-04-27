@@ -2,6 +2,7 @@ import { AdjSaberSpot } from '../devices/adj-saber-spot';
 import { Beamer } from '../devices/beamer';
 import { EuroliteLedPixBar } from '../devices/eurolite-led-pix-bar';
 import { FunGenerationLedDiamondDome } from '../devices/fun-generation-led-diamond-dome';
+import { NeopixelStrip } from '../devices/neopixel-strip';
 import { VarytecGigabarHex } from '../devices/varytec-gigabar-hex';
 import { VarytecHeroWash } from '../devices/varytec-hero-wash';
 import { Config } from './config';
@@ -26,6 +27,8 @@ export class DeviceRegistry {
   private headLeft = new VarytecHeroWash(114, 'head-left', this.config);
   private headRight = new VarytecHeroWash(130, 'head-right', this.config);
   private beamer = new Beamer(146, 'beamer', this.config);
+  private neopixelA = new NeopixelStrip(150);
+  private neopixelB = new NeopixelStrip(150);
 
   private devices = [
     this.hex1,
@@ -39,10 +42,16 @@ export class DeviceRegistry {
     this.headLeft,
     this.headRight,
     this.beamer,
+    this.neopixelA,
+    this.neopixelB,
   ];
 
   constructor(private config: Config) {
     for (const device of this.devices) {
+      if (device instanceof NeopixelStrip) {
+        continue;
+      }
+
       if (device instanceof FunGenerationLedDiamondDome) {
         this.masterChannels.push({
           deviceId: device.id,
@@ -97,6 +106,8 @@ export class DeviceRegistry {
         all: [this.headLeft, this.headRight],
       },
       beamer: this.beamer,
+      neopixelA: this.neopixelA,
+      neopixelB: this.neopixelB,
     };
   }
 }
