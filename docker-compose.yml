@@ -33,6 +33,8 @@ services:
       - /dev/ttyAMA0:/dev/ttyAMA0
     volumes:
       - ./static:/usr/src/app/static
+    links:
+      - mosquitto
     # ports:
     #   - 3000:3000
 
