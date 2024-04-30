@@ -141,6 +141,10 @@ export class DMX {
 
     return [
       {
+        topic: 'neopixel',
+        message: buffer,
+      },
+      {
         topic: 'neopixel-a',
         message: buffer.slice(0, 150 * 4),
       },

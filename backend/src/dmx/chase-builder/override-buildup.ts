@@ -78,9 +78,40 @@ export const createChaseBuildupInfinite = (
 ): Chase => {
   const chase = new Chase(OverrideProgramName.BUILDUP_INFINITE, color);
 
-  const steps = getBuildupSteps(32, devices, color).slice(0, 16);
+  const colors = getChaseColorValues(color);
 
-  chase.addSteps(steps);
+  const { neopixelA, neopixelB } = devices.object();
+
+  const steps: Array<number[]> = [];
+
+  for (const color of [colors.a, colors.b]) {
+    const indexes = [];
+    for (let i = 0; i < neopixelA.length; i++) {
+      if (i % 10 == 0) {
+        indexes.push(i, i + 1, i + 2, i + 3, i + 4);
+      }
+    }
+
+    const state = indexes.map((o) => ({
+      index: o,
+      values: { master: 255, ...color },
+    }));
+
+    const off = [...neopixelA.empty(), ...neopixelB.empty()];
+    const on = [
+      ...neopixelA.setMultiple(state),
+      ...neopixelB.setMultiple(state),
+    ];
+
+    for (let i = 0; i < 8; i++) {
+      steps.push(on, on, on, on, on, on, on, on);
+      // steps.push(off, off, off, off, off, off);
+    }
+  }
+
+  chase.addSteps(new Array(steps.length / 4).fill(null).map(() => []));
+
+  chase.addPixelSteps(steps);
 
   return chase;
 };

@@ -120,6 +120,11 @@ export class NeopixelStrip {
       w *= multiplier;
     }
 
+    r = Math.floor(r);
+    g = Math.floor(g);
+    b = Math.floor(b);
+    w = Math.floor(w);
+
     // TODO: optimize for energy
 
     return { r, g, b, w };

@@ -114,3 +114,17 @@ export const mergeDevicePatterns = (
 
   return steps;
 };
+
+export const shiftPixels = (
+  state: Array<{ index: number; values: DeviceStateValues }>,
+  steps: number = 1,
+) => {
+  state.unshift(state.pop());
+  for (let i = 0; i < state.length; i++) {
+    state[i].index = i;
+  }
+  steps--;
+  if (steps > 0) {
+    shiftPixels(state, steps);
+  }
+};
