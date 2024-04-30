@@ -8,8 +8,8 @@ describe('BeamerSettingsModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BeamerSettingsModalComponent ]
-    })
+    imports: [BeamerSettingsModalComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(BeamerSettingsModalComponent);

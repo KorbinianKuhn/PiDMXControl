@@ -8,8 +8,8 @@ describe('OverrideProgramButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OverrideProgramButtonComponent ]
-    })
+    imports: [OverrideProgramButtonComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(OverrideProgramButtonComponent);

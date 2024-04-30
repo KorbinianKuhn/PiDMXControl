@@ -1,11 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { WSService } from '../../../services/ws.service';
+import { MatSliderModule } from '@angular/material/slider';
+import { PadButtonComponent } from '../../pad-button/pad-button.component';
+import { BpmNumberComponent } from '../bpm-number/bpm-number.component';
 
 @Component({
-  selector: 'app-bpm-modal',
-  templateUrl: './bpm-modal.component.html',
-  styleUrls: ['./bpm-modal.component.scss'],
+    selector: 'app-bpm-modal',
+    templateUrl: './bpm-modal.component.html',
+    styleUrls: ['./bpm-modal.component.scss'],
+    standalone: true,
+    imports: [
+        BpmNumberComponent,
+        PadButtonComponent,
+        MatSliderModule,
+    ],
 })
 export class BpmModalComponent implements OnInit, OnDestroy {
   private taps: number[] = [];

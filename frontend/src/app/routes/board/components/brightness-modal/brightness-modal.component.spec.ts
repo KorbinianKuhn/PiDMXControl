@@ -8,8 +8,8 @@ describe('BrightnessModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BrightnessModalComponent ]
-    })
+    imports: [BrightnessModalComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(BrightnessModalComponent);

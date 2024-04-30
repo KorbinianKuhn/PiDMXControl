@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
+import { LetDirective } from '@ngrx/component';
 import { map } from 'rxjs';
+import { PadButtonComponent } from '../../../../components/pad-button/pad-button.component';
 import { ActiveProgramName } from '../../../../services/ws.interfaces';
 import { WSService } from '../../../../services/ws.service';
 
@@ -7,6 +9,8 @@ import { WSService } from '../../../../services/ws.service';
   selector: 'app-active-program-button',
   templateUrl: './active-program-button.component.html',
   styleUrls: ['./active-program-button.component.scss'],
+  standalone: true,
+  imports: [LetDirective, PadButtonComponent],
 })
 export class ActiveProgramButtonComponent {
   @Input() name!: ActiveProgramName;

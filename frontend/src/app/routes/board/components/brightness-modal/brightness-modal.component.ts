@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { WSService } from '../../../../services/ws.service';
+import { NgFor, AsyncPipe } from '@angular/common';
+import { MatSliderModule } from '@angular/material/slider';
+import { PanelGroupComponent } from '../../../../components/panel-group/panel-group.component';
 
 interface Control {
   id: string;
@@ -7,9 +10,16 @@ interface Control {
 }
 
 @Component({
-  selector: 'app-brightness-modal',
-  templateUrl: './brightness-modal.component.html',
-  styleUrls: ['./brightness-modal.component.scss'],
+    selector: 'app-brightness-modal',
+    templateUrl: './brightness-modal.component.html',
+    styleUrls: ['./brightness-modal.component.scss'],
+    standalone: true,
+    imports: [
+        PanelGroupComponent,
+        MatSliderModule,
+        NgFor,
+        AsyncPipe,
+    ],
 })
 export class BrightnessModalComponent {
   public master$ = this.wsService.master$;

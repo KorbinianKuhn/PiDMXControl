@@ -1,9 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { NgClass, NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-pad-button',
-  templateUrl: './pad-button.component.html',
-  styleUrls: ['./pad-button.component.scss'],
+    selector: 'app-pad-button',
+    templateUrl: './pad-button.component.html',
+    styleUrls: ['./pad-button.component.scss'],
+    standalone: true,
+    imports: [NgClass, NgIf],
 })
 export class PadButtonComponent implements OnInit {
   @Input() color!: string;

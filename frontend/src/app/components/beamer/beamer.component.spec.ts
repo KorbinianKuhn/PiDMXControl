@@ -8,8 +8,8 @@ describe('BeamerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BeamerComponent ]
-    })
+    imports: [BeamerComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(BeamerComponent);

@@ -2,6 +2,8 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DeviceConfig } from '../../services/ws.interfaces';
 import { WSService } from '../../services/ws.service';
+import { MatSliderModule } from '@angular/material/slider';
+import { NgFor } from '@angular/common';
 
 interface Control {
   key: string;
@@ -12,9 +14,11 @@ interface Control {
 }
 
 @Component({
-  selector: 'app-device-config-modal',
-  templateUrl: './device-config-modal.component.html',
-  styleUrls: ['./device-config-modal.component.scss'],
+    selector: 'app-device-config-modal',
+    templateUrl: './device-config-modal.component.html',
+    styleUrls: ['./device-config-modal.component.scss'],
+    standalone: true,
+    imports: [NgFor, MatSliderModule],
 })
 export class DeviceConfigModalComponent {
   public controls: Control[] = [];

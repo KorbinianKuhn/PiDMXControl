@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
+import { LetDirective } from '@ngrx/component';
 import { map } from 'rxjs';
+import { ToggleButtonComponent } from '../../../../components/toggle-button/toggle-button.component';
 import { OverrideProgramName } from '../../../../services/ws.interfaces';
 import { WSService } from '../../../../services/ws.service';
 
@@ -7,6 +9,8 @@ import { WSService } from '../../../../services/ws.service';
   selector: 'app-override-program-button',
   templateUrl: './override-program-button.component.html',
   styleUrls: ['./override-program-button.component.scss'],
+  standalone: true,
+  imports: [LetDirective, ToggleButtonComponent],
 })
 export class OverrideProgramButtonComponent {
   @Input() name!: OverrideProgramName;

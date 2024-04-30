@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -6,6 +7,7 @@ import {
   OnDestroy,
   ViewChild,
 } from '@angular/core';
+import { LetDirective } from '@ngrx/component';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 import { VideoService } from '../../services/video.service';
 import { WSService } from '../../services/ws.service';
@@ -14,6 +16,8 @@ import { WSService } from '../../services/ws.service';
   selector: 'app-visuals',
   templateUrl: './visuals.component.html',
   styleUrls: ['./visuals.component.scss'],
+  standalone: true,
+  imports: [LetDirective, NgClass],
 })
 export class VisualsComponent implements AfterViewInit, OnDestroy {
   @ViewChild('videoElement')

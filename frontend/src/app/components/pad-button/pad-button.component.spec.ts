@@ -8,8 +8,8 @@ describe('PadButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PadButtonComponent ]
-    })
+    imports: [PadButtonComponent]
+})
     .compileComponents();
   });
 

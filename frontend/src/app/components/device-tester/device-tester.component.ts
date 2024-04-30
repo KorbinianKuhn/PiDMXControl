@@ -2,11 +2,15 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { Device } from '../../interfaces/general.interfaces';
 import { WSService } from '../../services/ws.service';
+import { MatSliderModule } from '@angular/material/slider';
+import { NgFor } from '@angular/common';
 
 @Component({
-  selector: 'app-device-tester',
-  templateUrl: './device-tester.component.html',
-  styleUrls: ['./device-tester.component.scss'],
+    selector: 'app-device-tester',
+    templateUrl: './device-tester.component.html',
+    styleUrls: ['./device-tester.component.scss'],
+    standalone: true,
+    imports: [NgFor, MatSliderModule],
 })
 export class DeviceTesterComponent implements OnInit, OnDestroy {
   @Input() device!: Device;

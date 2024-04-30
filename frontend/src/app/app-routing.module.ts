@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { BoardComponent } from './routes/board/board.component';
+import { VisualsComponent } from './routes/visuals/visuals.component';
 
 const routes: Routes = [
   {
     path: 'board',
-    loadChildren: () =>
-      import('./routes/board/board.module').then((m) => m.BoardModule),
+    component: BoardComponent,
   },
   {
     path: 'visuals',
-    loadChildren: () =>
-      import('./routes/visuals/visuals.module').then((m) => m.VisualsModule),
+    component: VisualsComponent,
   },
   {
     path: '**',

@@ -8,8 +8,8 @@ describe('BoardColorsModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BoardColorsModalComponent ]
-    })
+    imports: [BoardColorsModalComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(BoardColorsModalComponent);

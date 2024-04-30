@@ -8,8 +8,8 @@ describe('BpmComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BpmComponent ]
-    })
+    imports: [BpmComponent]
+})
     .compileComponents();
   });
 

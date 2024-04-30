@@ -17,14 +17,14 @@ import { ColorService } from '../../services/color.service';
 import { ConfigService } from '../../services/config.service';
 import { MqttService } from '../../services/mqtt.service';
 import { WSService } from '../../services/ws.service';
-import { BeamerModule } from '../devices/beamer/beamer.module';
+import { BeamerComponent } from '../beamer/beamer.component';
 
 @Component({
   selector: 'app-visualisation2',
   templateUrl: './visualisation2.component.html',
   styleUrls: ['./visualisation2.component.scss'],
   standalone: true,
-  imports: [BeamerModule],
+  imports: [BeamerComponent],
 })
 export class Visualisation2Component implements AfterViewInit, OnDestroy {
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;

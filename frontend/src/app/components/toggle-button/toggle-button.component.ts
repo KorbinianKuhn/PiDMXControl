@@ -1,9 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { PadButtonComponent } from '../pad-button/pad-button.component';
 
 @Component({
-  selector: 'app-toggle-button',
-  templateUrl: './toggle-button.component.html',
-  styleUrls: ['./toggle-button.component.scss'],
+    selector: 'app-toggle-button',
+    templateUrl: './toggle-button.component.html',
+    styleUrls: ['./toggle-button.component.scss'],
+    standalone: true,
+    imports: [PadButtonComponent],
 })
 export class ToggleButtonComponent implements OnInit {
   @Input() colorOff: string = 'bg-gray-900';

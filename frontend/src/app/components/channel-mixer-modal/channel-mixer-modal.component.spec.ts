@@ -8,8 +8,8 @@ describe('ChannelMixerModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ChannelMixerModalComponent ]
-    })
+    imports: [ChannelMixerModalComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(ChannelMixerModalComponent);

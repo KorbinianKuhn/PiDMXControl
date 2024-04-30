@@ -8,8 +8,8 @@ describe('BpmModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BpmModalComponent ]
-    })
+    imports: [BpmModalComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(BpmModalComponent);

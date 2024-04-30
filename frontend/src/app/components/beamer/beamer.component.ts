@@ -1,3 +1,4 @@
+import { AsyncPipe, NgClass, NgIf } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -6,16 +7,19 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { LetDirective } from '@ngrx/component';
 import { Subject, combineLatest, debounceTime, filter, takeUntil } from 'rxjs';
-import { ConfigService } from '../../../services/config.service';
-import { VideoService } from '../../../services/video.service';
-import { WSService } from '../../../services/ws.service';
-import { BeamerSettingsModalComponent } from '../../beamer-settings-modal/beamer-settings-modal.component';
+import { ConfigService } from '../../services/config.service';
+import { VideoService } from '../../services/video.service';
+import { WSService } from '../../services/ws.service';
+import { BeamerSettingsModalComponent } from '../beamer-settings-modal/beamer-settings-modal.component';
 
 @Component({
   selector: 'app-beamer',
   templateUrl: './beamer.component.html',
   styleUrls: ['./beamer.component.scss'],
+  standalone: true,
+  imports: [LetDirective, NgIf, NgClass, AsyncPipe],
 })
 export class BeamerComponent {
   @Input() id!: string;

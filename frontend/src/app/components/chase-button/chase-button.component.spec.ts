@@ -8,8 +8,8 @@ describe('ChaseButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ChaseButtonComponent ]
-    })
+    imports: [ChaseButtonComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(ChaseButtonComponent);
