@@ -20,13 +20,13 @@ import { WSService } from '../../services/ws.service';
 import { BeamerComponent } from '../beamer/beamer.component';
 
 @Component({
-  selector: 'app-visualisation2',
-  templateUrl: './visualisation2.component.html',
-  styleUrls: ['./visualisation2.component.scss'],
+  selector: 'app-visualisation',
+  templateUrl: './visualisation.component.html',
+  styleUrls: ['./visualisation.component.scss'],
   standalone: true,
   imports: [BeamerComponent],
 })
-export class Visualisation2Component implements AfterViewInit, OnDestroy {
+export class VisualisationComponent implements AfterViewInit, OnDestroy {
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
 
   private destroy$$ = new Subject<void>();
@@ -171,16 +171,6 @@ export class Visualisation2Component implements AfterViewInit, OnDestroy {
       ctx.arc(posX, posY, radius, 0, 2 * Math.PI);
       ctx.fill();
     }
-
-    // for (let i = 0; i < 3; i++) {
-    //   const posX = vertical ? x + i * spacing : x;
-    //   const posY = vertical ? y : y + i * spacing;
-
-    //   ctx.beginPath();
-    //   ctx.arc(posX, posY, radius, 0, 2 * Math.PI);
-    //   ctx.fillStyle = color;
-    //   ctx.fill();
-    // }
   }
 
   updateLedPixBar(x: number, y: number, address: number, data: number[]) {
@@ -253,18 +243,18 @@ export class Visualisation2Component implements AfterViewInit, OnDestroy {
     ctx.fillStyle = this.bgColor;
     ctx.fillRect(x, y, 4 + margin * 2, numPixels + margin * 2);
 
-    for (let i = 0; i < numPixels; i += 2) {
-      const index = i * 4;
-      const index2 = (i + 1) * 4;
-      const r = Math.min(data[index] + data[index2], 255);
-      const g = Math.min(data[index + 1] + data[index2 + 1], 255);
-      const b = Math.min(data[index + 2] + data[index2 + 2], 255);
-      const w = Math.min(data[index + 3] + data[index2 + 3], 255);
+    for (let i = 0; i < numPixels; i += 4) {
+      const pixels = data.slice(i * 4, i * 4 + 16);
+
+      const r = Math.min(pixels[0] + pixels[4] + pixels[8] + pixels[12], 255);
+      const g = Math.min(pixels[1] + pixels[5] + pixels[9] + pixels[13], 255);
+      const b = Math.min(pixels[2] + pixels[6] + pixels[10] + pixels[14], 255);
+      const w = Math.min(pixels[3] + pixels[7] + pixels[11] + pixels[15], 255);
 
       const color = this.colorService.toRGB(255, r, g, b, w, 0, 0);
 
       ctx.fillStyle = color;
-      ctx.fillRect(x + margin, y + margin + i, 4, 1);
+      ctx.fillRect(x + margin, y + margin + i, 4, 4);
     }
   }
 }

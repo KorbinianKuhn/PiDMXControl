@@ -1,13 +1,15 @@
 <table *ngrxLet="visuals$ as visuals">
-  <tr *ngFor="let source of visuals.sources; index as index">
-    <td>
-      <button
-        mat-button
-        [color]="index === visuals.currentIndex ? 'primary' : null"
-        (click)="onVisualChange(index)"
-      >
-        {{ source.url.replace(".mp4", "").replaceAll("-", " ") | titlecase }}
-      </button>
-    </td>
-  </tr>
+  @for (source of visuals.sources; track source; let index = $index) {
+    <tr>
+      <td>
+        <button
+          mat-button
+          [color]="index === visuals.currentIndex ? 'primary' : null"
+          (click)="onVisualChange(index)"
+          >
+          {{ source.url.replace(".mp4", "").replaceAll("-", " ") | titlecase }}
+        </button>
+      </td>
+    </tr>
+  }
 </table>

@@ -3,8 +3,8 @@
   class="flex flex-wrap p-5 overflow-hidden border border-cyan-700 rounded-sm"
   tabindex="0"
 >
+  @for (button of buttons; track button) {
   <app-pad-button
-    *ngFor="let button of buttons"
     [color]="button.gradient"
     class="m-1"
     [active]="isColorActive(button.color)"
@@ -16,4 +16,5 @@
       >{{ button.a }}<br />{{ button.b }}</span
     >
   </app-pad-button>
+  }
 </div>

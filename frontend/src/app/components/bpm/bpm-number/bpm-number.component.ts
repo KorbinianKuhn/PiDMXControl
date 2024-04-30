@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { map } from 'rxjs';
 import { WSService } from '../../../services/ws.service';
-import { NgFor, NgClass, AsyncPipe } from '@angular/common';
+import { NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-bpm-number',
@@ -9,10 +9,9 @@ import { NgFor, NgClass, AsyncPipe } from '@angular/common';
     styleUrls: ['./bpm-number.component.scss'],
     standalone: true,
     imports: [
-        NgFor,
-        NgClass,
-        AsyncPipe,
-    ],
+    NgClass,
+    AsyncPipe
+],
 })
 export class BpmNumberComponent {
   public bpm$ = this.wsService.bpm$;

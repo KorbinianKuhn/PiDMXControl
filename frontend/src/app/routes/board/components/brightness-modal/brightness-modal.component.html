@@ -9,7 +9,7 @@
               matSliderThumb
               [value]="master$ | async"
               (valueChange)="onMasterChange($event)"
-            />
+              />
           </mat-slider>
         </td>
       </tr>
@@ -21,22 +21,24 @@
               matSliderThumb
               [value]="ambientUV$ | async"
               (valueChange)="onAmbientUVChange($event)"
-            />
+              />
           </mat-slider>
         </td>
       </tr>
-      <tr *ngFor="let control of controls">
-        <td>{{ control.id }}</td>
-        <td>
-          <mat-slider [min]="0" [max]="1" [step]="0.05" discrete>
-            <input
-              matSliderThumb
-              [value]="control.value"
-              (valueChange)="onValueChange(control, $event)"
-            />
-          </mat-slider>
-        </td>
-      </tr>
+      @for (control of controls; track control) {
+        <tr>
+          <td>{{ control.id }}</td>
+          <td>
+            <mat-slider [min]="0" [max]="1" [step]="0.05" discrete>
+              <input
+                matSliderThumb
+                [value]="control.value"
+                (valueChange)="onValueChange(control, $event)"
+                />
+            </mat-slider>
+          </td>
+        </tr>
+      }
     </table>
   </app-panel-group>
 </div>

@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass, NgIf } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -19,7 +19,7 @@ import { BeamerSettingsModalComponent } from '../beamer-settings-modal/beamer-se
   templateUrl: './beamer.component.html',
   styleUrls: ['./beamer.component.scss'],
   standalone: true,
-  imports: [LetDirective, NgIf, NgClass, AsyncPipe],
+  imports: [LetDirective, NgClass, AsyncPipe],
 })
 export class BeamerComponent {
   @Input() id!: string;

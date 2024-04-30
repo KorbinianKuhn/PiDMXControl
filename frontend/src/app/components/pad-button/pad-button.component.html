@@ -6,7 +6,7 @@
   [class.h-16]="size === 'normal'"
   [class.w-12]="size === 'small'"
   [class.h-12]="size === 'small'"
->
+  >
   <div
     class="absolute inset-0 bg-black"
     [class.opacity-0]="active"
@@ -16,7 +16,9 @@
   <div class="relative flex justify-center items-center">
     <ng-content> </ng-content>
   </div>
-  <div class="progress" *ngIf="current">
-    <div class="progress-current" [style.width.%]="progress"></div>
-  </div>
+  @if (current) {
+    <div class="progress">
+      <div class="progress-current" [style.width.%]="progress"></div>
+    </div>
+  }
 </button>

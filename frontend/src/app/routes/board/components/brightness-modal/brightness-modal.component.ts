@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { WSService } from '../../../../services/ws.service';
-import { NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatSliderModule } from '@angular/material/slider';
 import { PanelGroupComponent } from '../../../../components/panel-group/panel-group.component';
 
@@ -15,11 +15,10 @@ interface Control {
     styleUrls: ['./brightness-modal.component.scss'],
     standalone: true,
     imports: [
-        PanelGroupComponent,
-        MatSliderModule,
-        NgFor,
-        AsyncPipe,
-    ],
+    PanelGroupComponent,
+    MatSliderModule,
+    AsyncPipe
+],
 })
 export class BrightnessModalComponent {
   public master$ = this.wsService.master$;

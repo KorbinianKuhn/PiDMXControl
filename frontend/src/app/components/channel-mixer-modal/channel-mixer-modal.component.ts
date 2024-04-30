@@ -4,7 +4,7 @@ import { Device } from '../../interfaces/general.interfaces';
 import { WSService } from '../../services/ws.service';
 import { DeviceTesterComponent } from '../device-tester/device-tester.component';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { NgClass, NgFor, AsyncPipe } from '@angular/common';
+import { NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-channel-mixer-modal',
@@ -12,12 +12,11 @@ import { NgClass, NgFor, AsyncPipe } from '@angular/common';
     styleUrls: ['./channel-mixer-modal.component.scss'],
     standalone: true,
     imports: [
-        NgClass,
-        MatExpansionModule,
-        NgFor,
-        DeviceTesterComponent,
-        AsyncPipe,
-    ],
+    NgClass,
+    MatExpansionModule,
+    DeviceTesterComponent,
+    AsyncPipe
+],
 })
 export class ChannelMixerModalComponent {
   public devices: Device[] = DEVICES;

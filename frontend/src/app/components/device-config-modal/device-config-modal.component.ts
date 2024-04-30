@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DeviceConfig } from '../../services/ws.interfaces';
 import { WSService } from '../../services/ws.service';
 import { MatSliderModule } from '@angular/material/slider';
-import { NgFor } from '@angular/common';
+
 
 interface Control {
   key: string;
@@ -18,7 +18,7 @@ interface Control {
     templateUrl: './device-config-modal.component.html',
     styleUrls: ['./device-config-modal.component.scss'],
     standalone: true,
-    imports: [NgFor, MatSliderModule],
+    imports: [MatSliderModule],
 })
 export class DeviceConfigModalComponent {
   public controls: Control[] = [];

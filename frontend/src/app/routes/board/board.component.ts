@@ -10,7 +10,7 @@ import { ChannelMixerModalComponent } from '../../components/channel-mixer-modal
 import { PadButtonComponent } from '../../components/pad-button/pad-button.component';
 import { PanelGroupComponent } from '../../components/panel-group/panel-group.component';
 import { ToggleButtonComponent } from '../../components/toggle-button/toggle-button.component';
-import { Visualisation2Component } from '../../components/visualisation2/visualisation2.component';
+import { VisualisationComponent } from '../../components/visualisation2/visualisation.component';
 import { ConfigService } from '../../services/config.service';
 import {
   ActiveProgramName,
@@ -39,7 +39,7 @@ import { OverrideProgramButtonComponent } from './components/override-program-bu
     PadButtonComponent,
     ActiveProgramButtonComponent,
     BpmComponent,
-    Visualisation2Component,
+    VisualisationComponent,
     MatButtonModule,
     MatIconModule,
     AsyncPipe,

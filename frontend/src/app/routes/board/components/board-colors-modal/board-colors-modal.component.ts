@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+
 import { Component } from '@angular/core';
 import { LetDirective } from '@ngrx/component';
 import { PadButtonComponent } from '../../../../components/pad-button/pad-button.component';
@@ -34,7 +34,7 @@ export const COLORS_TO: { [key: string]: string } = {
   templateUrl: './board-colors-modal.component.html',
   styleUrls: ['./board-colors-modal.component.scss'],
   standalone: true,
-  imports: [LetDirective, NgFor, PadButtonComponent],
+  imports: [LetDirective, PadButtonComponent],
 })
 export class BoardColorsModalComponent {
   public chaseColorEnum = ChaseColor;
