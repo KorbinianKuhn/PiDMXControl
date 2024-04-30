@@ -1,6 +1,6 @@
-<div class="flex flex-row pt-2 flex-wrap">
+<div class="flex flex-row pt-2 flex-wrap justify-center">
   <div class="flex flex-col justify-start">
-    <app-panel-group label="Overrides">
+    <app-panel-group label="Overrides" class="mb-1">
       <app-toggle-button
         [active]="black$ | async"
         (click)="onClickBlack()"
@@ -21,7 +21,7 @@
       </app-override-program-button>
     </app-panel-group>
 
-    <app-panel-group label="Chases">
+    <app-panel-group label="Chases" class="mb-1">
       <ng-container *ngrxLet="currentColor$ as currentColor">
         <app-pad-button
           [color]="currentColor.gradient"
@@ -79,7 +79,7 @@
       </div>
     </app-panel-group>
 
-    <app-panel-group label="Buildups">
+    <app-panel-group label="Buildups" class="mb-2">
       <app-override-program-button [name]="overrideProgram.BUILDUP_BRIGHT">
         <span class="text-xs tracking-widest">Bright</span>
       </app-override-program-button>
@@ -127,11 +127,14 @@
         <app-bpm></app-bpm>
       </app-panel-group>
     </div>
-    <app-panel-group label="Visualization">
+    <!-- <app-panel-group label="Visualization">
       <app-visualization></app-visualization>
+    </app-panel-group> -->
+    <app-panel-group label="Visualisation">
+      <app-visualisation2></app-visualisation2>
     </app-panel-group>
     <app-panel-group>
-      <div class="flex flex-1 justify-center items-center h-16 my-1">
+      <div class="flex flex-1 justify-center items-center h-16">
         <button
           class="text-cyan-600"
           mat-icon-button

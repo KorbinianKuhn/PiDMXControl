@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil, throttleTime } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 import { ColorService } from '../../../services/color.service';
 import { ConfigService } from '../../../services/config.service';
 import { WSService } from '../../../services/ws.service';
@@ -32,6 +33,7 @@ export class AdjSaberSpotComponent implements OnInit {
     this.wsService.dmx$
       .pipe(
         takeUntil(this.destroy$$),
+        throttleTime(environment.visualisationThrottleTime),
         map((data) => data.slice(this.address, this.address + this.numChannels))
       )
       .subscribe((channels) => this.updateColor(channels));

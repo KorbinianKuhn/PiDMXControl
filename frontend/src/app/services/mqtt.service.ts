@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class MqttService {
-  public messages$ = new Subject<{ deviceId: string; message: Buffer }>();
+  public neopixel$ = new Subject<Buffer>();
 
   constructor() {}
 
@@ -15,11 +15,11 @@ export class MqttService {
     const client = await mqtt.connectAsync(environment.mqttWsUrl);
 
     client.on('message', (topic, message) => {
-      this.messages$.next({ deviceId: topic, message });
+      this.neopixel$.next(message);
     });
 
     client.subscribe(
-      '+',
+      'neopixel',
       {
         qos: 0,
       },

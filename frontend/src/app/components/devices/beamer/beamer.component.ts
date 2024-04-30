@@ -6,7 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subject, combineLatest, debounceTime, filter } from 'rxjs';
+import { Subject, combineLatest, debounceTime, filter, takeUntil } from 'rxjs';
 import { ConfigService } from '../../../services/config.service';
 import { VideoService } from '../../../services/video.service';
 import { WSService } from '../../../services/ws.service';
@@ -42,6 +42,7 @@ export class BeamerComponent {
   ngAfterViewInit(): void {
     combineLatest([this.visualisation$, this.wsService.visuals$])
       .pipe(
+        takeUntil(this.destroy$$),
         debounceTime(1000),
         filter(([visible, visuals]) => visible)
       )

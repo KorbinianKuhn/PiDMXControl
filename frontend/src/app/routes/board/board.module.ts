@@ -13,6 +13,7 @@ import { ChaseButtonComponent } from '../../components/chase-button/chase-button
 import { PadButtonModule } from '../../components/pad-button/pad-button.module';
 import { PanelGroupModule } from '../../components/panel-group/panel-group.module';
 import { ToggleButtonModule } from '../../components/toggle-button/toggle-button.module';
+import { Visualisation2Component } from '../../components/visualisation2/visualisation2.component';
 import { VisualizationModule } from '../../components/visualization/visualization.module';
 import { BoardRoutingModule } from './board-routing.module';
 import { BoardComponent } from './board.component';
@@ -44,6 +45,7 @@ import { OverrideProgramButtonComponent } from './components/override-program-bu
     MatIconModule,
     BrightnessModalModule,
     MatButtonModule,
+    Visualisation2Component,
   ],
 })
 export class BoardModule {}
