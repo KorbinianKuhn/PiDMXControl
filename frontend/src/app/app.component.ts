@@ -14,13 +14,14 @@ const ICONS = [
   'visibility',
   'visibility_off',
   'movie',
+  'movie_off',
 ];
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: true,
-    imports: [RouterOutlet],
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  standalone: true,
+  imports: [RouterOutlet],
 })
 export class AppComponent {
   public board: boolean = true;

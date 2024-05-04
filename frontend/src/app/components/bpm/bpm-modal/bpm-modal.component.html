@@ -1,22 +1,55 @@
 <div
-  class="flex flex-col p-5 overflow-hidden border border-cyan-700 rounded-sm"
+  class="flex flex-col items-center p-5 overflow-hidden border border-cyan-700 rounded-sm"
   tabindex="0"
 >
-  <app-bpm-number></app-bpm-number>
-
-  <div class="flex justify-between mt-2">
-    <app-pad-button
-      color="bg-gray-900 mr-8"
-      [active]="true"
-      (click)="onClickStart()"
-      >Start</app-pad-button
-    >
-    <app-pad-button color="bg-gray-900" [active]="true" (click)="onClickTap()"
-      >Tap</app-pad-button
-    >
+  <div class="flex">
+    <app-bpm-number></app-bpm-number>
   </div>
 
   <mat-slider [min]="60" [max]="240" [step]="0.5" discrete>
     <input matSliderThumb [value]="bpm" (dragEnd)="onSliderChange($event)" />
   </mat-slider>
+
+  <div class="flex justify-between mt-2">
+    <app-pad-button
+      size="small"
+      color="bg-gray-900"
+      (click)="onChangeValue(-2)"
+      class="mr-1"
+      >--</app-pad-button
+    >
+    <app-pad-button
+      size="small"
+      color="bg-gray-900"
+      (click)="onChangeValue(-1)"
+      class="mr-1"
+      >-</app-pad-button
+    >
+    <app-pad-button
+      size="small"
+      color="bg-gray-900"
+      (click)="onChangeValue(1)"
+      class="mr-1"
+      >+</app-pad-button
+    >
+    <app-pad-button size="small" color="bg-gray-900" (click)="onChangeValue(2)"
+      >++</app-pad-button
+    >
+  </div>
+
+  <div class="flex justify-between mt-2">
+    <app-pad-button
+      color="bg-gray-900"
+      [active]="true"
+      (click)="onClickStart()"
+      class="mr-1"
+      >Start</app-pad-button
+    >
+    <app-pad-button color="bg-gray-900" (click)="onClickRound()" class="mr-1"
+      >Round</app-pad-button
+    >
+    <app-pad-button color="bg-gray-900" [active]="true" (click)="onClickTap()"
+      >Tap</app-pad-button
+    >
+  </div>
 </div>

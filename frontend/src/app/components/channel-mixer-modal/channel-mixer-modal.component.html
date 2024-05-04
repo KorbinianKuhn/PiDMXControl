@@ -3,22 +3,22 @@
     class="px-4 py-2 rounded-sm"
     [ngClass]="(enabled | async) ? 'bg-cyan-500' : 'bg-gray-900'"
     (click)="onToggle()"
-    >
+  >
     {{ (enabled | async) ? "On" : "Off" }}
   </button>
 </div>
 
 <mat-accordion>
   @for (device of devices; track device) {
-    <mat-expansion-panel
-      class="border-t border-cyan-900"
-      >
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{ device.name }}
-        </mat-panel-title>
-      </mat-expansion-panel-header>
+  <mat-expansion-panel class="border-t border-cyan-900">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ device.name }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-template matExpansionPanelContent>
       <app-device-tester [device]="device"></app-device-tester>
-    </mat-expansion-panel>
+    </ng-template>
+  </mat-expansion-panel>
   }
 </mat-accordion>

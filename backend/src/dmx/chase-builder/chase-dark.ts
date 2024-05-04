@@ -182,9 +182,11 @@ const createPixelPattern = (
 
   let steps: Array<number[]> = [];
 
+  const off = [...neopixelA.setAll({}), ...neopixelB.setAll({})];
+
   for (let i = 0; i < 2; i++) {
     for (const color of [colors.a, colors.b]) {
-      for (let i2 = 0; i2 < 4; i2++) {
+      for (let i2 = 0; i2 < 2; i2++) {
         for (let i3 = 0; i3 < 16; i3++) {
           const index = Math.round(i3 * (neopixelA.length / 16));
           steps.push([
@@ -192,13 +194,15 @@ const createPixelPattern = (
             ...neopixelB.setPixel(index, { ...color }),
           ]);
         }
+        for (let i2 = 0; i2 < 16; i2++) {
+          steps.push(off);
+        }
       }
     }
   }
 
   steps = steps.slice(0, -32);
 
-  const off = [...neopixelA.setAll({}), ...neopixelB.setAll({})];
   const a = [
     ...neopixelA.setAll({ ...colors.a }),
     ...neopixelB.setAll({ ...colors.a }),

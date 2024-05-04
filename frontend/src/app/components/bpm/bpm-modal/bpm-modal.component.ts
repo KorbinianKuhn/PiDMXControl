@@ -1,20 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatSliderModule } from '@angular/material/slider';
 import { Subject, takeUntil } from 'rxjs';
 import { WSService } from '../../../services/ws.service';
-import { MatSliderModule } from '@angular/material/slider';
 import { PadButtonComponent } from '../../pad-button/pad-button.component';
 import { BpmNumberComponent } from '../bpm-number/bpm-number.component';
 
 @Component({
-    selector: 'app-bpm-modal',
-    templateUrl: './bpm-modal.component.html',
-    styleUrls: ['./bpm-modal.component.scss'],
-    standalone: true,
-    imports: [
-        BpmNumberComponent,
-        PadButtonComponent,
-        MatSliderModule,
-    ],
+  selector: 'app-bpm-modal',
+  templateUrl: './bpm-modal.component.html',
+  styleUrls: ['./bpm-modal.component.scss'],
+  standalone: true,
+  imports: [BpmNumberComponent, PadButtonComponent, MatSliderModule],
 })
 export class BpmModalComponent implements OnInit, OnDestroy {
   private taps: number[] = [];
@@ -70,5 +66,13 @@ export class BpmModalComponent implements OnInit, OnDestroy {
 
   onSliderChange(event: any) {
     this.wsService.setBpm(event.value);
+  }
+
+  onChangeValue(amount: number) {
+    this.wsService.setBpm(this.bpm + amount);
+  }
+
+  onClickRound() {
+    this.wsService.setBpm(Math.round(this.bpm));
   }
 }

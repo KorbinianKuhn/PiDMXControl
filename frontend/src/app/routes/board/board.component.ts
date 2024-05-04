@@ -10,7 +10,7 @@ import { ChannelMixerModalComponent } from '../../components/channel-mixer-modal
 import { PadButtonComponent } from '../../components/pad-button/pad-button.component';
 import { PanelGroupComponent } from '../../components/panel-group/panel-group.component';
 import { ToggleButtonComponent } from '../../components/toggle-button/toggle-button.component';
-import { VisualisationComponent } from '../../components/visualisation2/visualisation.component';
+import { VisualisationComponent } from '../../components/visualisation/visualisation.component';
 import { ConfigService } from '../../services/config.service';
 import {
   ActiveProgramName,

@@ -27,8 +27,8 @@ export class DeviceRegistry {
   private headLeft = new VarytecHeroWash(114, 'head-left', this.config);
   private headRight = new VarytecHeroWash(130, 'head-right', this.config);
   private beamer = new Beamer(146, 'beamer', this.config);
-  private neopixelA = new NeopixelStrip(150);
-  private neopixelB = new NeopixelStrip(150);
+  private neopixelA = new NeopixelStrip('neopixel-a', 150, this.config);
+  private neopixelB = new NeopixelStrip('neopixel-b', 150, this.config);
 
   private devices = [
     this.hex1,
@@ -81,6 +81,8 @@ export class DeviceRegistry {
         );
       }
     }
+
+    this.config.registerDevices(this.devices);
   }
 
   list() {

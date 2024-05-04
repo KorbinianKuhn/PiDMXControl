@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { WSService } from '../../../../services/ws.service';
 import { AsyncPipe } from '@angular/common';
+import { Component } from '@angular/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { PanelGroupComponent } from '../../../../components/panel-group/panel-group.component';
+import { WSService } from '../../../../services/ws.service';
 
 interface Control {
   id: string;
@@ -10,15 +10,11 @@ interface Control {
 }
 
 @Component({
-    selector: 'app-brightness-modal',
-    templateUrl: './brightness-modal.component.html',
-    styleUrls: ['./brightness-modal.component.scss'],
-    standalone: true,
-    imports: [
-    PanelGroupComponent,
-    MatSliderModule,
-    AsyncPipe
-],
+  selector: 'app-brightness-modal',
+  templateUrl: './brightness-modal.component.html',
+  styleUrls: ['./brightness-modal.component.scss'],
+  standalone: true,
+  imports: [PanelGroupComponent, MatSliderModule, AsyncPipe],
 })
 export class BrightnessModalComponent {
   public master$ = this.wsService.master$;

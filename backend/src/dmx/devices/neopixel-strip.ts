@@ -1,4 +1,5 @@
-import { DeviceStateValues } from '../lib/device';
+import { Config } from '../lib/config';
+import { Device, DeviceStateValues } from '../lib/device';
 
 interface RGBW {
   r: number;
@@ -7,12 +8,14 @@ interface RGBW {
   w: number;
 }
 
-export class NeopixelStrip {
+export class NeopixelStrip extends Device {
   get length(): number {
     return this.numPixels;
   }
 
-  constructor(private numPixels: number) {}
+  constructor(id: string, public numPixels: number, config: Config) {
+    super(-1, id, [], config);
+  }
 
   clear(): number[] {
     return this.empty();

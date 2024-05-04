@@ -87,7 +87,7 @@ export const createChaseBuildupInfinite = (
   for (const color of [colors.a, colors.b]) {
     const indexes = [];
     for (let i = 0; i < neopixelA.length; i++) {
-      if (i % 10 == 0) {
+      if (i % 25 == 0) {
         indexes.push(i, i + 1, i + 2, i + 3, i + 4);
       }
     }
@@ -103,10 +103,7 @@ export const createChaseBuildupInfinite = (
       ...neopixelB.setMultiple(state),
     ];
 
-    for (let i = 0; i < 8; i++) {
-      steps.push(on, on, on, on, on, on, on, on);
-      // steps.push(off, off, off, off, off, off);
-    }
+    steps.push(...new Array(32).fill(null).map((o, i) => (i < 4 ? on : off)));
   }
 
   chase.addSteps(new Array(steps.length / 4).fill(null).map(() => []));

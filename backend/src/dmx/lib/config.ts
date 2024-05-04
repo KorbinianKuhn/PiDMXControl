@@ -1,10 +1,11 @@
 import { readFileSync } from 'fs';
 import { readdir, writeFile } from 'fs/promises';
 import { join } from 'path';
-import { BehaviorSubject, Subject, debounceTime, skip } from 'rxjs';
+import { BehaviorSubject, Subject, debounceTime } from 'rxjs';
 import { TypedServer } from '../../server/events.interfaces';
 import { Logger } from '../../utils/logger';
 import { ChaseColor } from './chase';
+import { Device } from './device';
 import { ActiveProgramName, OverrideProgramName } from './program';
 
 const CONFIG_PATH = join(__dirname, '../../..', 'static/config.json');
@@ -59,9 +60,7 @@ export class Config {
 
   constructor(private io: TypedServer) {
     this._readConfigFromFile();
-    this.store$
-      .pipe(debounceTime(5000), skip(1))
-      .subscribe(() => this._saveToFile());
+    this.store$.pipe(debounceTime(5000)).subscribe(() => this._saveToFile());
 
     this.scanVisualSources();
   }
@@ -190,5 +189,19 @@ export class Config {
       startedAt: new Date().toISOString(),
     };
     this.io.emit('visuals:updated', this.visuals);
+  }
+
+  registerDevices(devices: Device[]) {
+    const updatedDevices: DeviceConfig[] = [];
+    for (const device of devices) {
+      const item = this.devices.find((o) => o.id === device.id);
+      if (item) {
+        updatedDevices.push(item);
+      } else {
+        updatedDevices.push({ id: device.id, master: 1 });
+      }
+    }
+    this.devices = updatedDevices;
+    this.store$.next();
   }
 }

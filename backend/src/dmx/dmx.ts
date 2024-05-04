@@ -126,16 +126,21 @@ export class DMX {
   neopixelData(): { topic: string; message: Buffer }[] {
     let buffer: Buffer = Buffer.alloc(2 * 150 * 4, 0);
 
-    if (
-      this.config.settingsMode ||
-      this.config.black ||
-      this.config.overrideProgram
-    ) {
+    if (this.config.settingsMode || this.config.black) {
       // Do nothing
     } else {
-      const data = this.activeProgram.pixelData();
+      const data = this.config.overrideProgram
+        ? this.overrideProgram.pixelData()
+        : this.activeProgram.pixelData();
       if (data?.length > 0) {
+        const master = this.config.getDeviceConfig('neopixel-a').master;
+        const multiplier = this.config.master * master;
         buffer = data;
+        for (let i = 0; i < buffer.length; i++) {
+          if (buffer[i] !== 0) {
+            buffer[i] = Math.round(buffer[i] * multiplier);
+          }
+        }
       }
     }
 

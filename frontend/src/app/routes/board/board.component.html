@@ -127,9 +127,6 @@
         <app-bpm></app-bpm>
       </app-panel-group>
     </div>
-    <!-- <app-panel-group label="Visualization">
-      <app-visualization></app-visualization>
-    </app-panel-group> -->
     <app-panel-group label="Visualisation">
       <app-visualisation></app-visualisation>
     </app-panel-group>
@@ -153,12 +150,12 @@
           ></mat-icon>
         </button>
         <button
+          class="text-cyan-600"
           mat-icon-button
           (click)="onVideoToggle()"
           *ngrxLet="video$ as video"
-          [color]="video ? 'primary' : null"
         >
-          <mat-icon svgIcon="movie"></mat-icon>
+          <mat-icon [svgIcon]="video ? 'movie' : 'movie_off'"></mat-icon>
         </button>
         <button
           class="text-cyan-600"
