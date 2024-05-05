@@ -4,14 +4,14 @@ import { ChaseRegistry } from './lib/chase-registry';
 import { Clock } from './lib/clock';
 import { Config } from './lib/config';
 import { DeviceRegistry } from './lib/device-registry';
+import { SEND_DATA, UART_SERIAL } from './lib/env';
 import { MQTT } from './lib/mqtt/mqtt';
 import { ActiveProgramName, OverrideProgramName, Program } from './lib/program';
 import { DummySerial } from './lib/serial/dummy-serial';
 import { UartSerial } from './lib/serial/uart-serial';
 
 export class DMX {
-  private serial =
-    process.env.CONFIG === 'pi' ? new UartSerial() : new DummySerial();
+  private serial = UART_SERIAL ? new UartSerial() : new DummySerial();
   private mqtt = new MQTT();
 
   public config = new Config(this.io);
@@ -30,13 +30,21 @@ export class DMX {
     await this.serial.init();
     await this.mqtt.init();
 
-    setInterval(async () => {
-      this._send();
-    }, 46);
+    this.mqtt.subscribe((topic, message) => {
+      if (topic === 'dmx') {
+        this.serial.write(message);
+      }
+    });
 
-    setInterval(() => {
-      this._sendMQTT();
-    }, 10);
+    if (SEND_DATA) {
+      setInterval(async () => {
+        this._send();
+      }, 46);
+
+      setInterval(() => {
+        this._sendMQTT();
+      }, 10);
+    }
 
     this.setActiveProgram(this.config.activeProgram);
   }
@@ -123,7 +131,7 @@ export class DMX {
     return data;
   }
 
-  neopixelData(): { topic: string; message: Buffer }[] {
+  neopixelData(): Buffer {
     let buffer: Buffer = Buffer.alloc(2 * 150 * 4, 0);
 
     if (this.config.settingsMode || this.config.black) {
@@ -144,32 +152,16 @@ export class DMX {
       }
     }
 
-    return [
-      {
-        topic: 'neopixel',
-        message: buffer,
-      },
-      {
-        topic: 'neopixel-a',
-        message: buffer.slice(0, 150 * 4),
-      },
-      {
-        topic: 'neopixel-b',
-        message: buffer.slice(150 * 4, 2 * 150 * 4),
-      },
-    ];
+    return buffer;
   }
 
   async _send() {
     const data = this.data();
-    await this.serial.write(data);
-    this.io.emit('dmx:write', { buffer: [...data] });
+    this.mqtt.send('dmx', data);
   }
 
   async _sendMQTT() {
     const data = this.neopixelData();
-    for (const device of data) {
-      this.mqtt.send(device.topic, device.message);
-    }
+    this.mqtt.send('neopixel', data);
   }
 }

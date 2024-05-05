@@ -1,11 +1,12 @@
 import mqtt from 'mqtt';
+import { MQTT_HOST } from '../env';
 
 export class MQTT {
   private client: mqtt.MqttClient;
 
   async init() {
     try {
-      this.client = await mqtt.connectAsync(process.env.CONFIG === 'pi' ? 'mqtt://mosquitto:1883' : 'mqtt://localhost:1883', {
+      this.client = await mqtt.connectAsync(MQTT_HOST, {
         queueQoSZero: false,
       });
     } catch (err) {
@@ -18,5 +19,10 @@ export class MQTT {
       qos: 0,
       retain: false,
     });
+  }
+
+  subscribe(callback: (topic: string, message: Buffer) => void) {
+    this.client?.on('message', callback);
+    this.client?.subscribe('+', { qos: 0 });
   }
 }

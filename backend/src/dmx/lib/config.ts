@@ -89,7 +89,7 @@ export class Config {
     this.black = config.black;
     this.master = config.master;
     this.ambientUV = config.ambientUV;
-    this.overrideProgram = config.overrideProgram;
+    this.overrideProgram = null;
     this.activeProgram = config.activeProgram;
     this.activeColors = config.activeColors;
     this.devices = config.devices;

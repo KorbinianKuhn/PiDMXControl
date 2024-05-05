@@ -93,7 +93,6 @@ export interface ServerToClientEvents {
   'active-colors:updated': (payload: { colors: ChaseColor[] }) => void;
   // 'chase:updated': (payload: { value: number }) => void;
   // 'step:updated': (payload: { value: number }) => void;
-  'dmx:write': (payload: { buffer: number[] }) => void;
   'settings-mode:updated': (payload: { value: boolean }) => void;
   'settings-data:updated': (payload: { buffer: number[] }) => void;
   'device-config:updated': (payload: {

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject, combineLatest, map, timer } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ColorService } from './color.service';
+import { MqttService } from './mqtt.service';
 import { WSService } from './ws.service';
 
 export interface AnimatedText {
@@ -52,9 +53,10 @@ export class VideoService {
 
   constructor(
     private wsService: WSService,
-    private colorService: ColorService
+    private colorService: ColorService,
+    private mqttService: MqttService
   ) {
-    this.wsService.dmx$
+    this.mqttService.dmx$
       .pipe(
         map((data) => data.slice(this.address, this.address + this.numChannels))
       )

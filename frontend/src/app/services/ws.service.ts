@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Socket, io } from 'socket.io-client';
 import { environment } from '../../environments/environment';
 import {
@@ -24,7 +24,6 @@ export class WSService {
   public strobe$ = new BehaviorSubject<boolean>(false);
   public master$ = new BehaviorSubject<number>(100);
   public ambientUV$ = new BehaviorSubject<number>(0);
-  public dmx$ = new Subject<number[]>();
   public activeProgramName$ = new BehaviorSubject<ActiveProgramName>(
     ActiveProgramName.ON
   );
@@ -126,10 +125,6 @@ export class WSService {
 
     this.socket.on('settings-data:updated', (data) => {
       this.settingsData$.next(data.buffer);
-    });
-
-    this.socket.on('dmx:write', (data) => {
-      this.dmx$.next(data.buffer);
     });
 
     this.socket.on('device-config:updated', (data) => {

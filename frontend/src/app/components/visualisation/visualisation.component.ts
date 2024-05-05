@@ -59,7 +59,7 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
 
     combineLatest([
       this.configService.visualisation$,
-      this.wsService.dmx$,
+      this.mqttService.dmx$,
       this.mqttService.neopixel$,
     ])
       .pipe(
@@ -93,7 +93,7 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
     this.updateDiamondDome(150 + 8, 110, 99, data);
   }
 
-  redrawNeopixel(message: Buffer) {
+  redrawNeopixel(message: number[]) {
     this.updateNeopixelStrip(48, 20, message.slice(0, 150 * 4));
     this.updateNeopixelStrip(300 - 60, 20, message.slice(150 * 4, 2 * 150 * 4));
   }
@@ -233,9 +233,8 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
     ctx.fill();
   }
 
-  updateNeopixelStrip(x: number, y: number, message: Buffer) {
+  updateNeopixelStrip(x: number, y: number, data: number[]) {
     const ctx = this.context;
-    const data = Array.from(message);
 
     const numPixels = data.length / 4;
     const margin = 4;
