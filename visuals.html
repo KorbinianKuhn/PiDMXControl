@@ -29,7 +29,7 @@
         });
         if (!iframeExists) {
           iframeExists = true;
-          document.body.innerHTML = `<iframe id="iframe" width="${width}" height="${height}" style="transform: scale(${scaleX}, ${scaleX})" src="http://dmx.local/visuals" frameborder="0"></iframe>`;
+          document.body.innerHTML = `<iframe id="iframe" width="100%" height="100%" src="http://dmx.local/visuals" frameborder="0"></iframe>`;
         }
         setTimeout(() => ping(), 30000);
       } catch (err) {

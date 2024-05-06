@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { LetDirective } from '@ngrx/component';
 import { map } from 'rxjs';
+import { BeamerSettingsModalComponent } from '../../components/beamer-settings-modal/beamer-settings-modal.component';
 import { BpmComponent } from '../../components/bpm/bpm.component';
 import { ChannelMixerModalComponent } from '../../components/channel-mixer-modal/channel-mixer-modal.component';
 import { PadButtonComponent } from '../../components/pad-button/pad-button.component';
@@ -50,7 +51,7 @@ export class BoardComponent implements OnInit {
   public overrideProgram = OverrideProgramName;
 
   public visualisation$ = this.configService.visualisation$;
-  public video$ = this.configService.video$;
+  public visuals$ = this.wsService.visuals$;
   public black$ = this.wsService.black$;
 
   public currentColor$ = this.wsService.currentActiveProgram$.pipe(
@@ -91,14 +92,6 @@ export class BoardComponent implements OnInit {
     });
   }
 
-  onVisualisationToggle() {
-    this.configService.toggleVisualisation();
-  }
-
-  onVideoToggle() {
-    this.configService.toggleVideo();
-  }
-
   onClickOpenColorsModal() {
     this.dialog.open(BoardColorsModalComponent);
   }
@@ -106,5 +99,11 @@ export class BoardComponent implements OnInit {
   onClickBlack() {
     const value = this.black$.getValue();
     this.wsService.setBlack(!value);
+  }
+
+  onClickOpenVisualsModal() {
+    this.dialog.open(BeamerSettingsModalComponent, {
+      width: '50vw',
+    });
   }
 }

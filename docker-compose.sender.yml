@@ -6,7 +6,7 @@ services:
     container_name: dmx-nginx
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./static:/static:ro
+      - ./backend/static:/static:ro
     links:
       - frontend
       - backend
@@ -30,4 +30,4 @@ services:
     environment:
       - CONFIG=sender
     volumes:
-      - ./static:/usr/src/app/static
+      - ./backend/static:/usr/src/app/static

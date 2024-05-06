@@ -1,15 +1,16 @@
 <table *ngrxLet="visuals$ as visuals">
   @for (source of visuals.sources; track source; let index = $index) {
-    <tr>
-      <td>
-        <button
-          mat-button
-          [color]="index === visuals.currentIndex ? 'primary' : null"
-          (click)="onVisualChange(index)"
-          >
-          {{ source.url.replace(".mp4", "").replaceAll("-", " ") | titlecase }}
-        </button>
-      </td>
-    </tr>
+  <tr>
+    <td>
+      <button
+        tabindex="-1"
+        mat-button
+        [color]="index - 1 === visuals.currentIndex ? 'primary' : null"
+        (click)="onVisualChange(index)"
+      >
+        {{ source.url.replace(".mp4", "").replaceAll("-", " ") | titlecase }}
+      </button>
+    </td>
+  </tr>
   }
 </table>

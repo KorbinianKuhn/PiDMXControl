@@ -22,20 +22,35 @@
     </app-panel-group>
 
     <app-panel-group label="Chases" class="mb-1">
-      <ng-container *ngrxLet="currentColor$ as currentColor">
-        <app-pad-button
-          [color]="currentColor.gradient"
-          class="m-1 mr-10"
-          size="small"
-          (click)="onClickOpenColorsModal()"
-          [current]="true"
-          [progress]="currentColor.progress"
-        >
-          <span class="text-xs tracking-widest"
-            >{{ currentColor.a }}<br />{{ currentColor.b }}</span
+      <div class="flex flex-col">
+        <ng-container *ngrxLet="currentColor$ as currentColor">
+          <app-pad-button
+            [color]="currentColor.gradient"
+            class="m-1 mr-10"
+            size="small"
+            (click)="onClickOpenColorsModal()"
+            [current]="true"
+            [progress]="currentColor.progress"
           >
-        </app-pad-button>
-      </ng-container>
+            <span class="text-xs tracking-widest"
+              >{{ currentColor.a }}<br />{{ currentColor.b }}</span
+            >
+          </app-pad-button>
+        </ng-container>
+
+        <ng-container *ngrxLet="visuals$ as visuals">
+          <app-pad-button
+            class="m-1 mr-10"
+            size="small"
+            color="bg-cyan-500"
+            [active]="visuals.currentIndex > -1"
+            [current]="visuals.currentIndex > -1"
+            (click)="onClickOpenVisualsModal()"
+          >
+            <span class="text-xs tracking-widest">Video</span>
+          </app-pad-button>
+        </ng-container>
+      </div>
 
       <!-- <app-active-program-button
         size="small"
@@ -138,24 +153,6 @@
           (click)="onOpenBrightnessModal()"
         >
           <mat-icon svgIcon="brightness"></mat-icon>
-        </button>
-        <button
-          class="text-cyan-600"
-          mat-icon-button
-          (click)="onVisualisationToggle()"
-          *ngrxLet="visualisation$ as visualisation"
-        >
-          <mat-icon
-            [svgIcon]="visualisation ? 'visibility' : 'visibility_off'"
-          ></mat-icon>
-        </button>
-        <button
-          class="text-cyan-600"
-          mat-icon-button
-          (click)="onVideoToggle()"
-          *ngrxLet="video$ as video"
-        >
-          <mat-icon [svgIcon]="video ? 'movie' : 'movie_off'"></mat-icon>
         </button>
         <button
           class="text-cyan-600"

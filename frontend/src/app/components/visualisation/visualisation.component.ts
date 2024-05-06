@@ -5,6 +5,9 @@ import {
   OnDestroy,
   ViewChild,
 } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { LetDirective } from '@ngrx/component';
 import {
   Subject,
   animationFrameScheduler,
@@ -16,7 +19,6 @@ import {
 import { ColorService } from '../../services/color.service';
 import { ConfigService } from '../../services/config.service';
 import { MqttService } from '../../services/mqtt.service';
-import { WSService } from '../../services/ws.service';
 import { BeamerComponent } from '../beamer/beamer.component';
 
 @Component({
@@ -24,18 +26,19 @@ import { BeamerComponent } from '../beamer/beamer.component';
   templateUrl: './visualisation.component.html',
   styleUrls: ['./visualisation.component.scss'],
   standalone: true,
-  imports: [BeamerComponent],
+  imports: [BeamerComponent, MatIconButton, LetDirective, MatIconModule],
 })
 export class VisualisationComponent implements AfterViewInit, OnDestroy {
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
 
   private destroy$$ = new Subject<void>();
-
   private bgColor = '#111827';
+
+  public visualisation$ = this.configService.visualisation$;
+  public video$ = this.configService.video$;
 
   constructor(
     private colorService: ColorService,
-    private wsService: WSService,
     private mqttService: MqttService,
     private configService: ConfigService
   ) {}
@@ -75,6 +78,22 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy$$.next();
+  }
+
+  onClick() {
+    this.configService.toggleVisualisation();
+    this.redraw(new Array(513).fill(0));
+    this.redrawNeopixel(new Array(1200).fill(0));
+    if (this.configService.visualisation$.getValue()) {
+      this.configService.startVideo();
+    } else {
+      this.configService.stopVideo();
+    }
+  }
+
+  onClickBeamer(event: MouseEvent) {
+    event.stopPropagation();
+    this.configService.toggleVideo();
   }
 
   redraw(data: number[]) {

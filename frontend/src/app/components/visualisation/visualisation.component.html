@@ -1,6 +1,11 @@
-<div class="container">
+<div class="container" (click)="onClick()">
   <canvas #canvas width="300" height="200"></canvas>
   <div class="beamer-wrapper">
-    <app-beamer id="beamer"></app-beamer>
+    <app-beamer id="beamer" (click)="onClickBeamer($event)"></app-beamer>
   </div>
+  <ng-container *ngrxLet="visualisation$ as visualisation">
+    @if (!visualisation) {
+    <div class="message text-xs tracking-wider">Click to enable preview</div>
+    }
+  </ng-container>
 </div>

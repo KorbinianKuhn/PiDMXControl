@@ -18,4 +18,12 @@ export class ConfigService {
   toggleVideo() {
     this.video$.next(!this.video$.getValue());
   }
+
+  stopVideo() {
+    this.video$.next(false);
+  }
+
+  startVideo() {
+    this.video$.next(true);
+  }
 }
