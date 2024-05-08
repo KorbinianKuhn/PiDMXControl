@@ -20,7 +20,7 @@ export const createChaseDark = (
   // const bar = createBarPattern(devices, colors);
   const hex = createHexPattern(devices, colors);
   const head = createHeadPattern(devices, colors);
-  const beamer = repeat(createBeamerPattern(devices, colors), 2);
+  const beamer = createBeamerPattern(devices, colors);
 
   const steps = mergeDevicePatterns(hex, head, beamer);
 
@@ -162,12 +162,13 @@ const createBeamerPattern = (
   const steps: ChannelAnimation = [];
 
   const beamer = devices.object().beamer;
-  const a = beamer.state({ master: 255, ...colors.a });
-  const b = beamer.state({ master: 255, ...colors.b });
 
-  for (const color of [a, b]) {
-    for (let i = 0; i < 64; i++) {
-      steps.push(color);
+  for (const color of [colors.a, colors.b]) {
+    for (let i = 0; i < 32; i++) {
+      steps.push(beamer.state({ master: 255, ...color }));
+      steps.push(beamer.state({ master: 205, ...color }));
+      steps.push(beamer.state({ master: 155, ...color }));
+      steps.push(beamer.state({ master: 105, ...color }));
     }
   }
 

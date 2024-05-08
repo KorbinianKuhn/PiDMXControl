@@ -30,7 +30,7 @@ export const createChaseMirrorBall = (
 
   chase.addSteps(mergeDevicePatterns(steps, ...animations));
 
-  // chase.addPixelSteps(createPixelPattern(devices, colors));
+  chase.addPixelSteps(createPixelPattern(devices, colors));
 
   return chase;
 };
@@ -183,59 +183,47 @@ const createPixelPattern = (
 
   const steps: Array<number[]> = [];
 
-  const randomInt = (min: number, max: number) => {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  };
+  const masterStates: Array<number[]> = [];
+  for (let i = 0; i < 16; i++) {
+    masterStates.push(
+      new Array(neopixelA.length + neopixelB.length)
+        .fill(null)
+        .map((o) => (Math.random() < 0.1 ? 255 : 0)),
+    );
+  }
 
-  for (const color of [colors.a, colors.b]) {
-    const a = [];
-    for (let i = 0; i < 4; i++) {
-      a.push(
-        new Array(neopixelA.length).fill(null).map((o, i) => {
-          return {
-            index: i,
-            values:
-              Math.random() > 0.2
-                ? {
-                    ...color,
-                    master: 0,
-                  }
-                : {
-                    ...color,
-                    master: randomInt(0, 128),
-                  },
-          };
-        }),
-      );
-    }
+  const masterSteps: Array<number[]> = [];
+  for (let i = 0; i < masterStates.length; i++) {
+    const from = masterStates[i];
+    const to =
+      i === masterStates.length - 1 ? masterStates[0] : masterStates[i + 1];
 
-    const states = [];
-    for (let i = 0; i < 3; i++) {
-      const from = a[i];
-      const to = a[i + 1];
-
-      for (let i2 = 0; i < 4; i2++) {
-        const state = new Array(neopixelA.length).fill(null);
-        for (let j = 0; j < from.length; j++) {
-          // const master = Math.floor(
-          //   from[j].values.master +
-          //     ((to[j].values.master - from[j].values.master) * i2) / 8,
-          // );
-          state[j] = {
-            index: j,
-            values: {
-              ...from[j].values,
-              master: 0,
-            },
-          };
-        }
-        states.push(state);
+    for (let j = 0; j < 32; j++) {
+      const state = new Array(from.length).fill(null);
+      for (let k = 0; k < from.length; k++) {
+        state[k] = Math.floor(from[k] + ((to[k] - from[k]) * j) / 32);
       }
+      masterSteps.push(state);
     }
+  }
 
-    for (const state of states) {
-      steps.push(neopixelA.setMultiple(state));
-    }
+  for (let i = 0; i < masterSteps.length; i++) {
+    const color = colors.a;
+
+    const state = [
+      ...neopixelA.setMultiple(
+        masterSteps[i]
+          .slice(0, 150)
+          .map((o, i) => ({ index: i, values: { master: o, ...color } })),
+      ),
+      ...neopixelB.setMultiple(
+        masterSteps[i]
+          .slice(150, 300)
+          .map((o, i) => ({ index: i, values: { master: o, ...color } })),
+      ),
+    ];
+
+    steps.push(state);
   }
 
   return steps;

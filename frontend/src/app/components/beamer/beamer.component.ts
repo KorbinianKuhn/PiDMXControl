@@ -1,14 +1,14 @@
 import { AsyncPipe, NgClass } from '@angular/common';
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { LetDirective } from '@ngrx/component';
 import {
-  Subject,
-  combineLatest,
-  debounceTime,
-  filter,
-  map,
-  takeUntil,
-} from 'rxjs';
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+} from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { LetDirective } from '@ngrx/component';
+import { Subject, combineLatest, filter, map, takeUntil } from 'rxjs';
 import { ConfigService } from '../../services/config.service';
 import { VideoService } from '../../services/video.service';
 import { WSService } from '../../services/ws.service';
@@ -18,15 +18,17 @@ import { WSService } from '../../services/ws.service';
   templateUrl: './beamer.component.html',
   styleUrls: ['./beamer.component.scss'],
   standalone: true,
-  imports: [LetDirective, NgClass, AsyncPipe],
+  imports: [LetDirective, NgClass, AsyncPipe, MatIconModule],
 })
 export class BeamerComponent {
   @Input() id!: string;
 
-  @ViewChild('videoElement')
+  @ViewChild('videoElement', { static: false })
   private videoElement!: ElementRef<HTMLVideoElement>;
 
   private destroy$$ = new Subject<void>();
+
+  private timer!: NodeJS.Timeout;
 
   public show$ = combineLatest([
     this.configService.visualisation$,
@@ -52,7 +54,8 @@ export class BeamerComponent {
   constructor(
     private videoService: VideoService,
     private configService: ConfigService,
-    private wsService: WSService
+    private wsService: WSService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {}
@@ -61,7 +64,7 @@ export class BeamerComponent {
     this.show$
       .pipe(
         takeUntil(this.destroy$$),
-        debounceTime(100),
+        // debounceTime(100),
         filter((show) => show === 'video')
       )
       .subscribe(() => {
@@ -74,9 +77,16 @@ export class BeamerComponent {
   }
 
   updateVideo() {
-    if (this.videoElement) {
-      this.videoService.setVideoElement(this.videoElement.nativeElement);
+    if (this.timer) {
+      clearInterval(this.timer);
     }
+
+    this.timer = setInterval(() => {
+      if (this.videoElement.nativeElement) {
+        this.videoService.setVideoElement(this.videoElement.nativeElement);
+        clearInterval(this.timer);
+      }
+    }, 50);
   }
 
   onLoadedMetadata() {

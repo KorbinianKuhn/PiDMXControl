@@ -33,6 +33,8 @@ export const createChaseClub = (
 
   chase.addSteps(mergeDevicePatterns(warped, ...animations));
 
+  chase.addPixelSteps(createPixelPattern(devices, colors));
+
   return chase;
 };
 
@@ -249,6 +251,34 @@ const createBeamerPattern = (
   for (const color of [a, b]) {
     for (let i = 0; i < 32; i++) {
       steps.push(color);
+    }
+  }
+
+  return steps;
+};
+
+const createPixelPattern = (
+  devices: DeviceRegistry,
+  colors: Colors,
+): Array<number[]> => {
+  const { neopixelA, neopixelB } = devices.object();
+
+  let steps: Array<number[]> = [];
+
+  const off = [...neopixelA.setAll({}), ...neopixelB.setAll({})];
+
+  for (const color of [colors.a, colors.b]) {
+    for (let i2 = 0; i2 < 4; i2++) {
+      for (let i3 = 16; i3 > 0; i3--) {
+        const index = Math.round(i3 * (neopixelA.length / 16));
+        steps.push([
+          ...neopixelA.setPixel(index, { ...color }),
+          ...neopixelB.setPixel(index, { ...color }),
+        ]);
+      }
+      for (let i2 = 0; i2 < 112; i2++) {
+        steps.push(off);
+      }
     }
   }
 

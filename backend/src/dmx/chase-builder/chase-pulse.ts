@@ -20,7 +20,7 @@ export const createChasePulse = (
   const bar = createBarPattern(devices, colors);
   const hex = createHexPattern(devices, colors);
   const head = createHeadPattern(devices, colors);
-  const beamer = repeat(createBeamerPattern(devices, colors), 2);
+  const beamer = createBeamerPattern(devices, colors);
 
   const steps = mergeDevicePatterns(bar, hex, head, beamer);
 
@@ -83,23 +83,27 @@ const createBarPattern = (
   const fadeOutSteps = 14;
   const maxBrightness = 255;
 
-  for (let i = 0; i < fadeInSteps; i++) {
-    const brightnessStep = Math.round(maxBrightness / fadeInSteps);
+  for (let color of [colors.a, colors.b]) {
+    for (let _ = 0; _ < 8; _++) {
+      for (let i = 0; i < fadeInSteps; i++) {
+        const brightnessStep = Math.round(maxBrightness / fadeInSteps);
 
-    const master = i * brightnessStep;
+        const master = i * brightnessStep;
 
-    steps.push(bar.state({ segments: 'all', master, ...colors.a }));
+        steps.push(bar.state({ segments: 'all', master, ...color }));
+      }
+
+      for (let i = 0; i < fadeOutSteps; i++) {
+        const brightnessStep = Math.round(maxBrightness / fadeOutSteps);
+
+        const master = maxBrightness - brightnessStep * i;
+
+        steps.push(bar.state({ segments: 'all', master, ...color }));
+      }
+    }
   }
 
-  for (let i = 0; i < fadeOutSteps; i++) {
-    const brightnessStep = Math.round(maxBrightness / fadeOutSteps);
-
-    const master = maxBrightness - brightnessStep * i;
-
-    steps.push(bar.state({ segments: 'all', master, ...colors.a }));
-  }
-
-  return repeat(steps, 16);
+  return steps;
 };
 
 const createHeadPattern = (
@@ -162,12 +166,28 @@ const createBeamerPattern = (
   const steps: ChannelAnimation = [];
 
   const beamer = devices.object().beamer;
-  const a = beamer.state({ master: 255, ...colors.a });
-  const b = beamer.state({ master: 255, ...colors.b });
 
-  for (const color of [a, b]) {
-    for (let i = 0; i < 64; i++) {
-      steps.push(color);
+  const fadeInSteps = 2;
+  const fadeOutSteps = 14;
+  const maxBrightness = 255;
+
+  for (let color of [colors.a, colors.b]) {
+    for (let _ = 0; _ < 8; _++) {
+      for (let i = 0; i < fadeInSteps; i++) {
+        const brightnessStep = Math.round(maxBrightness / fadeInSteps);
+
+        const master = i * brightnessStep;
+
+        steps.push(beamer.state({ master, ...color }));
+      }
+
+      for (let i = 0; i < fadeOutSteps; i++) {
+        const brightnessStep = Math.round(maxBrightness / fadeOutSteps);
+
+        const master = maxBrightness - brightnessStep * i;
+
+        steps.push(beamer.state({ master, ...color }));
+      }
     }
   }
 

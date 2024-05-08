@@ -84,11 +84,11 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
     this.configService.toggleVisualisation();
     this.redraw(new Array(513).fill(0));
     this.redrawNeopixel(new Array(1200).fill(0));
-    if (this.configService.visualisation$.getValue()) {
-      this.configService.startVideo();
-    } else {
-      this.configService.stopVideo();
-    }
+    // if (this.configService.visualisation$.getValue()) {
+    //   this.configService.startVideo();
+    // } else {
+    //   this.configService.stopVideo();
+    // }
   }
 
   onClickBeamer(event: MouseEvent) {

@@ -33,6 +33,8 @@ export const createChaseMoody = (
 
   chase.addSteps(mergeDevicePatterns(warped, ...animations));
 
+  chase.addPixelSteps(createPixelPattern(devices, colors));
+
   return chase;
 };
 
@@ -317,6 +319,95 @@ const createBeamerPattern = (
   }
   for (let i = 0; i < 8; i++) {
     steps.push(b);
+  }
+
+  return steps;
+};
+
+const createPixelPattern = (
+  devices: DeviceRegistry,
+  colors: Colors,
+): Array<number[]> => {
+  const { neopixelA, neopixelB } = devices.object();
+
+  const steps: Array<number[]> = [];
+
+  const masterStates: Array<number[]> = [];
+  for (let i = 0; i < 32; i++) {
+    masterStates.push(
+      new Array(neopixelA.length + neopixelB.length)
+        .fill(null)
+        .map((o) => (Math.random() < 0.1 ? 255 : 0)),
+    );
+  }
+
+  const masterSteps: Array<number[]> = [];
+  for (let i = 0; i < masterStates.length; i++) {
+    const from = masterStates[i];
+    const to =
+      i === masterStates.length - 1 ? masterStates[0] : masterStates[i + 1];
+
+    for (let j = 0; j < 16; j++) {
+      const state = new Array(from.length).fill(null);
+      for (let k = 0; k < from.length; k++) {
+        state[k] = Math.floor(from[k] + ((to[k] - from[k]) * j) / 16);
+      }
+      masterSteps.push(state);
+    }
+  }
+
+  for (let i = 0; i < 512; i++) {
+    steps.push([...neopixelA.clear(), ...neopixelB.clear()]);
+  }
+
+  let color = colors.a;
+  for (let i = 0; i < masterSteps.length; i++) {
+    if (i % 128 === 0) {
+      color = color === colors.a ? colors.b : colors.a;
+    }
+
+    const state = [
+      ...neopixelA.setMultiple(
+        masterSteps[i]
+          .slice(0, 150)
+          .map((o, i) => ({ index: i, values: { master: o, ...color } })),
+      ),
+      ...neopixelB.setMultiple(
+        masterSteps[i]
+          .slice(150, 300)
+          .map((o, i) => ({ index: i, values: { master: o, ...color } })),
+      ),
+    ];
+
+    steps.push(state);
+  }
+
+  color = colors.a;
+  for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 64; i++) {
+      steps.push([...neopixelA.clear(), ...neopixelB.clear()]);
+    }
+
+    for (let i = 0; i < 64; i++) {
+      if (i % 128 === 0) {
+        color = color === colors.a ? colors.b : colors.a;
+      }
+
+      const state = [
+        ...neopixelA.setMultiple(
+          masterSteps[i]
+            .slice(0, 150)
+            .map((o, i) => ({ index: i, values: { master: o, ...color } })),
+        ),
+        ...neopixelB.setMultiple(
+          masterSteps[i]
+            .slice(150, 300)
+            .map((o, i) => ({ index: i, values: { master: o, ...color } })),
+        ),
+      ];
+
+      steps.push(state);
+    }
   }
 
   return steps;

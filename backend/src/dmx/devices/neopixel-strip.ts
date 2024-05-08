@@ -115,7 +115,7 @@ export class NeopixelStrip extends Device {
       b += 127 * factor;
     }
 
-    if (values.master) {
+    if (values.master !== undefined) {
       const multiplier = values.master / 255;
       r *= multiplier;
       g *= multiplier;
