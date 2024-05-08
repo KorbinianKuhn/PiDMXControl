@@ -85,12 +85,18 @@ export const createChaseBuildupInfinite = (
   const steps: Array<number[]> = [];
 
   for (const color of [colors.a, colors.b]) {
-    const indexes = [];
+    let indexes = [];
+
+    const offset = color === colors.a ? 0 : 12;
+
     for (let i = 0; i < neopixelA.length; i++) {
-      if (i % 25 == 0) {
-        indexes.push(i, i + 1, i + 2, i + 3, i + 4);
+      if (i % 25 === 0) {
+        const index = i + offset;
+        indexes.push(index, index + 1, index + 2, index + 3, index + 4);
       }
     }
+
+    indexes = indexes.filter((o) => o < neopixelA.length);
 
     const state = indexes.map((o) => ({
       index: o,
@@ -131,11 +137,11 @@ export const createChaseBuildupBright = (
       .hex.all.map((o) => o.state({ master: 255, ...colors.a })),
   );
 
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 16; i++) {
     steps.push(on);
   }
 
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 16; i++) {
     steps.push([]);
   }
 
@@ -144,6 +150,26 @@ export const createChaseBuildupBright = (
     .head.all.map((o) => o.animationFront(steps.length));
 
   chase.addSteps(mergeDevicePatterns(steps, ...animations));
+
+  const { neopixelA, neopixelB } = devices.object();
+  const pixelSteps = [];
+  const off = [...neopixelA.clear(), ...neopixelB.clear()];
+  const left = [
+    ...neopixelA.setAll({ ...colors.a, master: 255 }),
+    ...neopixelB.setAll({ ...colors.a, master: 0 }),
+  ];
+  const right = [
+    ...neopixelA.setAll({ ...colors.a, master: 0 }),
+    ...neopixelB.setAll({ ...colors.a, master: 255 }),
+  ];
+  for (let i = 0; i < 64; i++) {
+    pixelSteps.push(off);
+  }
+  for (let i = 0; i < 8; i++) {
+    pixelSteps.push(left, left, off, off);
+    pixelSteps.push(right, right, off, off);
+  }
+  chase.addPixelSteps(pixelSteps);
 
   return chase;
 };
@@ -183,7 +209,7 @@ export const createChaseBuildupBlinder = (
     );
   }
 
-  steps = repeat(steps, 4);
+  steps = repeat(steps, 8);
 
   const animations = devices
     .object()

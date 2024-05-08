@@ -175,6 +175,13 @@ const createBeamerPattern = (
   return steps;
 };
 
+const masterStates: Array<number[]> = [];
+for (let i = 0; i < 16; i++) {
+  masterStates.push(
+    new Array(300).fill(null).map((o) => (Math.random() < 0.1 ? 255 : 0)),
+  );
+}
+
 const createPixelPattern = (
   devices: DeviceRegistry,
   colors: Colors,
@@ -182,15 +189,6 @@ const createPixelPattern = (
   const { neopixelA, neopixelB } = devices.object();
 
   const steps: Array<number[]> = [];
-
-  const masterStates: Array<number[]> = [];
-  for (let i = 0; i < 16; i++) {
-    masterStates.push(
-      new Array(neopixelA.length + neopixelB.length)
-        .fill(null)
-        .map((o) => (Math.random() < 0.1 ? 255 : 0)),
-    );
-  }
 
   const masterSteps: Array<number[]> = [];
   for (let i = 0; i < masterStates.length; i++) {
@@ -208,7 +206,7 @@ const createPixelPattern = (
   }
 
   for (let i = 0; i < masterSteps.length; i++) {
-    const color = colors.a;
+    const color = i > masterSteps.length / 2 ? colors.a : colors.b;
 
     const state = [
       ...neopixelA.setMultiple(

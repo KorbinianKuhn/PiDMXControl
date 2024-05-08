@@ -1,11 +1,11 @@
 import { ChannelAnimation, Chase, ChaseColor } from '../lib/chase';
+import { DeviceStateValues } from '../lib/device';
 import { DeviceRegistry } from '../lib/device-registry';
 import { OverrideProgramName } from '../lib/program';
 import {
   flattenChannelStates,
   getChaseColorValues,
   mergeDevicePatterns,
-  repeat,
 } from './chase-utils';
 
 export const createChaseStrobeInfinite = (
@@ -54,37 +54,41 @@ export const createChaseStrobeA = (
 ): Chase => {
   const chase = new Chase(OverrideProgramName.STROBE_A, color);
 
-  const steps: ChannelAnimation = [];
+  const steps: Array<number[]> = [];
 
   const colors = getChaseColorValues(color);
 
-  const { bar, head, dome, spot, beamer, hex } = devices.object();
+  const { neopixelA, neopixelB } = devices.object();
 
-  for (let i = 0; i < 4; i++) {
-    const state = flattenChannelStates(
-      ...hex.all.map((o, i2) =>
-        i2 === i
-          ? o.state({ master: 255, w: 255 })
-          : o.state({ master: 0, w: 0 }),
-      ),
-      bar.state({ segments: 'all', master: 255, w: 255, strobe: 250 }),
-      ...head.all.map((o) =>
-        o.state({ master: 255, ...colors.a, strobe: 250 }),
-      ),
-      dome.state({ master: 255, ...colors.a, strobe: 250 }),
-      spot.state({ master: 255, ...colors.a, strobe: 250 }),
-      beamer.state({ master: 255, ...colors.a, strobe: 120 }),
-    );
-    steps.push(state);
+  const getRandomMasterValues = () =>
+    Array.from({ length: 29 }, () => (Math.random() < 0.05 ? 255 : 0));
+
+  const getRandomStrobeValues = (color: DeviceStateValues) => {
+    const master = getRandomMasterValues();
+    const values = [];
+
+    for (let i = 0; i < master.length; i++) {
+      values.push(
+        ...Array.from({ length: 5 }, (_, i2) => ({
+          index: i * 5 + i2,
+          values: { ...color, master: master[i] },
+        })),
+      );
+    }
+
+    return values;
+  };
+
+  for (let i = 0; i < 64; i++) {
+    const state = [
+      ...neopixelA.setMultiple(getRandomStrobeValues(colors.a)),
+      ...neopixelB.setMultiple(getRandomStrobeValues(colors.a)),
+    ];
+    steps.push(state, state);
   }
 
-  const warped = repeat(steps, 4);
-
-  const animations = devices
-    .object()
-    .head.all.map((o) => repeat(o.animationTop(steps.length), 4));
-
-  chase.addSteps(mergeDevicePatterns(warped, ...animations));
+  chase.addSteps(new Array(steps.length / 4).fill(null).map(() => []));
+  chase.addPixelSteps(steps);
 
   return chase;
 };
@@ -105,7 +109,7 @@ export const createChaseStrobeB = (
       .head.all.map((o) => o.state({ master: 255, ...colors.a, strobe: 100 })),
   );
 
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 32; i++) {
     steps.push(on);
   }
 
@@ -124,7 +128,7 @@ export const createChaseStrobeC = (
 
   const { bar, head } = devices.object();
 
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 32; i++) {
     const state = flattenChannelStates(
       bar.state({ segments: 'all', master: 255, ...colors.a, strobe: 250 }),
       ...head.all.map((o) =>
@@ -149,7 +153,7 @@ export const createChaseStrobeD = (
 
   const { bar, head } = devices.object();
 
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 32; i++) {
     const state = flattenChannelStates(
       bar.state({ segments: 'all', master: 255, w: 255, strobe: 250 }),
       ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 250 })),
