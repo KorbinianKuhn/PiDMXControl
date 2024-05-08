@@ -9,6 +9,7 @@
     "prebuild": "rimraf dist",
     "build": "tsc -p tsconfig.build.json",
     "start": "CONFIG=dev ts-node-dev src/main.ts",
+    "start:sender": "CONFIG=sender ts-node-dev src/main.ts",
     "start:build": "CONFIG=pi node dist/main.js"
   },
   "dependencies": {

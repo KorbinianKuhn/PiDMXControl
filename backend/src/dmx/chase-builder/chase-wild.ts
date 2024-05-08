@@ -29,7 +29,7 @@ export const createChaseWild = (
 
   const animations = devices
     .object()
-    .head.all.map((o) => repeat(o.animationNodding(steps.length / 8), 8));
+    .head.all.map((o) => repeat(o.animationNodding(steps.length / 2), 2));
 
   chase.addSteps(mergeDevicePatterns(warped, ...animations));
 

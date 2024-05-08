@@ -86,6 +86,25 @@ export class VarytecHeroWash extends Device {
     return steps;
   }
 
+  animationFront(numSteps: number): ChannelAnimation {
+    const steps: ChannelAnimation = [];
+
+    for (let i = 0; i < numSteps; i++) {
+      steps.push([
+        {
+          address: this.address + 0,
+          value: 0,
+        },
+        {
+          address: this.address + 2,
+          value: 0,
+        },
+      ]);
+    }
+
+    return steps;
+  }
+
   animationEight(numSteps: number): ChannelAnimation {
     const steps: ChannelAnimation = [];
 
@@ -153,7 +172,7 @@ export class VarytecHeroWash extends Device {
       .fill(null)
       .map((o, i) => panMin + i * panStepValue);
 
-    const animationPan = [...panRight, ...panRight.slice().reverse()];
+    const animationPan = [...panRight, ...panRight.reverse()];
 
     // TILT
     const tiltSteps = numSteps / 8;
@@ -167,7 +186,12 @@ export class VarytecHeroWash extends Device {
       ...tiltDown,
       ...tiltUp,
       ...tiltDown,
+      ...tiltUp,
+      ...tiltDown,
+      ...tiltUp,
+      ...tiltDown,
     ];
+
     const animationTilt = [
       ...animationTiltUnshifted.slice(tiltSteps / 2),
       ...animationTiltUnshifted.slice(0, tiltSteps / 2),

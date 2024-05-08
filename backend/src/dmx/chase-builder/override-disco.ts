@@ -30,7 +30,7 @@ export const createChaseDisco = (
 
   const animations = devices
     .object()
-    .head.all.map((o) => repeat(o.animationNodding(warped.length / 8), 8));
+    .head.all.map((o) => repeat(o.animationNodding(warped.length / 2), 2));
 
   chase.addSteps(mergeDevicePatterns(warped, ...animations));
 

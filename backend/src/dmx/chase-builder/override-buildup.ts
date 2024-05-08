@@ -139,7 +139,11 @@ export const createChaseBuildupBright = (
     steps.push([]);
   }
 
-  chase.addSteps(steps);
+  const animations = devices
+    .object()
+    .head.all.map((o) => o.animationFront(steps.length));
+
+  chase.addSteps(mergeDevicePatterns(steps, ...animations));
 
   return chase;
 };
@@ -183,7 +187,7 @@ export const createChaseBuildupBlinder = (
 
   const animations = devices
     .object()
-    .head.all.map((o) => o.animationTop(steps.length));
+    .head.all.map((o) => o.animationFront(steps.length));
 
   chase.addSteps(mergeDevicePatterns(steps, ...animations));
 
