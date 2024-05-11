@@ -5,7 +5,9 @@ import {
   Colors,
   flattenChannelStates,
   getChaseColorValues,
+  getPixelGradient,
   mergeDevicePatterns,
+  mergePixelPatterns,
   repeat,
   warp,
 } from './chase-utils';
@@ -237,21 +239,34 @@ const createPixelPattern = (
 
   for (const color of [colors.a, colors.b, colors.a, colors.b]) {
     for (let i = 0; i < 8; i++) {
-      for (let i2 = 0; i2 < 16; i2++) {
-        const index = Math.round(i2 * (neopixelA.length / 16));
-        steps.push([
-          ...neopixelA.setPixel(index, { ...color }),
-          ...neopixelB.setPixel(index, {}),
-        ]);
-      }
+      steps.push(
+        ...mergePixelPatterns(
+          getPixelGradient(neopixelA, color, 8, 16),
+          getPixelGradient(neopixelB, {}, 8, 16),
+        ),
+      );
+      steps.push(
+        ...mergePixelPatterns(
+          getPixelGradient(neopixelA, {}, 8, 16),
+          getPixelGradient(neopixelB, color, 8, 16),
+        ),
+      );
 
-      for (let i2 = 0; i2 < 16; i2++) {
-        const index = Math.round(i2 * (neopixelA.length / 16));
-        steps.push([
-          ...neopixelA.setPixel(index, {}),
-          ...neopixelB.setPixel(index, { ...color }),
-        ]);
-      }
+      // for (let i2 = 0; i2 < 16; i2++) {
+      //   const index = Math.round(i2 * (neopixelA.length / 16));
+      //   steps.push([
+      //     ...neopixelA.setPixel(index, { ...color }),
+      //     ...neopixelB.setPixel(index, {}),
+      //   ]);
+      // }
+
+      // for (let i2 = 0; i2 < 16; i2++) {
+      //   const index = Math.round(i2 * (neopixelA.length / 16));
+      //   steps.push([
+      //     ...neopixelA.setPixel(index, {}),
+      //     ...neopixelB.setPixel(index, { ...color }),
+      //   ]);
+      // }
     }
   }
 

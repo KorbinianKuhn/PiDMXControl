@@ -44,11 +44,13 @@ export class Chase {
       [
         OverrideProgramName.BUILDUP_BRIGHT,
         OverrideProgramName.BUILDUP_FADEOUT,
+        OverrideProgramName.BUILDUP_STREAK,
         OverrideProgramName.BUILDUP_BLINDER,
         OverrideProgramName.STROBE_A,
         OverrideProgramName.STROBE_B,
         OverrideProgramName.STROBE_C,
         OverrideProgramName.STROBE_D,
+        OverrideProgramName.STROBE_E,
       ].includes(programName as any)
     ) {
       this.loop = false;

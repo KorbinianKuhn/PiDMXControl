@@ -8,7 +8,7 @@
       class="relative flex-1 flex justify-center items-center overflow-hidden"
       [style.opacity]="video.opacity"
     >
-      <ng-container>
+      <ng-container *ngrxLet="color$ as color">
         @if (show === 'video') {
         <video
           class="w-20 h-10 max-w-none"
@@ -17,15 +17,15 @@
           (loadedmetadata)="onLoadedMetadata()"
           #videoElement
         ></video>
+        @if (color === 'chase') {
         <div
           [style.background-color]="video.color"
           class="absolute inset-0 mix-blend-color"
         ></div>
-        } @if (show === 'color') {
+        } } @if (show === 'color') {
         <div
-          [style.background-color]="video.color"
+          [style.background-color]="color === 'chase' ? video.color : '#555'"
           class="absolute inset-0 flex items-center justify-center"
-          [style.opacity]="video.opacity"
         >
           <mat-icon svgIcon="movie_off" class="text-black"></mat-icon>
         </div>

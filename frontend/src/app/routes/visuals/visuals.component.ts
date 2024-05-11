@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { LetDirective } from '@ngrx/component';
-import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { VideoService } from '../../services/video.service';
 import { WSService } from '../../services/ws.service';
 
@@ -24,9 +24,11 @@ export class VisualsComponent implements AfterViewInit, OnDestroy {
   private videoElement!: ElementRef<HTMLVideoElement>;
 
   private destroy$$ = new Subject<void>();
+  private timer!: NodeJS.Timeout;
 
   public text$ = this.videoService.text$;
   public video$ = this.videoService.video$;
+  public color$ = this.wsService.visuals$.pipe(map((visuals) => visuals.color));
 
   constructor(
     private elementRef: ElementRef,
@@ -43,11 +45,9 @@ export class VisualsComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.wsService.visuals$
-      .pipe(takeUntil(this.destroy$$), debounceTime(1000))
-      .subscribe(() => {
-        this.updateVideo();
-      });
+    this.wsService.visuals$.pipe(takeUntil(this.destroy$$)).subscribe(() => {
+      this.updateVideo();
+    });
   }
 
   ngOnDestroy(): void {
@@ -55,9 +55,16 @@ export class VisualsComponent implements AfterViewInit, OnDestroy {
   }
 
   updateVideo() {
-    if (this.videoElement) {
-      this.videoService.setVideoElement(this.videoElement.nativeElement);
+    if (this.timer) {
+      clearInterval(this.timer);
     }
+
+    this.timer = setInterval(() => {
+      if (this.videoElement.nativeElement) {
+        this.videoService.setVideoElement(this.videoElement.nativeElement);
+        clearInterval(this.timer);
+      }
+    }, 50);
   }
 
   onLoadedMetadata() {

@@ -61,7 +61,7 @@ export const createChaseStrobeA = (
   const { neopixelA, neopixelB } = devices.object();
 
   const getRandomMasterValues = () =>
-    Array.from({ length: 29 }, () => (Math.random() < 0.05 ? 255 : 0));
+    Array.from({ length: 15 }, () => (Math.random() < 0.05 ? 255 : 0));
 
   const getRandomStrobeValues = (color: DeviceStateValues) => {
     const master = getRandomMasterValues();
@@ -69,8 +69,8 @@ export const createChaseStrobeA = (
 
     for (let i = 0; i < master.length; i++) {
       values.push(
-        ...Array.from({ length: 5 }, (_, i2) => ({
-          index: i * 5 + i2,
+        ...Array.from({ length: 10 }, (_, i2) => ({
+          index: i * 10 + i2,
           values: { ...color, master: master[i] },
         })),
       );
@@ -162,6 +162,44 @@ export const createChaseStrobeD = (
   }
 
   chase.addSteps(steps);
+
+  return chase;
+};
+
+export const createChaseStrobeE = (
+  devices: DeviceRegistry,
+  color: ChaseColor,
+): Chase => {
+  const chase = new Chase(OverrideProgramName.STROBE_E, color);
+
+  const colors = getChaseColorValues(color);
+
+  const { neopixelA, neopixelB } = devices.object();
+
+  const steps: Array<number[]> = [];
+
+  for (let i = 0; i < 8; i++) {
+    for (let color of [colors.a, colors.b]) {
+      steps.push([
+        ...neopixelA.setAll({ ...color, master: 255 }),
+        ...neopixelB.setAll({ ...color, master: 255 }),
+      ]);
+      steps.push([
+        ...neopixelA.setAll({ ...color, master: 255 }),
+        ...neopixelB.setAll({ ...color, master: 255 }),
+      ]);
+      steps.push([...neopixelA.empty(), ...neopixelB.empty()]);
+      steps.push([...neopixelA.empty(), ...neopixelB.empty()]);
+      steps.push([...neopixelA.empty(), ...neopixelB.empty()]);
+      steps.push([...neopixelA.empty(), ...neopixelB.empty()]);
+      steps.push([...neopixelA.empty(), ...neopixelB.empty()]);
+      steps.push([...neopixelA.empty(), ...neopixelB.empty()]);
+    }
+  }
+
+  chase.addSteps(new Array(steps.length / 4).fill(null).map(() => []));
+
+  chase.addPixelSteps(steps);
 
   return chase;
 };

@@ -11,11 +11,13 @@ export enum OverrideProgramName {
   BUILDUP_BRIGHT = 'buildup-bright',
   BUILDUP_FADEOUT = 'buildup-fadeout',
   BUILDUP_BLINDER = 'buildup-blinder',
+  BUILDUP_STREAK = 'buildup-streak',
   BUILDUP_INFINITE = 'buildup-inifite',
   STROBE_A = 'strobe-a',
   STROBE_B = 'strobe-b',
   STROBE_C = 'strobe-c',
   STROBE_D = 'strobe-d',
+  STROBE_E = 'strobe-e',
   DISCO = 'disco',
   STROBE_INFINITE = 'strobe-infinite',
 }

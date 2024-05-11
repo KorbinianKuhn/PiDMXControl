@@ -1,5 +1,5 @@
 app-panel-group {
-  max-width: 395px;
+  max-width: min(100vw, 466px);
 }
 
 app-panel-group.max-4 {

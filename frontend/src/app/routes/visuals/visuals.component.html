@@ -1,5 +1,6 @@
 <ng-container *ngrxLet="video$ as video">
   <div
+    *ngrxLet="color$ as color"
     class="relative flex-1 flex justify-center items-center"
     [style.opacity]="video.opacity"
     [ngClass]="video.strobe.classes"
@@ -11,10 +12,12 @@
       (loadedmetadata)="onLoadedMetadata()"
       #videoElement
     ></video>
+    @if (color === 'chase') {
     <div
       [style.background-color]="video.color"
       class="absolute inset-0 mix-blend-color"
     ></div>
+    }
     <div
       *ngrxLet="text$ as text"
       class="absolute inset-0 flex items-center justify-center"

@@ -1,15 +1,6 @@
 <div class="flex flex-row pt-2 flex-wrap justify-center">
   <div class="flex flex-col justify-start">
     <app-panel-group label="Overrides" class="mb-1">
-      <app-toggle-button
-        [active]="black$ | async"
-        (click)="onClickBlack()"
-        class="m-1"
-        size="small"
-        [current]="!!(black$ | async)"
-      >
-        <span class="text-xs tracking-widest">Black</span>
-      </app-toggle-button>
       <app-override-program-button size="small" [name]="overrideProgram.DAY">
         <span class="text-xs tracking-widest">Day</span>
       </app-override-program-button>
@@ -40,7 +31,7 @@
 
         <ng-container *ngrxLet="visuals$ as visuals">
           <app-pad-button
-            class="m-1 mr-10"
+            class="m-1"
             size="small"
             color="bg-cyan-500"
             [active]="visuals.currentIndex > -1"
@@ -51,16 +42,8 @@
           </app-pad-button>
         </ng-container>
       </div>
-
-      <!-- <app-active-program-button
-        size="small"
-        class="mx-4"
-        [name]="activeProgram.ON"
-      >
-        <span class="text-xs tracking-widest">On</span>
-      </app-active-program-button> -->
-
-      <div class="flex flex-wrap justify-end">
+      <div class="flex-1"></div>
+      <div class="flex flex-wrap justify-end" style="max-width: 260px">
         <app-active-program-button
           size="small"
           [name]="activeProgram.MIRROR_BALL"
@@ -104,35 +87,35 @@
       <app-override-program-button [name]="overrideProgram.BUILDUP_BLINDER">
         <span class="text-xs tracking-widest">Blinder</span>
       </app-override-program-button>
+      <app-override-program-button [name]="overrideProgram.BUILDUP_STREAK">
+        <span class="text-xs tracking-widest">Streak</span>
+      </app-override-program-button>
       <app-override-program-button [name]="overrideProgram.BUILDUP_INFINITE">
         <span class="text-xs tracking-widest">Infinite</span>
       </app-override-program-button>
-      <app-toggle-button
-        [active]="black$ | async"
-        (click)="onClickBlack()"
-        class="m-1"
-        [current]="!!(black$ | async)"
-      >
-        <span class="text-xs tracking-widest">Black</span>
-      </app-toggle-button>
     </app-panel-group>
 
     <app-panel-group label="Strobes">
-      <app-override-program-button [name]="overrideProgram.STROBE_A">
-        <span class="text-xs tracking-widest">Storm</span>
-      </app-override-program-button>
-      <app-override-program-button [name]="overrideProgram.STROBE_B">
-        <span class="text-xs tracking-widest">Slow-Mo</span>
-      </app-override-program-button>
-      <app-override-program-button [name]="overrideProgram.STROBE_C">
-        <span class="text-xs tracking-widest">Color</span>
-      </app-override-program-button>
-      <app-override-program-button [name]="overrideProgram.STROBE_D">
-        <span class="text-xs tracking-widest">White</span>
-      </app-override-program-button>
-      <app-override-program-button [name]="overrideProgram.STROBE_INFINITE">
-        <span class="text-xs tracking-widest">Infinite</span>
-      </app-override-program-button>
+      <div class="flex flex-wrap">
+        <app-override-program-button [name]="overrideProgram.STROBE_A">
+          <span class="text-xs tracking-widest">Storm</span>
+        </app-override-program-button>
+        <app-override-program-button [name]="overrideProgram.STROBE_B">
+          <span class="text-xs tracking-widest">Slow-Mo</span>
+        </app-override-program-button>
+        <app-override-program-button [name]="overrideProgram.STROBE_C">
+          <span class="text-xs tracking-widest">Color</span>
+        </app-override-program-button>
+        <app-override-program-button [name]="overrideProgram.STROBE_D">
+          <span class="text-xs tracking-widest">White</span>
+        </app-override-program-button>
+        <app-override-program-button [name]="overrideProgram.STROBE_E">
+          <span class="text-xs tracking-widest">Pixels</span>
+        </app-override-program-button>
+        <app-override-program-button [name]="overrideProgram.STROBE_INFINITE">
+          <span class="text-xs tracking-widest">Infinite</span>
+        </app-override-program-button>
+      </div>
     </app-panel-group>
   </div>
 
@@ -145,32 +128,43 @@
     <app-panel-group label="Visualisation">
       <app-visualisation></app-visualisation>
     </app-panel-group>
-    <app-panel-group>
-      <div class="flex flex-1 justify-center items-center h-16">
-        <button
-          class="text-cyan-600"
-          mat-icon-button
-          (click)="onOpenBrightnessModal()"
+    <div class="flex">
+      <app-panel-group style="flex: 0">
+        <app-toggle-button
+          [active]="black$ | async"
+          (click)="onClickBlack()"
+          class="m-1"
+          [current]="!!(black$ | async)"
         >
-          <mat-icon svgIcon="brightness"></mat-icon>
-        </button>
-        <div class="flex-1"></div>
-        <button
-          class="text-cyan-600"
-          mat-icon-button
-          (click)="onOpenChannelMixerModal()"
-        >
-          <mat-icon svgIcon="tune"></mat-icon>
-        </button>
+          <span class="text-xs tracking-widest">Black</span>
+        </app-toggle-button>
+      </app-panel-group>
+      <app-panel-group class="flex-1">
+        <div class="flex flex-1 justify-center items-center h-16 m-1">
+          <button
+            class="text-cyan-600"
+            mat-icon-button
+            (click)="onOpenBrightnessModal()"
+          >
+            <mat-icon svgIcon="brightness"></mat-icon>
+          </button>
+          <button
+            class="text-cyan-600"
+            mat-icon-button
+            (click)="onOpenChannelMixerModal()"
+          >
+            <mat-icon svgIcon="tune"></mat-icon>
+          </button>
 
-        <button
-          class="text-cyan-600"
-          mat-icon-button
-          (click)="onRefreshClick()"
-        >
-          <mat-icon svgIcon="refresh"></mat-icon>
-        </button>
-      </div>
-    </app-panel-group>
+          <button
+            class="text-cyan-600"
+            mat-icon-button
+            (click)="onRefreshClick()"
+          >
+            <mat-icon svgIcon="refresh"></mat-icon>
+          </button>
+        </div>
+      </app-panel-group>
+    </div>
   </div>
 </div>

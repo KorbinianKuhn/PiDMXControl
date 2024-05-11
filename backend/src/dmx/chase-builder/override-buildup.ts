@@ -1,4 +1,5 @@
 import { ChannelAnimation, Chase, ChaseColor } from '../lib/chase';
+import { DeviceStateValues } from '../lib/device';
 import { DeviceRegistry } from '../lib/device-registry';
 import { OverrideProgramName } from '../lib/program';
 import {
@@ -84,32 +85,19 @@ export const createChaseBuildupInfinite = (
 
   const steps: Array<number[]> = [];
 
-  for (const color of [colors.a, colors.b]) {
-    let indexes = [];
-
-    const offset = color === colors.a ? 0 : 12;
-
-    for (let i = 0; i < neopixelA.length; i++) {
-      if (i % 25 === 0) {
-        const index = i + offset;
-        indexes.push(index, index + 1, index + 2, index + 3, index + 4);
+  for (let i = 0; i < 4; i++) {
+    for (let color of [colors.a, colors.b]) {
+      const masters = [50, 100, 255, 100, 50];
+      for (let master of masters) {
+        steps.push([
+          ...neopixelA.setAll({ ...color, master }),
+          ...neopixelB.setAll({ ...color, master }),
+        ]);
+      }
+      for (let j = 0; j < 32 - masters.length; j++) {
+        steps.push([...neopixelA.empty(), ...neopixelB.empty()]);
       }
     }
-
-    indexes = indexes.filter((o) => o < neopixelA.length);
-
-    const state = indexes.map((o) => ({
-      index: o,
-      values: { master: 255, ...color },
-    }));
-
-    const off = [...neopixelA.empty(), ...neopixelB.empty()];
-    const on = [
-      ...neopixelA.setMultiple(state),
-      ...neopixelB.setMultiple(state),
-    ];
-
-    steps.push(...new Array(32).fill(null).map((o, i) => (i < 4 ? on : off)));
   }
 
   chase.addSteps(new Array(steps.length / 4).fill(null).map(() => []));
@@ -216,6 +204,56 @@ export const createChaseBuildupBlinder = (
     .head.all.map((o) => o.animationFront(steps.length));
 
   chase.addSteps(mergeDevicePatterns(steps, ...animations));
+
+  return chase;
+};
+
+export const createChaseBuildupStreak = (
+  devices: DeviceRegistry,
+  color: ChaseColor,
+): Chase => {
+  const chase = new Chase(OverrideProgramName.BUILDUP_STREAK, color);
+
+  const colors = getChaseColorValues(color);
+
+  const { neopixelA, neopixelB } = devices.object();
+
+  const steps: Array<number[]> = [];
+
+  const getArray = (length: number, color: DeviceStateValues) => {
+    return new Array(length)
+      .fill(null)
+      .map((o, index) => ({ index, values: { ...color } }));
+  };
+
+  for (let i = 0; i < 5; i++) {
+    const state = getArray((neopixelA.length / 5) * (i + 1), colors.a);
+    for (let j = 0; j < 16; j++) {
+      steps.push([
+        ...neopixelA.setMultiple(state),
+        ...neopixelB.setMultiple(state),
+      ]);
+    }
+  }
+
+  const off = [...neopixelA.clear(), ...neopixelB.clear()];
+  const b = [
+    ...neopixelA.setAll({ ...colors.a, master: 255 }),
+    ...neopixelB.setAll({ ...colors.a, master: 255 }),
+  ];
+
+  for (let i = 0; i < 16; i++) {
+    steps.push(off);
+  }
+
+  for (let i = 0; i < 8; i++) {
+    steps.push(b, b);
+    steps.push(off, off);
+  }
+
+  chase.addSteps(new Array(steps.length / 4).fill(null).map(() => []));
+
+  chase.addPixelSteps(steps);
 
   return chase;
 };

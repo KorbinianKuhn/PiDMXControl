@@ -14,6 +14,8 @@ import { BpmNumberComponent } from '../bpm-number/bpm-number.component';
 })
 export class BpmModalComponent implements OnInit, OnDestroy {
   private taps: number[] = [];
+  private precision = 5;
+
   private destroy$$ = new Subject<void>();
 
   public bpm: number = this.wsService.bpm$.getValue();
@@ -35,6 +37,41 @@ export class BpmModalComponent implements OnInit, OnDestroy {
   }
 
   onClickTap() {
+    this.taps.push(Date.now());
+
+    let ticks = [];
+
+    if (this.taps.length >= 2) {
+      for (let i = 0; i < this.taps.length; i++) {
+        if (i >= 1) {
+          // calc bpm between last two taps
+          ticks.push(
+            Math.round(
+              (60 / (this.taps[i] / 1000 - this.taps[i - 1] / 1000)) * 100
+            ) / 100
+          );
+        }
+      }
+    }
+
+    if (this.taps.length >= 24) {
+      this.taps.shift();
+    }
+
+    if (ticks.length >= 4) {
+      let n = 0;
+
+      for (let i = ticks.length - 1; i >= 0; i--) {
+        n += ticks[i];
+        if (ticks.length - i >= this.precision) break;
+      }
+
+      this.bpm = Math.round((n / this.precision) * 2) / 2;
+      this.wsService.setBpm(this.bpm);
+    }
+  }
+
+  onClickTap2() {
     const now = Date.now();
     const length = this.taps.length;
 

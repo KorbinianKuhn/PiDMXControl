@@ -107,7 +107,7 @@ const main = async () => {
     });
 
     socket.on('set:visuals', (args) => {
-      dmx.config.setVisualSource(args.id);
+      dmx.config.setVisuals(args.id, args.color, args.opacity);
     });
   });
 

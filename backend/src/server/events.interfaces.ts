@@ -17,7 +17,11 @@ export interface ClientToServerEvents {
   'set:settings-mode': (payload: { value: boolean }) => void;
   'set:settings-channel': (payload: { address: number; value: number }) => void;
   'set:device-config': (payload: { id: string; config: DeviceConfig }) => void;
-  'set:visuals': (payload: { id: number }) => void;
+  'set:visuals': (payload: {
+    id: number;
+    color: 'chase' | 'original';
+    opacity: 'chase' | 'off';
+  }) => void;
 }
 
 export interface ServerToClientEvents {

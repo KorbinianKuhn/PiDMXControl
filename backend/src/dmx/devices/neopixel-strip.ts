@@ -58,6 +58,7 @@ export class NeopixelStrip extends Device {
 
     for (const pixel of pixels) {
       const { r, g, b, w } = this.getRGBWFromValues(pixel.values);
+
       state[pixel.index * 4] = r;
       state[pixel.index * 4 + 1] = g;
       state[pixel.index * 4 + 2] = b;

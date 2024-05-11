@@ -20,11 +20,13 @@ export enum OverrideProgramName {
   BUILDUP_BRIGHT = 'buildup-bright',
   BUILDUP_FADEOUT = 'buildup-fadeout',
   BUILDUP_BLINDER = 'buildup-blinder',
+  BUILDUP_STREAK = 'buildup-streak',
   BUILDUP_INFINITE = 'buildup-inifite',
   STROBE_A = 'strobe-a',
   STROBE_B = 'strobe-b',
   STROBE_C = 'strobe-c',
   STROBE_D = 'strobe-d',
+  STROBE_E = 'strobe-e',
   DISCO = 'disco',
   STROBE_INFINITE = 'strobe-infinite',
 }
@@ -53,6 +55,8 @@ export interface Visuals {
   sources: Array<{ url: string }>;
   currentIndex: number;
   startedAt: string;
+  color: 'chase' | 'original';
+  opacity: 'chase' | 'off';
 }
 
 export interface ClientToServerEvents {
@@ -69,7 +73,11 @@ export interface ClientToServerEvents {
   'set:settings-mode': (payload: { value: boolean }) => void;
   'set:settings-channel': (payload: { address: number; value: number }) => void;
   'set:device-config': (payload: { id: string; config: DeviceConfig }) => void;
-  'set:visuals': (payload: { id: number }) => void;
+  'set:visuals': (payload: {
+    id: number;
+    color: 'chase' | 'original';
+    opacity: 'chase' | 'off';
+  }) => void;
 }
 
 export interface ServerToClientEvents {

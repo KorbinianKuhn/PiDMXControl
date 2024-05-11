@@ -5,7 +5,9 @@ import {
   Colors,
   flattenChannelStates,
   getChaseColorValues,
+  getPixelGradient,
   mergeDevicePatterns,
+  mergePixelPatterns,
   repeat,
   warp,
 } from './chase-utils';
@@ -203,13 +205,17 @@ const createPixelPattern = (
   const steps: Array<number[]> = [];
 
   for (const color of [colors.a, colors.b]) {
-    for (let i2 = 0; i2 < 32; i2++) {
-      const index = Math.round(i2 * (neopixelA.length / 32));
-      steps.push([
-        ...neopixelA.setPixel(index, { ...color }),
-        ...neopixelB.setPixel(index, { ...color }),
-      ]);
-    }
+    const a = getPixelGradient(neopixelA, color, 8, 32);
+    const b = getPixelGradient(neopixelB, color, 8, 32);
+    steps.push(...mergePixelPatterns(a, b));
+
+    // for (let i2 = 0; i2 < 32; i2++) {
+    //   const index = Math.round(i2 * (neopixelA.length / 32));
+    //   steps.push([
+    //     ...neopixelA.setPixel(index, { ...color }),
+    //     ...neopixelB.setPixel(index, { ...color }),
+    //   ]);
+    // }
 
     for (let i2 = 0; i2 < 96; i2++) {
       steps.push([...neopixelA.setAll({}), ...neopixelB.setAll({})]);

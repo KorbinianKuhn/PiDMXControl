@@ -102,8 +102,6 @@ export class BoardComponent implements OnInit {
   }
 
   onClickOpenVisualsModal() {
-    this.dialog.open(BeamerSettingsModalComponent, {
-      width: '50vw',
-    });
+    this.dialog.open(BeamerSettingsModalComponent);
   }
 }

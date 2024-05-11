@@ -5,9 +5,9 @@ import {
   Colors,
   flattenChannelStates,
   getChaseColorValues,
+  getPixelGradient,
   mergeDevicePatterns,
   repeat,
-  shiftPixels,
 } from './chase-utils';
 
 export const createChaseMagic = (
@@ -176,38 +176,48 @@ const createPixelPattern = (
 
   const steps: Array<number[]> = [];
 
-  for (const color of [colors.a, colors.b, colors.a]) {
-    const gradient = Array.from({ length: 32 }, (_, i) => ({
-      ...color,
-      master: Math.floor((i * 255) / 32),
-    }));
+  // for (const color of [colors.a, colors.b, colors.a]) {
+  //   const gradient = Array.from({ length: 32 }, (_, i) => ({
+  //     ...color,
+  //     master: Math.floor((i * 255) / 32),
+  //   }));
 
-    const a = new Array(neopixelA.length)
-      .fill({})
-      .map((o, i) => ({ index: i, values: {} }));
+  //   const a = new Array(neopixelA.length)
+  //     .fill({})
+  //     .map((o, i) => ({ index: i, values: {} }));
 
-    const b = new Array(neopixelB.length)
-      .fill({})
-      .map((o, i) => ({ index: i, values: {} }));
+  //   const b = new Array(neopixelB.length)
+  //     .fill({})
+  //     .map((o, i) => ({ index: i, values: {} }));
 
-    for (let i = 0; i < gradient.length; i++) {
-      a[i].values = { ...gradient[i] };
-      b[i].values = { ...gradient[i] };
+  //   for (let i = 0; i < gradient.length; i++) {
+  //     a[i].values = { ...gradient[i] };
+  //     b[i].values = { ...gradient[i] };
+  //   }
+
+  //   shiftPixels(b, 64);
+
+  //   for (let i = 0; i < 150; i++) {
+  //     steps.push([...neopixelA.setMultiple(a), ...neopixelB.setMultiple(b)]);
+  //     shiftPixels(a, 2);
+  //     shiftPixels(b, 2);
+  //   }
+  // }
+
+  // const off = [...neopixelA.setAll({}), ...neopixelB.setAll({})];
+
+  // for (let i = 0; i < 62; i++) {
+  //   steps.push(off);
+  // }
+
+  for (const color of [colors.a, colors.b]) {
+    for (let i = 0; i < 4; i++) {
+      const a = getPixelGradient(neopixelA, color, 32, 64);
+      const b = getPixelGradient(neopixelB, color, 32, 64, 64);
+      for (let j = 0; j < a.length; j++) {
+        steps.push([...a[j], ...b[j]]);
+      }
     }
-
-    shiftPixels(b, 64);
-
-    for (let i = 0; i < 150; i++) {
-      steps.push([...neopixelA.setMultiple(a), ...neopixelB.setMultiple(b)]);
-      shiftPixels(a, 2);
-      shiftPixels(b, 2);
-    }
-  }
-
-  const off = [...neopixelA.setAll({}), ...neopixelB.setAll({})];
-
-  for (let i = 0; i < 62; i++) {
-    steps.push(off);
   }
 
   return steps;

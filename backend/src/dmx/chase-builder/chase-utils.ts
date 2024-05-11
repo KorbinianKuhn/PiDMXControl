@@ -1,3 +1,4 @@
+import { NeopixelStrip } from '../devices/neopixel-strip';
 import { ChannelAnimation, ChaseColor } from '../lib/chase';
 import { ChannelState, DeviceStateValues } from '../lib/device';
 
@@ -127,4 +128,60 @@ export const shiftPixels = (
   if (steps > 0) {
     shiftPixels(state, steps);
   }
+};
+
+export const getPixelGradient = (
+  device: NeopixelStrip,
+  color: DeviceStateValues,
+  gradientLength: number,
+  numSteps: number,
+  offset: number = 0,
+): Array<number[]> => {
+  const steps: Array<number[]> = [];
+
+  const master = new Array(device.length + gradientLength)
+    .fill(null)
+    .map((o, i) =>
+      i < gradientLength ? Math.floor((i * 255) / gradientLength) : 0,
+    );
+
+  const shift = (iterations: number) => {
+    for (let i = 0; i < iterations; i++) {
+      master.unshift(master.pop());
+    }
+  };
+
+  const getValues = () => {
+    return master.slice(gradientLength).map((master, index) => ({
+      index,
+      values: {
+        ...color,
+        master,
+      },
+    }));
+  };
+
+  const movement = Math.floor((device.length + gradientLength * 2) / numSteps);
+
+  shift(offset);
+
+  for (let i = 0; i < numSteps; i++) {
+    steps.push(device.setMultiple(getValues()));
+    shift(movement);
+  }
+
+  return steps;
+};
+
+export const mergePixelPatterns = (
+  a: Array<number[]>,
+  b: Array<number[]>,
+): Array<number[]> => {
+  const steps: Array<number[]> = [];
+
+  for (let i = 0; i < a.length; i++) {
+    steps.push([...a[i], ...b[i]]);
+  }
+
+  return steps;
 };

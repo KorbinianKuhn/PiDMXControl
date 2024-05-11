@@ -49,6 +49,8 @@ export class WSService {
     sources: [],
     currentIndex: -1,
     startedAt: '',
+    color: 'chase',
+    opacity: 'chase',
   });
 
   constructor() {
@@ -181,7 +183,11 @@ export class WSService {
     this.socket.emit('set:device-config', { id, config });
   }
 
-  setVisualSource(id: number) {
-    this.socket.emit('set:visuals', { id });
+  setVisuals(
+    id: number,
+    color: 'chase' | 'original',
+    opacity: 'chase' | 'off'
+  ) {
+    this.socket.emit('set:visuals', { id, color, opacity });
   }
 }

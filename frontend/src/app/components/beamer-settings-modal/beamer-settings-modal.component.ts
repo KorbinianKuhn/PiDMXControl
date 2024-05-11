@@ -1,9 +1,9 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatRadioModule } from '@angular/material/radio';
 import { LetDirective } from '@ngrx/component';
-import { map } from 'rxjs';
 import { WSService } from '../../services/ws.service';
 
 @Component({
@@ -11,31 +11,31 @@ import { WSService } from '../../services/ws.service';
   templateUrl: './beamer-settings-modal.component.html',
   styleUrls: ['./beamer-settings-modal.component.scss'],
   standalone: true,
-  imports: [LetDirective, MatButtonModule, TitleCasePipe],
+  imports: [
+    LetDirective,
+    MatButtonModule,
+    TitleCasePipe,
+    MatRadioModule,
+    FormsModule,
+  ],
 })
 export class BeamerSettingsModalComponent {
-  public visuals$ = this.wsService.visuals$.pipe(
-    map((visuals) => {
-      return {
-        ...visuals,
-        sources: [
-          {
-            url: 'None',
-          },
-          ...visuals.sources,
-        ],
-      };
-    })
-  );
+  public visuals$ = this.wsService.visuals$;
 
-  constructor(
-    private wsService: WSService,
-    private matDialogRef: MatDialogRef<BeamerSettingsModalComponent>
-  ) {}
+  constructor(private wsService: WSService) {}
 
-  onVisualChange(index: number) {
-    this.wsService.setVisualSource(index - 1);
+  onVisualIndexChange(index: number) {
+    const { color, opacity } = this.visuals$.getValue();
+    this.wsService.setVisuals(index, color, opacity);
+  }
 
-    this.matDialogRef.close();
+  onVisualColorChange(color: 'chase' | 'original') {
+    const { currentIndex, opacity } = this.visuals$.getValue();
+    this.wsService.setVisuals(currentIndex, color, opacity);
+  }
+
+  onVisualOpacityChange(opacity: 'chase' | 'off') {
+    const { currentIndex, color } = this.visuals$.getValue();
+    this.wsService.setVisuals(currentIndex, color, opacity);
   }
 }

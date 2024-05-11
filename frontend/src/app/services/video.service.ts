@@ -50,6 +50,7 @@ export class VideoService {
   public text$ = new Subject<AnimatedText>();
   public enableText = false;
   public video$ = new Subject<VideoState>();
+  public visuals$ = this.wsService.visuals$;
 
   constructor(
     private wsService: WSService,
@@ -64,7 +65,8 @@ export class VideoService {
         const [r, g, b, master, strobe] = channels;
 
         const color = this.colorService.toRGB(255, r, g, b, 0, 0, 0);
-        const opacity = master / 255;
+        const opacity =
+          this.visuals$.getValue().opacity === 'chase' ? master / 255 : 1;
 
         const { classes, duration } = this.colorService.getStrobeClasses(
           strobe,

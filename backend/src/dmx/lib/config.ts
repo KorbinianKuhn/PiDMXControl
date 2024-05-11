@@ -34,6 +34,8 @@ export interface Visuals {
   sources: Array<{ url: string }>;
   currentIndex: number;
   startedAt: string;
+  color: 'chase' | 'original';
+  opacity: 'chase' | 'off';
 }
 
 export class Config {
@@ -51,6 +53,8 @@ export class Config {
     sources: [],
     currentIndex: -1,
     startedAt: new Date().toISOString(),
+    color: 'chase',
+    opacity: 'chase',
   };
 
   public devices: DeviceConfig[] = [];
@@ -179,14 +183,19 @@ export class Config {
       })),
     };
 
-    this.setVisualSource(0);
+    this.setVisuals(0, 'chase', 'chase');
   }
 
-  setVisualSource(currentIndex: number) {
+  setVisuals(
+    currentIndex: number,
+    color: 'chase' | 'original',
+    opacity: 'chase' | 'off',
+  ) {
     this.visuals = {
       ...this.visuals,
       currentIndex,
-      startedAt: new Date().toISOString(),
+      color,
+      opacity,
     };
     this.io.emit('visuals:updated', this.visuals);
   }

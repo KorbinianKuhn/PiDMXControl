@@ -1,11 +1,5 @@
 import { AsyncPipe, NgClass } from '@angular/common';
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Input,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { LetDirective } from '@ngrx/component';
 import { Subject, combineLatest, filter, map, takeUntil } from 'rxjs';
@@ -50,12 +44,12 @@ export class BeamerComponent {
   public videoSelected$ = this.wsService.visuals$.pipe(
     map((visuals) => visuals.currentIndex > -1)
   );
+  public color$ = this.wsService.visuals$.pipe(map((visuals) => visuals.color));
 
   constructor(
     private videoService: VideoService,
     private configService: ConfigService,
-    private wsService: WSService,
-    private changeDetectorRef: ChangeDetectorRef
+    private wsService: WSService
   ) {}
 
   ngOnInit(): void {}
