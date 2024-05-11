@@ -151,11 +151,17 @@ export class Program {
 
     const chase = this.chases[this.chaseIndex];
 
-    if (chase.lengthPixel > 0) {
-      return chase.pixelData(this.pixelStepIndex);
+    if (chase.lengthPixel === 0) {
+      return Buffer.alloc(2 * 150 * 4, 0);
     }
 
-    return;
+    const data = chase.pixelData(this.pixelStepIndex);
+
+    if (data?.length) {
+      return Buffer.from(data);
+    } else {
+      return Buffer.alloc(2 * 150 * 4, 0);
+    }
   }
 
   progress(): { programName: string; color: string; progress: number } {

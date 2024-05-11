@@ -136,14 +136,19 @@ export const getPixelGradient = (
   gradientLength: number,
   numSteps: number,
   offset: number = 0,
+  reverse: boolean = false,
 ): Array<number[]> => {
   const steps: Array<number[]> = [];
 
-  const master = new Array(device.length + gradientLength)
+  const anim = new Array(gradientLength)
     .fill(null)
-    .map((o, i) =>
-      i < gradientLength ? Math.floor((i * 255) / gradientLength) : 0,
-    );
+    .map((o, i) => Math.floor((i * 255) / gradientLength));
+
+  if (reverse) {
+    anim.reverse();
+  }
+
+  const master = [...anim, ...new Array(device.length).fill(0)];
 
   const shift = (iterations: number) => {
     for (let i = 0; i < iterations; i++) {
@@ -168,6 +173,55 @@ export const getPixelGradient = (
   for (let i = 0; i < numSteps; i++) {
     steps.push(device.setMultiple(getValues()));
     shift(movement);
+  }
+
+  if (reverse) {
+    return steps.reverse();
+  }
+
+  return steps;
+};
+
+export const getPixelGlowing = (
+  numPixels: number,
+  totalDuration: number,
+  glowingDuration: number,
+  maxBrightness: number = 255,
+): Array<number[]> => {
+  const steps: Array<number[]> = [];
+
+  const animation = new Array(glowingDuration / 2)
+    .fill(null)
+    .map((o, i) =>
+      Math.floor(((i + 1) * maxBrightness) / (glowingDuration / 2)),
+    );
+  animation.push(Math.max(...animation));
+  animation.push(...animation.slice(1, -1).reverse());
+
+  const shift = (values: number[], iterations: number) => {
+    const result = [...values];
+    for (let i = 0; i < iterations; i++) {
+      result.unshift(result.pop());
+    }
+    return result;
+  };
+
+  const randomAnimationState = () => {
+    const randomInt = Math.floor(Math.random() * animation.length);
+    return shift(animation, randomInt);
+  };
+
+  const animations = new Array(numPixels)
+    .fill(null)
+    .map(() => randomAnimationState());
+
+  for (let i = 0; i < totalDuration; i++) {
+    const step = new Array(numPixels).fill(null);
+    for (let j = 0; j < numPixels; j++) {
+      step[j] = animations[j][0];
+      animations[j] = shift(animations[j], 1);
+    }
+    steps.push(step);
   }
 
   return steps;

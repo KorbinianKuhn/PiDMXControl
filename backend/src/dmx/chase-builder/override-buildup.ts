@@ -221,9 +221,10 @@ export const createChaseBuildupStreak = (
   const steps: Array<number[]> = [];
 
   const getArray = (length: number, color: DeviceStateValues) => {
-    return new Array(length)
-      .fill(null)
-      .map((o, index) => ({ index, values: { ...color } }));
+    return new Array(length).fill(null).map((o, index) => ({
+      index,
+      values: { ...color },
+    }));
   };
 
   for (let i = 0; i < 5; i++) {

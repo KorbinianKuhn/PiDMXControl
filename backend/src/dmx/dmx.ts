@@ -1,3 +1,4 @@
+import { throttleTime } from 'rxjs';
 import { TypedServer } from '../server/events.interfaces';
 import { ChaseColor } from './lib/chase';
 import { ChaseRegistry } from './lib/chase-registry';
@@ -37,13 +38,10 @@ export class DMX {
     });
 
     if (SEND_DATA) {
-      setInterval(async () => {
-        this._send();
-      }, 46);
-
-      setInterval(() => {
+      this.clock.microtick$.pipe(throttleTime(46)).subscribe(() => {
         this._sendMQTT();
-      }, 10);
+        this._send();
+      });
     }
 
     this.setActiveProgram(this.config.activeProgram);
@@ -132,23 +130,18 @@ export class DMX {
   }
 
   neopixelData(): Buffer {
-    let buffer: Buffer = Buffer.alloc(2 * 150 * 4, 0);
-
     if (this.config.settingsMode || this.config.black) {
-      // Do nothing
-    } else {
-      const data = this.config.overrideProgram
-        ? this.overrideProgram.pixelData()
-        : this.activeProgram.pixelData();
-      if (data?.length > 0) {
-        const master = this.config.getDeviceConfig('neopixel-a').master;
-        const multiplier = this.config.master * master;
-        buffer = data;
-        for (let i = 0; i < buffer.length; i++) {
-          if (buffer[i] !== 0) {
-            buffer[i] = Math.round(buffer[i] * multiplier);
-          }
-        }
+      return Buffer.alloc(2 * 150 * 4, 0);
+    }
+    const buffer = this.config.overrideProgram
+      ? this.overrideProgram.pixelData()
+      : this.activeProgram.pixelData();
+
+    const master = this.config.getDeviceConfig('neopixel-a').master;
+    const multiplier = this.config.master * master;
+    for (let i = 0; i < buffer.length; i++) {
+      if (buffer[i] !== 0) {
+        buffer[i] = Math.round(buffer[i] * multiplier);
       }
     }
 

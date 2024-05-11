@@ -6,6 +6,7 @@ import {
   Colors,
   flattenChannelStates,
   getChaseColorValues,
+  getPixelGlowing,
   mergeDevicePatterns,
   warp,
 } from './chase-utils';
@@ -175,12 +176,14 @@ const createBeamerPattern = (
   return steps;
 };
 
-const masterStates: Array<number[]> = [];
-for (let i = 0; i < 8; i++) {
-  masterStates.push(
-    new Array(300).fill(null).map((o) => (Math.random() < 0.1 ? 255 : 0)),
-  );
-}
+// const masterStates: Array<number[]> = [];
+// for (let i = 0; i < 8; i++) {
+//   masterStates.push(
+//     new Array(300).fill(null).map((o) => (Math.random() < 0.1 ? 255 : 0)),
+//   );
+// }
+
+const mastersStates = getPixelGlowing(300, 256, 128, 64);
 
 const createPixelPattern = (
   devices: DeviceRegistry,
@@ -190,39 +193,57 @@ const createPixelPattern = (
 
   const steps: Array<number[]> = [];
 
-  const masterSteps: Array<number[]> = [];
-  for (let i = 0; i < masterStates.length; i++) {
-    const from = masterStates[i];
-    const to =
-      i === masterStates.length - 1 ? masterStates[0] : masterStates[i + 1];
-
-    for (let j = 0; j < 64; j++) {
-      const state = new Array(from.length).fill(null);
-      for (let k = 0; k < from.length; k++) {
-        state[k] = Math.floor(from[k] + ((to[k] - from[k]) * j) / 64);
-      }
-      masterSteps.push(state);
+  for (const color of [colors.a, colors.b]) {
+    for (const master of mastersStates) {
+      const state = [
+        ...neopixelA.setMultiple(
+          master
+            .slice(0, 150)
+            .map((o, i) => ({ index: i, values: { master: o, ...color } })),
+        ),
+        ...neopixelB.setMultiple(
+          master
+            .slice(150, 300)
+            .map((o, i) => ({ index: i, values: { master: o, ...color } })),
+        ),
+      ];
+      steps.push(state);
     }
   }
 
-  for (let i = 0; i < masterSteps.length; i++) {
-    const color = i > masterSteps.length / 2 ? colors.a : colors.b;
+  // const masterSteps: Array<number[]> = [];
+  // for (let i = 0; i < masterStates.length; i++) {
+  //   const from = masterStates[i];
+  //   const to =
+  //     i === masterStates.length - 1 ? masterStates[0] : masterStates[i + 1];
 
-    const state = [
-      ...neopixelA.setMultiple(
-        masterSteps[i]
-          .slice(0, 150)
-          .map((o, i) => ({ index: i, values: { master: o, ...color } })),
-      ),
-      ...neopixelB.setMultiple(
-        masterSteps[i]
-          .slice(150, 300)
-          .map((o, i) => ({ index: i, values: { master: o, ...color } })),
-      ),
-    ];
+  //   for (let j = 0; j < 64; j++) {
+  //     const state = new Array(from.length).fill(null);
+  //     for (let k = 0; k < from.length; k++) {
+  //       state[k] = Math.floor(from[k] + ((to[k] - from[k]) * j) / 64);
+  //     }
+  //     masterSteps.push(state);
+  //   }
+  // }
 
-    steps.push(state);
-  }
+  // for (let i = 0; i < masterSteps.length; i++) {
+  //   const color = i > masterSteps.length / 2 ? colors.a : colors.b;
+
+  //   const state = [
+  //     ...neopixelA.setMultiple(
+  //       masterSteps[i]
+  //         .slice(0, 150)
+  //         .map((o, i) => ({ index: i, values: { master: o, ...color } })),
+  //     ),
+  //     ...neopixelB.setMultiple(
+  //       masterSteps[i]
+  //         .slice(150, 300)
+  //         .map((o, i) => ({ index: i, values: { master: o, ...color } })),
+  //     ),
+  //   ];
+
+  //   steps.push(state);
+  // }
 
   return steps;
 };
