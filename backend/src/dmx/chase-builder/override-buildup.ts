@@ -6,7 +6,6 @@ import {
   flattenChannelStates,
   getChaseColorValues,
   mergeDevicePatterns,
-  repeat,
 } from './chase-utils';
 
 const getBuildupSteps = (
@@ -73,11 +72,11 @@ const getBuildupSteps = (
   return merged.slice(merged.length - 16 - length);
 };
 
-export const createChaseBuildupInfinite = (
+export const createChaseBuildupBlink = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(OverrideProgramName.BUILDUP_INFINITE, color);
+  const chase = new Chase(OverrideProgramName.BUILDUP_BLINK, true, color);
 
   const colors = getChaseColorValues(color);
 
@@ -111,7 +110,7 @@ export const createChaseBuildupBright = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(OverrideProgramName.BUILDUP_BRIGHT, color);
+  const chase = new Chase(OverrideProgramName.BUILDUP_BRIGHT, false, color);
   const colors = getChaseColorValues(color);
   const steps: ChannelAnimation = [];
 
@@ -166,7 +165,7 @@ export const createChaseBuildupFadeout = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(OverrideProgramName.BUILDUP_FADEOUT, color);
+  const chase = new Chase(OverrideProgramName.BUILDUP_FADEOUT, false, color);
 
   const steps = getBuildupSteps(8, devices, color);
 
@@ -179,25 +178,27 @@ export const createChaseBuildupBlinder = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(OverrideProgramName.BUILDUP_BLINDER, color);
+  const chase = new Chase(OverrideProgramName.BUILDUP_BLINDER, true, color);
 
   const colors = getChaseColorValues(color);
 
   let steps: ChannelAnimation = [];
 
-  for (let i = 0; i < 4; i++) {
-    const master = i * 255;
-    steps.push(
-      flattenChannelStates(
-        devices.object().bar.state({ segments: 'all', master, ...colors.a }),
-        ...devices
-          .object()
-          .head.all.map((o) => o.state({ master, ...colors.a })),
-      ),
-    );
+  for (let i = 0; i < 8; i++) {
+    const color = i < 4 ? colors.a : colors.b;
+    for (let j = 0; j < 4; j++) {
+      const master = j * 255;
+      steps.push(
+        flattenChannelStates(
+          devices.object().bar.state({ segments: 'all', master, ...color }),
+          ...devices
+            .object()
+            .head.all.map((o) => o.state({ master, ...color })),
+        ),
+      );
+    }
+    steps.push([], [], [], []);
   }
-
-  steps = repeat(steps, 8);
 
   const animations = devices
     .object()
@@ -212,7 +213,7 @@ export const createChaseBuildupStreak = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(OverrideProgramName.BUILDUP_STREAK, color);
+  const chase = new Chase(OverrideProgramName.BUILDUP_STREAK, true, color);
 
   const colors = getChaseColorValues(color);
 
@@ -227,29 +228,21 @@ export const createChaseBuildupStreak = (
     }));
   };
 
-  for (let i = 0; i < 5; i++) {
-    const state = getArray((neopixelA.length / 5) * (i + 1), colors.a);
-    for (let j = 0; j < 16; j++) {
-      steps.push([
-        ...neopixelA.setMultiple(state),
-        ...neopixelB.setMultiple(state),
-      ]);
-    }
-  }
-
   const off = [...neopixelA.clear(), ...neopixelB.clear()];
-  const b = [
-    ...neopixelA.setAll({ ...colors.a, master: 255 }),
-    ...neopixelB.setAll({ ...colors.a, master: 255 }),
-  ];
 
-  for (let i = 0; i < 16; i++) {
-    steps.push(off);
-  }
-
-  for (let i = 0; i < 8; i++) {
-    steps.push(b, b);
-    steps.push(off, off);
+  for (let color of [colors.a, colors.b]) {
+    for (let i = 0; i < 3; i++) {
+      const state = getArray(Math.floor(neopixelA.length / 3) * (i + 1), color);
+      for (let j = 0; j < 16; j++) {
+        steps.push([
+          ...neopixelA.setMultiple(state),
+          ...neopixelB.setMultiple(state),
+        ]);
+      }
+    }
+    for (let j = 0; j < 16; j++) {
+      steps.push(off);
+    }
   }
 
   chase.addSteps(new Array(steps.length / 4).fill(null).map(() => []));
@@ -259,63 +252,76 @@ export const createChaseBuildupStreak = (
   return chase;
 };
 
-export const createChaseBuildupPride = (
-  devices: DeviceRegistry,
-  color: ChaseColor,
-): Chase => {
-  const chase = new Chase(OverrideProgramName.BUILDUP_PRIDE, color);
+// export const createChaseBuildupPride = (devices: DeviceRegistry): Chase => {
+//   const chase = new Chase(OverrideProgramName.BUILDUP_PRIDE, true);
 
-  const { neopixelA, neopixelB, bar } = devices.object();
+//   const { neopixelA, neopixelB, bar, head } = devices.object();
 
-  const steps: ChannelAnimation = [];
-  const pixelSteps: Array<number[]> = [];
+//   const steps: ChannelAnimation = [];
+//   const pixelSteps: Array<number[]> = [];
 
-  const colors = [
-    { r: 255 },
-    { r: 255, g: 127 },
-    { r: 255, g: 255 },
-    { g: 255 },
-    { b: 255 },
-    { r: 127, b: 255 },
-  ];
+//   const colors = [
+//     { r: 255 },
+//     { r: 255, g: 127 },
+//     { r: 255, g: 255 },
+//     { g: 255 },
+//     { b: 255 },
+//     { r: 127, b: 255 },
+//   ];
 
-  const on = bar.state(
-    ...colors.map((color, index) => ({
-      segments: index + 1,
-      master: 255,
-      ...color,
-    })),
-  );
-  for (let i = 0; i < 75; i++) {
-    steps.push(on);
-  }
+//   for (let i = 0; i < 3; i++) {
+//     for (let j = 0; j < 25; j++) {
+//       const master =
+//         j < 12
+//           ? Math.floor((255 / 12) * j)
+//           : Math.floor(255 - (255 / 12) * (j - 12));
+//       steps.push(
+//         flattenChannelStates(
+//           bar.state(
+//             ...colors.map((color, index) => ({
+//               segments: index + 1,
+//               master,
+//               ...color,
+//             })),
+//           ),
+//           ...head.all.map((o) =>
+//             o.state({ master: 255, r: 255, b: 127, strobe: 40 }),
+//           ),
+//         ),
+//       );
+//     }
+//   }
 
-  chase.addSteps(steps);
+//   const animations = devices
+//     .object()
+//     .head.all.map((o) => o.animationTop(steps.length));
 
-  const colorLength = Math.floor(neopixelA.length / colors.length);
+//   chase.addSteps(mergeDevicePatterns(steps, ...animations));
 
-  const rainbow = [];
-  for (const color of colors) {
-    for (let i = 0; i < colorLength; i++) {
-      rainbow.push({ ...color });
-    }
-  }
+//   const colorLength = Math.floor(neopixelA.length / colors.length);
 
-  for (let i = 0; i < neopixelA.length - rainbow.length; i++) {
-    rainbow.push({});
-  }
+//   const rainbow = [];
+//   for (const color of colors) {
+//     for (let i = 0; i < colorLength; i++) {
+//       rainbow.push({ ...color });
+//     }
+//   }
 
-  for (let i = 0; i < 300; i++) {
-    const state = rainbow.map((values, index) => ({ index, values }));
-    pixelSteps.push([
-      ...neopixelA.setMultiple(state),
-      ...neopixelB.setMultiple(state),
-    ]);
+//   for (let i = 0; i < neopixelA.length - rainbow.length; i++) {
+//     rainbow.push({});
+//   }
 
-    rainbow.unshift(rainbow.pop());
-  }
+//   for (let i = 0; i < 300; i++) {
+//     const state = rainbow.map((values, index) => ({ index, values }));
+//     pixelSteps.push([
+//       ...neopixelA.setMultiple(state),
+//       ...neopixelB.setMultiple(state),
+//     ]);
 
-  chase.addPixelSteps(pixelSteps);
+//     rainbow.unshift(rainbow.pop());
+//   }
 
-  return chase;
-};
+//   chase.addPixelSteps(pixelSteps);
+
+//   return chase;
+// };

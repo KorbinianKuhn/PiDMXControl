@@ -12,7 +12,7 @@ export const createChaseOn = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(ActiveProgramName.ON, color);
+  const chase = new Chase(ActiveProgramName.ON, true, color);
   const colors = getChaseColorValues(color);
 
   const d = devices.object();

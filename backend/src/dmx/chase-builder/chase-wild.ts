@@ -16,7 +16,7 @@ export const createChaseWild = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(ActiveProgramName.WILD, color);
+  const chase = new Chase(ActiveProgramName.WILD, true, color);
   const colors = getChaseColorValues(color);
 
   const bar = createBarPattern(devices, colors);

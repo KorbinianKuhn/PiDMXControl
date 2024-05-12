@@ -14,7 +14,7 @@ export const createChaseMagic = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(ActiveProgramName.MAGIC, color);
+  const chase = new Chase(ActiveProgramName.MAGIC, true, color);
   const colors = getChaseColorValues(color);
 
   const hex = createHexPattern(devices, colors);

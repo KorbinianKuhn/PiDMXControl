@@ -16,7 +16,7 @@ export const createChasePulse = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(ActiveProgramName.PULSE, color);
+  const chase = new Chase(ActiveProgramName.PULSE, true, color);
   const colors = getChaseColorValues(color);
 
   const bar = createBarPattern(devices, colors);

@@ -34,28 +34,11 @@ export class Chase {
     return `${this.programName}-${this.color}`;
   }
 
-  public loop = true;
-
   constructor(
     public programName: ActiveProgramName | OverrideProgramName,
-    public color: ChaseColor,
-  ) {
-    if (
-      [
-        OverrideProgramName.BUILDUP_BRIGHT,
-        OverrideProgramName.BUILDUP_FADEOUT,
-        OverrideProgramName.BUILDUP_STREAK,
-        OverrideProgramName.BUILDUP_BLINDER,
-        OverrideProgramName.STROBE_A,
-        OverrideProgramName.STROBE_B,
-        OverrideProgramName.STROBE_C,
-        OverrideProgramName.STROBE_D,
-        OverrideProgramName.STROBE_E,
-      ].includes(programName as any)
-    ) {
-      this.loop = false;
-    }
-  }
+    public loop: boolean,
+    public color?: ChaseColor,
+  ) {}
 
   addStep(channels: ChannelState[]) {
     const data = Buffer.alloc(512 + 1, 0);

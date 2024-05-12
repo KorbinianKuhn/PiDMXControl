@@ -8,11 +8,11 @@ import {
   mergeDevicePatterns,
 } from './chase-utils';
 
-export const createChaseStrobeInfinite = (
+export const createChaseStrobeStorm = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(OverrideProgramName.STROBE_INFINITE, color);
+  const chase = new Chase(OverrideProgramName.STROBE_STORM, true, color);
 
   const colors = getChaseColorValues(color);
 
@@ -48,11 +48,11 @@ export const createChaseStrobeInfinite = (
   return chase;
 };
 
-export const createChaseStrobeA = (
+export const createChaseStrobeFlash = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(OverrideProgramName.STROBE_A, color);
+  const chase = new Chase(OverrideProgramName.STROBE_FLASH, false, color);
 
   const steps: Array<number[]> = [];
 
@@ -93,11 +93,11 @@ export const createChaseStrobeA = (
   return chase;
 };
 
-export const createChaseStrobeB = (
+export const createChaseStrobeSlowmo = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(OverrideProgramName.STROBE_B, color);
+  const chase = new Chase(OverrideProgramName.STROBE_SLOWMO, false, color);
 
   const steps: ChannelAnimation = [];
 
@@ -106,7 +106,7 @@ export const createChaseStrobeB = (
   const on = flattenChannelStates(
     ...devices
       .object()
-      .head.all.map((o) => o.state({ master: 255, ...colors.a, strobe: 100 })),
+      .head.all.map((o) => o.state({ master: 255, ...colors.a, strobe: 120 })),
   );
 
   for (let i = 0; i < 32; i++) {
@@ -118,11 +118,11 @@ export const createChaseStrobeB = (
   return chase;
 };
 
-export const createChaseStrobeC = (
+export const createChaseStrobeColor = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(OverrideProgramName.STROBE_C, color);
+  const chase = new Chase(OverrideProgramName.STROBE_COLOR, false, color);
   const colors = getChaseColorValues(color);
   const steps: ChannelAnimation = [];
 
@@ -130,9 +130,9 @@ export const createChaseStrobeC = (
 
   for (let i = 0; i < 32; i++) {
     const state = flattenChannelStates(
-      bar.state({ segments: 'all', master: 255, ...colors.a, strobe: 250 }),
+      bar.state({ segments: 'all', master: 255, ...colors.a, strobe: 240 }),
       ...head.all.map((o) =>
-        o.state({ master: 255, ...colors.a, strobe: 250 }),
+        o.state({ master: 255, ...colors.a, strobe: 240 }),
       ),
     );
     steps.push(state);
@@ -143,11 +143,8 @@ export const createChaseStrobeC = (
   return chase;
 };
 
-export const createChaseStrobeD = (
-  devices: DeviceRegistry,
-  color: ChaseColor,
-): Chase => {
-  const chase = new Chase(OverrideProgramName.STROBE_D, color);
+export const createChaseStrobeWhite = (devices: DeviceRegistry): Chase => {
+  const chase = new Chase(OverrideProgramName.STROBE_WHITE, false);
 
   const steps: ChannelAnimation = [];
 
@@ -155,8 +152,8 @@ export const createChaseStrobeD = (
 
   for (let i = 0; i < 32; i++) {
     const state = flattenChannelStates(
-      bar.state({ segments: 'all', master: 255, w: 255, strobe: 250 }),
-      ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 250 })),
+      bar.state({ segments: 'all', master: 255, w: 255, strobe: 240 }),
+      ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 240 })),
     );
     steps.push(state);
   }
@@ -166,11 +163,11 @@ export const createChaseStrobeD = (
   return chase;
 };
 
-export const createChaseStrobeE = (
+export const createChaseStrobePixels = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(OverrideProgramName.STROBE_E, color);
+  const chase = new Chase(OverrideProgramName.STROBE_PIXELS, false, color);
 
   const colors = getChaseColorValues(color);
 

@@ -1,28 +1,21 @@
-import { ChannelAnimation, Chase, ChaseColor } from '../lib/chase';
+import { ChannelAnimation, Chase } from '../lib/chase';
 import { DeviceStateValues } from '../lib/device';
 import { DeviceRegistry } from '../lib/device-registry';
 import { OverrideProgramName } from '../lib/program';
 import {
-  Colors,
   flattenChannelStates,
-  getChaseColorValues,
   mergeDevicePatterns,
   repeat,
   warp,
 } from './chase-utils';
 
-export const createChaseDisco = (
-  devices: DeviceRegistry,
-  color: ChaseColor,
-): Chase => {
-  const chase = new Chase(OverrideProgramName.DISCO, color);
+export const createChaseStrobeDisco = (devices: DeviceRegistry): Chase => {
+  const chase = new Chase(OverrideProgramName.STROBE_DISCO, true);
 
-  const colors = getChaseColorValues(color);
-
-  const bar = createBarPattern(devices, colors);
-  const hex = createHexPattern(devices, colors);
-  const ball = createBallPattern(devices, colors);
-  const head = createHeadPattern(devices, colors);
+  const bar = createBarPattern(devices);
+  const hex = createHexPattern(devices);
+  const ball = createBallPattern(devices);
+  const head = createHeadPattern(devices);
 
   const steps = mergeDevicePatterns(hex, bar, ball, head);
 
@@ -37,10 +30,7 @@ export const createChaseDisco = (
   return chase;
 };
 
-const createBarPattern = (
-  devices: DeviceRegistry,
-  colors: Colors,
-): ChannelAnimation => {
+const createBarPattern = (devices: DeviceRegistry): ChannelAnimation => {
   const steps: ChannelAnimation = [];
 
   const { bar } = devices.object();
@@ -90,10 +80,7 @@ const createBarPattern = (
   return steps;
 };
 
-const createHexPattern = (
-  devices: DeviceRegistry,
-  colors: Colors,
-): ChannelAnimation => {
+const createHexPattern = (devices: DeviceRegistry): ChannelAnimation => {
   const steps: ChannelAnimation = [];
 
   const { all, a, b, c, d, e } = devices.object().hex;
@@ -129,10 +116,7 @@ const createHexPattern = (
   return steps;
 };
 
-const createBallPattern = (
-  devices: DeviceRegistry,
-  colors: Colors,
-): ChannelAnimation => {
+const createBallPattern = (devices: DeviceRegistry): ChannelAnimation => {
   const steps: ChannelAnimation = [];
 
   const { dome, spot } = devices.object();
@@ -163,10 +147,7 @@ const createBallPattern = (
   return warp(steps, 2);
 };
 
-const createHeadPattern = (
-  devices: DeviceRegistry,
-  colors: Colors,
-): ChannelAnimation => {
+const createHeadPattern = (devices: DeviceRegistry): ChannelAnimation => {
   const steps: ChannelAnimation = [];
 
   const { left, right } = devices.object().head;

@@ -84,28 +84,27 @@ export class DMX {
       return this.config.settingsData;
     }
 
+    this.io.emit('active-program:progress', {
+      ...this.activeProgram.progress(),
+    });
+
+    this.io.emit('override-program:progress', {
+      ...(this.config.overrideProgram
+        ? this.overrideProgram.progress()
+        : {
+            programName: '',
+            color: '',
+            progress: 0,
+          }),
+    });
+
     if (this.config.black) {
       return Buffer.alloc(512 + 1, 0);
     }
 
-    let data: Buffer;
-
-    if (this.config.overrideProgram) {
-      data = this.overrideProgram.data();
-      this.io.emit('override-program:progress', {
-        ...this.overrideProgram.progress(),
-      });
-    } else {
-      data = this.activeProgram.data();
-      this.io.emit('override-program:progress', {
-        programName: '',
-        color: '',
-        progress: 0,
-      });
-    }
-    this.io.emit('active-program:progress', {
-      ...this.activeProgram.progress(),
-    });
+    const data: Buffer = this.config.overrideProgram
+      ? this.overrideProgram.data()
+      : this.activeProgram.data();
 
     // UV override
     if (this.config.ambientUV !== 0) {

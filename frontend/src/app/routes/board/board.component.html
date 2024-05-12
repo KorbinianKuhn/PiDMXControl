@@ -3,6 +3,13 @@
     <app-panel-group label="Overrides" class="mb-1">
       <app-override-program-button
         size="small"
+        [name]="overrideProgram.WHITE"
+        color="bg-red-900"
+      >
+        <span class="text-xs tracking-widest">White</span>
+      </app-override-program-button>
+      <app-override-program-button
+        size="small"
         [name]="overrideProgram.DAY"
         color="bg-red-900"
       >
@@ -14,6 +21,13 @@
         color="bg-red-900"
       >
         <span class="text-xs tracking-widest">Night</span>
+      </app-override-program-button>
+      <app-override-program-button
+        size="small"
+        [name]="overrideProgram.WARM"
+        color="bg-red-900"
+      >
+        <span class="text-xs tracking-widest">Warm</span>
       </app-override-program-button>
       <app-override-program-button
         size="small"
@@ -56,6 +70,9 @@
       </div>
       <div class="flex-1"></div>
       <div class="flex flex-wrap justify-end" style="max-width: 260px">
+        <app-active-program-button size="small" [name]="activeProgram.PRIDE">
+          <span class="text-xs tracking-widest">Pride</span>
+        </app-active-program-button>
         <app-active-program-button
           size="small"
           [name]="activeProgram.MIRROR_BALL"
@@ -80,13 +97,6 @@
         <app-active-program-button size="small" [name]="activeProgram.WILD">
           <span class="text-xs tracking-widest">Wild</span>
         </app-active-program-button>
-        <app-override-program-button
-          size="small"
-          [name]="overrideProgram.DISCO"
-          color="bg-red-900"
-        >
-          <span class="text-xs tracking-widest">Disco</span>
-        </app-override-program-button>
       </div>
     </app-panel-group>
 
@@ -97,48 +107,70 @@
       <app-override-program-button [name]="overrideProgram.BUILDUP_FADEOUT">
         <span class="text-xs tracking-widest">Fadeout</span>
       </app-override-program-button>
-      <app-override-program-button [name]="overrideProgram.BUILDUP_BLINDER">
-        <span class="text-xs tracking-widest">Blinder</span>
-      </app-override-program-button>
-      <app-override-program-button [name]="overrideProgram.BUILDUP_STREAK">
-        <span class="text-xs tracking-widest">Streak</span>
-      </app-override-program-button>
+      <div class="flex-1"></div>
       <app-override-program-button
-        [name]="overrideProgram.BUILDUP_PRIDE"
+        [name]="overrideProgram.BUILDUP_BLINDER"
         color="bg-red-900"
       >
-        <span class="text-xs tracking-widest">Pride</span>
+        <div class="flex flex-col">
+          <span class="text-xs tracking-widest">Blinder</span>
+          <span style="line-height: 0.5rem">∞</span>
+        </div>
       </app-override-program-button>
       <app-override-program-button
-        [name]="overrideProgram.BUILDUP_INFINITE"
+        [name]="overrideProgram.BUILDUP_STREAK"
         color="bg-red-900"
       >
-        <span class="text-xs tracking-widest">Infinite</span>
+        <div class="flex flex-col">
+          <span class="text-xs tracking-widest">Streak</span>
+          <span style="line-height: 0.5rem">∞</span>
+        </div>
+      </app-override-program-button>
+      <app-override-program-button
+        [name]="overrideProgram.BUILDUP_BLINK"
+        color="bg-red-900"
+      >
+        <div class="flex flex-col">
+          <span class="text-xs tracking-widest">Blink</span>
+          <span style="line-height: 0.5rem">∞</span>
+        </div>
       </app-override-program-button>
     </app-panel-group>
 
     <app-panel-group label="Strobes">
       <div class="flex flex-wrap">
-        <app-override-program-button [name]="overrideProgram.STROBE_A">
-          <span class="text-xs tracking-widest">Storm</span>
+        <app-override-program-button [name]="overrideProgram.STROBE_FLASH">
+          <span class="text-xs tracking-widest">Flash</span>
         </app-override-program-button>
-        <app-override-program-button [name]="overrideProgram.STROBE_B">
-          <span class="text-xs tracking-widest">Slow-Mo</span>
+        <app-override-program-button [name]="overrideProgram.STROBE_SLOWMO">
+          <span class="text-xs tracking-widest">Slow</span>
         </app-override-program-button>
-        <app-override-program-button [name]="overrideProgram.STROBE_C">
+        <!-- <app-override-program-button [name]="overrideProgram.STROBE_COLOR">
           <span class="text-xs tracking-widest">Color</span>
-        </app-override-program-button>
-        <app-override-program-button [name]="overrideProgram.STROBE_D">
+        </app-override-program-button> -->
+        <app-override-program-button [name]="overrideProgram.STROBE_WHITE">
           <span class="text-xs tracking-widest">White</span>
         </app-override-program-button>
-        <app-override-program-button [name]="overrideProgram.STROBE_E">
+        <app-override-program-button [name]="overrideProgram.STROBE_PIXELS">
           <span class="text-xs tracking-widest">Pixels</span>
         </app-override-program-button>
         <app-override-program-button
-          [name]="overrideProgram.STROBE_INFINITE"
+          [name]="overrideProgram.STROBE_DISCO"
           color="bg-red-900"
         >
-          <span class="text-xs tracking-widest">Infinite</span>
+          <div class="flex flex-col">
+            <span class="text-xs tracking-widest">Disco</span>
+            <span style="line-height: 0.5rem">∞</span>
+          </div>
+        </app-override-program-button>
+        <app-override-program-button
+          [name]="overrideProgram.STROBE_STORM"
+          color="bg-red-900"
+        >
+          <div class="flex flex-col">
+            <span class="text-xs tracking-widest">Storm</span>
+            <span style="line-height: 0.5rem">∞</span>
+          </div>
         </app-override-program-button>
       </div>
     </app-panel-group>

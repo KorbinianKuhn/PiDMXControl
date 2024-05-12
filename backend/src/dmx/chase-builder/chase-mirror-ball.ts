@@ -15,7 +15,7 @@ export const createChaseMirrorBall = (
   devices: DeviceRegistry,
   color: ChaseColor,
 ): Chase => {
-  const chase = new Chase(ActiveProgramName.MIRROR_BALL, color);
+  const chase = new Chase(ActiveProgramName.MIRROR_BALL, true, color);
   const colors = getChaseColorValues(color);
 
   const bar = createBarPattern(devices, colors);
