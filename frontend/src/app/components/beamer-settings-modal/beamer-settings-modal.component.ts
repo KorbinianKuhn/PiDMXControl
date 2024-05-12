@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatSliderModule } from '@angular/material/slider';
 import { LetDirective } from '@ngrx/component';
 import { WSService } from '../../services/ws.service';
 
@@ -17,6 +18,7 @@ import { WSService } from '../../services/ws.service';
     TitleCasePipe,
     MatRadioModule,
     FormsModule,
+    MatSliderModule,
   ],
 })
 export class BeamerSettingsModalComponent {
@@ -37,5 +39,9 @@ export class BeamerSettingsModalComponent {
   onVisualOpacityChange(opacity: 'chase' | 'off') {
     const { currentIndex, color } = this.visuals$.getValue();
     this.wsService.setVisuals(currentIndex, color, opacity);
+  }
+
+  onSliderChange(direction: 'left' | 'right' | 'top' | 'bottom', event: any) {
+    console.log(direction, event.value);
   }
 }

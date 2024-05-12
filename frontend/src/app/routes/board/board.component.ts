@@ -1,4 +1,4 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -44,6 +44,7 @@ import { OverrideProgramButtonComponent } from './components/override-program-bu
     MatButtonModule,
     MatIconModule,
     AsyncPipe,
+    CommonModule,
   ],
 })
 export class BoardComponent implements OnInit {
@@ -65,6 +66,12 @@ export class BoardComponent implements OnInit {
         progress,
       };
     })
+  );
+
+  public neopixelDisabled$ = this.wsService.devices$.pipe(
+    map(
+      (devices) => devices.find((d) => d.id === 'neopixel-a')?.disabled || false
+    )
   );
 
   constructor(
@@ -103,5 +110,16 @@ export class BoardComponent implements OnInit {
 
   onClickOpenVisualsModal() {
     this.dialog.open(BeamerSettingsModalComponent);
+  }
+
+  onToggleNeopixelDisabled() {
+    const config = this.wsService.devices$
+      .getValue()
+      .find((d) => d.id === 'neopixel-a')!;
+
+    this.wsService.setDeviceConfig('neopixel-a', {
+      ...config,
+      disabled: !config.disabled,
+    });
   }
 }

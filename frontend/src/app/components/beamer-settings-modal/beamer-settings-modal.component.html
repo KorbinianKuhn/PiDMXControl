@@ -46,5 +46,17 @@
         <mat-radio-button [value]="'off'" color="primary">Off</mat-radio-button>
       </mat-radio-group>
     </div>
+    <div>
+      <label>Width</label>
+      <mat-slider [min]="0" [max]="50" [step]="1">
+        <input matSliderStartThumb (dragEnd)="onSliderChange('left', $event)" />
+        <input matSliderEndThumb (dragEnd)="onSliderChange('right', $event)" />
+      </mat-slider>
+      <label>Height</label>
+      <mat-slider [min]="0" [max]="50" [step]="1">
+        <input matSliderStartThumb (dragEnd)="onSliderChange('top', $event)" />
+        <input matSliderEndThumb (dragEnd)="onSliderChange('bottom', $event)" />
+      </mat-slider>
+    </div>
   </div>
 </div>

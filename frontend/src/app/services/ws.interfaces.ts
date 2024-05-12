@@ -21,6 +21,7 @@ export enum OverrideProgramName {
   BUILDUP_FADEOUT = 'buildup-fadeout',
   BUILDUP_BLINDER = 'buildup-blinder',
   BUILDUP_STREAK = 'buildup-streak',
+  BUILDUP_PRIDE = 'buildup-pride',
   BUILDUP_INFINITE = 'buildup-inifite',
   STROBE_A = 'strobe-a',
   STROBE_B = 'strobe-b',
@@ -49,6 +50,7 @@ export interface DeviceConfig {
   maxPan?: number;
   minTilt?: number;
   maxTilt?: number;
+  disabled?: boolean;
 }
 
 export interface Visuals {

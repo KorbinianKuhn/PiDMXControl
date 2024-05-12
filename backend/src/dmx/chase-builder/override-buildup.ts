@@ -258,3 +258,64 @@ export const createChaseBuildupStreak = (
 
   return chase;
 };
+
+export const createChaseBuildupPride = (
+  devices: DeviceRegistry,
+  color: ChaseColor,
+): Chase => {
+  const chase = new Chase(OverrideProgramName.BUILDUP_PRIDE, color);
+
+  const { neopixelA, neopixelB, bar } = devices.object();
+
+  const steps: ChannelAnimation = [];
+  const pixelSteps: Array<number[]> = [];
+
+  const colors = [
+    { r: 255 },
+    { r: 255, g: 127 },
+    { r: 255, g: 255 },
+    { g: 255 },
+    { b: 255 },
+    { r: 127, b: 255 },
+  ];
+
+  const on = bar.state(
+    ...colors.map((color, index) => ({
+      segments: index + 1,
+      master: 255,
+      ...color,
+    })),
+  );
+  for (let i = 0; i < 75; i++) {
+    steps.push(on);
+  }
+
+  chase.addSteps(steps);
+
+  const colorLength = Math.floor(neopixelA.length / colors.length);
+
+  const rainbow = [];
+  for (const color of colors) {
+    for (let i = 0; i < colorLength; i++) {
+      rainbow.push({ ...color });
+    }
+  }
+
+  for (let i = 0; i < neopixelA.length - rainbow.length; i++) {
+    rainbow.push({});
+  }
+
+  for (let i = 0; i < 300; i++) {
+    const state = rainbow.map((values, index) => ({ index, values }));
+    pixelSteps.push([
+      ...neopixelA.setMultiple(state),
+      ...neopixelB.setMultiple(state),
+    ]);
+
+    rainbow.unshift(rainbow.pop());
+  }
+
+  chase.addPixelSteps(pixelSteps);
+
+  return chase;
+};

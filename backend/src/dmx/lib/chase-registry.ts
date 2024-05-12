@@ -15,6 +15,7 @@ import {
   createChaseBuildupBright,
   createChaseBuildupFadeout,
   createChaseBuildupInfinite,
+  createChaseBuildupPride,
   createChaseBuildupStreak,
 } from '../chase-builder/override-buildup';
 import { createChaseDisco } from '../chase-builder/override-disco';
@@ -66,6 +67,7 @@ export class ChaseRegistry {
       this.chases.push(createChaseBuildupFadeout(this.devices, color));
       this.chases.push(createChaseBuildupBlinder(this.devices, color));
       this.chases.push(createChaseBuildupStreak(this.devices, color));
+      this.chases.push(createChaseBuildupPride(this.devices, color));
       this.chases.push(createChaseBuildupInfinite(this.devices, color));
 
       // Strobes

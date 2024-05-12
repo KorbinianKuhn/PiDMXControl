@@ -1,13 +1,25 @@
 <div class="flex flex-row pt-2 flex-wrap justify-center">
   <div class="flex flex-col justify-start">
     <app-panel-group label="Overrides" class="mb-1">
-      <app-override-program-button size="small" [name]="overrideProgram.DAY">
+      <app-override-program-button
+        size="small"
+        [name]="overrideProgram.DAY"
+        color="bg-red-900"
+      >
         <span class="text-xs tracking-widest">Day</span>
       </app-override-program-button>
-      <app-override-program-button size="small" [name]="overrideProgram.NIGHT">
+      <app-override-program-button
+        size="small"
+        [name]="overrideProgram.NIGHT"
+        color="bg-red-900"
+      >
         <span class="text-xs tracking-widest">Night</span>
       </app-override-program-button>
-      <app-override-program-button size="small" [name]="overrideProgram.FADE">
+      <app-override-program-button
+        size="small"
+        [name]="overrideProgram.FADE"
+        color="bg-red-900"
+      >
         <span class="text-xs tracking-widest">Fade</span>
       </app-override-program-button>
     </app-panel-group>
@@ -71,6 +83,7 @@
         <app-override-program-button
           size="small"
           [name]="overrideProgram.DISCO"
+          color="bg-red-900"
         >
           <span class="text-xs tracking-widest">Disco</span>
         </app-override-program-button>
@@ -90,7 +103,16 @@
       <app-override-program-button [name]="overrideProgram.BUILDUP_STREAK">
         <span class="text-xs tracking-widest">Streak</span>
       </app-override-program-button>
-      <app-override-program-button [name]="overrideProgram.BUILDUP_INFINITE">
+      <app-override-program-button
+        [name]="overrideProgram.BUILDUP_PRIDE"
+        color="bg-red-900"
+      >
+        <span class="text-xs tracking-widest">Pride</span>
+      </app-override-program-button>
+      <app-override-program-button
+        [name]="overrideProgram.BUILDUP_INFINITE"
+        color="bg-red-900"
+      >
         <span class="text-xs tracking-widest">Infinite</span>
       </app-override-program-button>
     </app-panel-group>
@@ -112,7 +134,10 @@
         <app-override-program-button [name]="overrideProgram.STROBE_E">
           <span class="text-xs tracking-widest">Pixels</span>
         </app-override-program-button>
-        <app-override-program-button [name]="overrideProgram.STROBE_INFINITE">
+        <app-override-program-button
+          [name]="overrideProgram.STROBE_INFINITE"
+          color="bg-red-900"
+        >
           <span class="text-xs tracking-widest">Infinite</span>
         </app-override-program-button>
       </div>
@@ -135,32 +160,33 @@
           (click)="onClickBlack()"
           class="m-1"
           [current]="!!(black$ | async)"
+          colorOn="bg-red-900"
         >
           <span class="text-xs tracking-widest">Black</span>
         </app-toggle-button>
       </app-panel-group>
       <app-panel-group class="flex-1">
         <div class="flex flex-1 justify-center items-center h-16 m-1">
-          <button
-            class="text-cyan-600"
-            mat-icon-button
-            (click)="onOpenBrightnessModal()"
-          >
+          <button mat-icon-button (click)="onOpenBrightnessModal()">
             <mat-icon svgIcon="brightness"></mat-icon>
-          </button>
-          <button
-            class="text-cyan-600"
-            mat-icon-button
-            (click)="onOpenChannelMixerModal()"
-          >
-            <mat-icon svgIcon="tune"></mat-icon>
           </button>
 
           <button
-            class="text-cyan-600"
+            *ngrxLet="neopixelDisabled$ as neopixelDisabled"
             mat-icon-button
-            (click)="onRefreshClick()"
+            (click)="onToggleNeopixelDisabled()"
           >
+            <mat-icon
+              svgIcon="neopixel_off"
+              [ngClass]="neopixelDisabled ? 'text-red-600' : undefined"
+            ></mat-icon>
+          </button>
+
+          <button mat-icon-button (click)="onOpenChannelMixerModal()">
+            <mat-icon svgIcon="tune"></mat-icon>
+          </button>
+
+          <button mat-icon-button (click)="onRefreshClick()">
             <mat-icon svgIcon="refresh"></mat-icon>
           </button>
         </div>

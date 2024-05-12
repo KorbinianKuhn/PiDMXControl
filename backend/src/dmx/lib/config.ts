@@ -18,6 +18,7 @@ export interface DeviceConfig {
   maxPan?: number;
   minTilt?: number;
   maxTilt?: number;
+  disabled?: boolean;
 }
 interface ConfigStore {
   bpm: number;

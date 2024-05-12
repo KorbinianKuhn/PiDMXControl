@@ -39,7 +39,9 @@ export class DMX {
 
     if (SEND_DATA) {
       this.clock.microtick$.pipe(throttleTime(46)).subscribe(() => {
-        this._sendMQTT();
+        if (!this.config.getDeviceConfig('neopixel-a').disabled) {
+          this._sendMQTT();
+        }
         this._send();
       });
     }

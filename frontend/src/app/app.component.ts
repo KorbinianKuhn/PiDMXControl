@@ -15,6 +15,7 @@ const ICONS = [
   'visibility_off',
   'movie',
   'movie_off',
+  'neopixel_off',
 ];
 @Component({
   selector: 'app-root',

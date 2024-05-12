@@ -15,6 +15,7 @@ import { WSService } from '../../../../services/ws.service';
 export class OverrideProgramButtonComponent {
   @Input() name!: OverrideProgramName;
   @Input() size: 'small' | 'normal' = 'normal';
+  @Input() color: string = 'bg-cyan-500';
 
   public current$ = this.wsService.currentOverrideProgram$.pipe(
     map(({ programName, progress }) => {
