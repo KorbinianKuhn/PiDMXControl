@@ -76,7 +76,7 @@ export class BeamerComponent {
     }
 
     this.timer = setInterval(() => {
-      if (this.videoElement.nativeElement) {
+      if (this.videoElement?.nativeElement) {
         this.videoService.setVideoElement(this.videoElement.nativeElement);
         clearInterval(this.timer);
       }

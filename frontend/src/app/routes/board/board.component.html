@@ -69,10 +69,7 @@
         </ng-container>
       </div>
       <div class="flex-1"></div>
-      <div class="flex flex-wrap justify-end" style="max-width: 260px">
-        <app-active-program-button size="small" [name]="activeProgram.PRIDE">
-          <span class="text-xs tracking-widest">Pride</span>
-        </app-active-program-button>
+      <div class="flex flex-wrap justify-end" style="max-width: 280px">
         <app-active-program-button
           size="small"
           [name]="activeProgram.MIRROR_BALL"
@@ -82,6 +79,9 @@
         <app-active-program-button size="small" [name]="activeProgram.MAGIC">
           <span class="text-xs tracking-widest">Magic</span>
         </app-active-program-button>
+        <app-active-program-button size="small" [name]="activeProgram.PRIDE">
+          <span class="text-xs tracking-widest">Pride</span>
+        </app-active-program-button>
         <app-active-program-button size="small" [name]="activeProgram.MOODY">
           <span class="text-xs tracking-widest">Moody</span>
         </app-active-program-button>
@@ -90,6 +90,12 @@
         </app-active-program-button>
         <app-active-program-button size="small" [name]="activeProgram.PULSE">
           <span class="text-xs tracking-widest">Pulse</span>
+        </app-active-program-button>
+        <app-active-program-button size="small" [name]="activeProgram.LATE">
+          <span class="text-xs tracking-widest">Late</span>
+        </app-active-program-button>
+        <app-active-program-button size="small" [name]="activeProgram.ROUGH">
+          <span class="text-xs tracking-widest">Rough</span>
         </app-active-program-button>
         <app-active-program-button size="small" [name]="activeProgram.DARK">
           <span class="text-xs tracking-widest">Dark</span>
@@ -108,6 +114,15 @@
         <span class="text-xs tracking-widest">Fadeout</span>
       </app-override-program-button>
       <div class="flex-1"></div>
+      <app-override-program-button
+        [name]="overrideProgram.BUILDUP_BEAM"
+        color="bg-red-900"
+      >
+        <div class="flex flex-col">
+          <span class="text-xs tracking-widest">Beam</span>
+          <span style="line-height: 0.5rem">∞</span>
+        </div>
+      </app-override-program-button>
       <app-override-program-button
         [name]="overrideProgram.BUILDUP_BLINDER"
         color="bg-red-900"
@@ -145,9 +160,6 @@
         <app-override-program-button [name]="overrideProgram.STROBE_SLOWMO">
           <span class="text-xs tracking-widest">Slow</span>
         </app-override-program-button>
-        <!-- <app-override-program-button [name]="overrideProgram.STROBE_COLOR">
-          <span class="text-xs tracking-widest">Color</span>
-        </app-override-program-button> -->
         <app-override-program-button [name]="overrideProgram.STROBE_WHITE">
           <span class="text-xs tracking-widest">White</span>
         </app-override-program-button>

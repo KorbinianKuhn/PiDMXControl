@@ -12,6 +12,7 @@ export enum OverrideProgramName {
   WARM = 'warm',
   BUILDUP_BRIGHT = 'buildup-bright',
   BUILDUP_FADEOUT = 'buildup-fadeout',
+  BUILDUP_BEAM = 'buildup-beam',
   BUILDUP_BLINDER = 'buildup-blinder',
   BUILDUP_STREAK = 'buildup-streak',
   BUILDUP_BLINK = 'buildup-blinke',
@@ -31,8 +32,10 @@ export enum ActiveProgramName {
   MAGIC = 'magic',
   MOODY = 'moody',
   CLUB = 'club',
+  ROUGH = 'rough',
   PULSE = 'pulse',
   DARK = 'dark',
+  LATE = 'late',
   WILD = 'wild',
 }
 

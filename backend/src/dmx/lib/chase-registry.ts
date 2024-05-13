@@ -1,13 +1,16 @@
 import { Logger } from '../../utils/logger';
 import { createChaseClub } from '../chase-builder/chase-club';
 import { createChaseDark } from '../chase-builder/chase-dark';
+import { createChaseLate } from '../chase-builder/chase-late';
 import { createChaseMagic } from '../chase-builder/chase-magic';
 import { createChaseMirrorBall } from '../chase-builder/chase-mirror-ball';
 import { createChaseMoody } from '../chase-builder/chase-moody';
 import { createChasePride } from '../chase-builder/chase-pride';
 import { createChasePulse } from '../chase-builder/chase-pulse';
+import { createChaseRough } from '../chase-builder/chase-rough';
 import { createChaseWild } from '../chase-builder/chase-wild';
 import {
+  createChaseBuildupBeam,
   createChaseBuildupBlinder,
   createChaseBuildupBlink,
   createChaseBuildupBright,
@@ -64,13 +67,16 @@ export class ChaseRegistry {
       this.chases.push(createChaseMagic(this.devices, color));
       this.chases.push(createChaseMoody(this.devices, color));
       this.chases.push(createChaseClub(this.devices, color));
+      this.chases.push(createChaseRough(this.devices, color));
       this.chases.push(createChasePulse(this.devices, color));
       this.chases.push(createChaseDark(this.devices, color));
+      this.chases.push(createChaseLate(this.devices, color));
       this.chases.push(createChaseWild(this.devices, color));
 
       // Buildups
       this.chases.push(createChaseBuildupBright(this.devices, color));
       this.chases.push(createChaseBuildupFadeout(this.devices, color));
+      this.chases.push(createChaseBuildupBeam(this.devices, color));
       this.chases.push(createChaseBuildupBlinder(this.devices, color));
       this.chases.push(createChaseBuildupStreak(this.devices, color));
       this.chases.push(createChaseBuildupBlink(this.devices, color));

@@ -16,8 +16,9 @@ export const createChaseStrobeDisco = (devices: DeviceRegistry): Chase => {
   const hex = createHexPattern(devices);
   const ball = createBallPattern(devices);
   const head = createHeadPattern(devices);
+  const beamer = createBeamerPattern(devices);
 
-  const steps = mergeDevicePatterns(hex, bar, ball, head);
+  const steps = mergeDevicePatterns(hex, bar, ball, head, beamer);
 
   const warped = warp(steps, 2);
 
@@ -173,6 +174,30 @@ const createHeadPattern = (devices: DeviceRegistry): ChannelAnimation => {
           right.state(i % 2 ? colorStatesRight[i2 % 4] : {}),
         ),
       );
+    }
+  }
+
+  return steps;
+};
+
+const createBeamerPattern = (devices: DeviceRegistry): ChannelAnimation => {
+  const steps: ChannelAnimation = [];
+
+  const beamer = devices.object().beamer;
+
+  const green: DeviceStateValues = { master: 255, g: 255 };
+  const pink: DeviceStateValues = { master: 255, r: 255, b: 255 };
+  const yellow: DeviceStateValues = { master: 255, r: 255, g: 255 };
+  const cyan: DeviceStateValues = { master: 255, g: 255, b: 255 };
+
+  const colors = [green, yellow, pink, cyan];
+
+  for (let i = 0; i < 8; i++) {
+    for (const color of colors) {
+      steps.push(beamer.state({ master: 255, ...color }));
+      steps.push(beamer.state({ master: 255, ...color }));
+      steps.push(beamer.state({ master: 0 }));
+      steps.push(beamer.state({ master: 0 }));
     }
   }
 

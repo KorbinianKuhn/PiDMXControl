@@ -150,13 +150,15 @@ export const getPixelGradient = (
 
   const master = [...anim, ...new Array(device.length).fill(0)];
 
-  const shift = (iterations: number) => {
+  const shift = (iterations: number): number[] => {
+    const copy = [...master];
     for (let i = 0; i < iterations; i++) {
-      master.unshift(master.pop());
+      copy.unshift(copy.pop());
     }
+    return copy;
   };
 
-  const getValues = () => {
+  const getValues = (master: number[]) => {
     return master.slice(gradientLength).map((master, index) => ({
       index,
       values: {
@@ -166,13 +168,12 @@ export const getPixelGradient = (
     }));
   };
 
-  const movement = Math.floor((device.length + gradientLength * 2) / numSteps);
-
-  shift(offset);
+  const movement = (device.length + gradientLength) / numSteps;
 
   for (let i = 0; i < numSteps; i++) {
-    steps.push(device.setMultiple(getValues()));
-    shift(movement);
+    steps.push(
+      device.setMultiple(getValues(shift(Math.round(i * movement) + offset))),
+    );
   }
 
   if (reverse) {
