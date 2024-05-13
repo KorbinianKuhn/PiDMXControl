@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Subject, combineLatest, map, timer } from 'rxjs';
+import {
+  BehaviorSubject,
+  Subject,
+  combineLatest,
+  filter,
+  interval,
+  map,
+} from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ColorService } from './color.service';
 import { MqttService } from './mqtt.service';
@@ -18,12 +25,6 @@ export interface VideoState {
     classes: string;
     duration: string;
   };
-  crop: {
-    top: number;
-    left: number;
-    bottom: number;
-    right: number;
-  };
 }
 
 @Injectable({
@@ -33,24 +34,25 @@ export class VideoService {
   private address = 146;
   private numChannels = 5;
   private messages: string[] = [
-    `Wonderland`,
-    `Have I gone mad?`,
-    `Imagine`,
-    `Who in the world am I?`,
-    `Belief`,
-    `We are all crazy!`,
-    `Reality`,
-    `Not all who wander are lost.`,
-    `Dream`,
-    `I'm not all there myself.`,
+    `Space`,
+    `Time`,
+    `Universe`,
+    `Life`,
+    `Galaxy`,
+    `Infinity`,
     `Existence`,
-    `Curiouser and curiouser!`,
+    `Travel`,
+    `Dimension`,
   ];
 
-  public text$ = new Subject<AnimatedText>();
-  public enableText = false;
+  public text$ = new BehaviorSubject<AnimatedText>({
+    message: '',
+    opacity: 0,
+    transform: '',
+  });
   public video$ = new Subject<VideoState>();
-  public visuals$ = this.wsService.visuals$;
+  public visualsSource$ = this.wsService.visualsSource$;
+  public visualsSettings$ = this.wsService.visualsSettings$;
 
   constructor(
     private wsService: WSService,
@@ -66,7 +68,9 @@ export class VideoService {
 
         const color = this.colorService.toRGB(255, r, g, b, 0, 0, 0);
         const opacity =
-          this.visuals$.getValue().opacity === 'chase' ? master / 255 : 1;
+          this.visualsSettings$.getValue().opacity === 'chase'
+            ? master / 255
+            : 1;
 
         const { classes, duration } = this.colorService.getStrobeClasses(
           strobe,
@@ -81,36 +85,28 @@ export class VideoService {
             classes,
             duration,
           },
-          crop: {
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
-          },
         });
       });
 
-    if (this.enableText) {
-      combineLatest([
-        timer(0, 30000).pipe(map((i) => i % 2 !== 0)),
-        timer(0, 60000).pipe(
-          map((i) => {
-            const message = this.messages[i % this.messages.length];
-            return message;
-          })
-        ),
-      ]).subscribe(([show, message]) => {
+    combineLatest([this.visualsSettings$, interval(10000)])
+      .pipe(filter(([visuals, counter]) => visuals.text))
+      .subscribe(([_, counter]) => {
+        const show = counter % 5 === 0;
+        let message = this.text$.getValue().message;
+        if (show) {
+          const index = this.messages.indexOf(message) ?? 0;
+          message = this.messages[(index + 1) % this.messages.length];
+        }
         this.text$.next({
           message,
           opacity: show ? 1 : 0,
           transform: '',
         });
       });
-    }
   }
 
   setVideoElement(element: HTMLVideoElement) {
-    const visuals = this.wsService.visuals$.getValue();
+    const visuals = this.wsService.visualsSettings$.getValue();
 
     element.pause();
     if (visuals.currentIndex < 0) {
@@ -126,7 +122,7 @@ export class VideoService {
   }
 
   onVideoElementMetadataLoaded(element: HTMLVideoElement) {
-    const visuals = this.wsService.visuals$.getValue();
+    const visuals = this.wsService.visualsSettings$.getValue();
     if (visuals.currentIndex >= 0) {
       const timeElapsed =
         (new Date().valueOf() - new Date(visuals.startedAt).valueOf()) / 1000;

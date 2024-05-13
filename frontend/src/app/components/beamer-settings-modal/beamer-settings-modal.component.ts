@@ -2,6 +2,7 @@ import { TitleCasePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSliderModule } from '@angular/material/slider';
 import { LetDirective } from '@ngrx/component';
@@ -19,29 +20,43 @@ import { WSService } from '../../services/ws.service';
     MatRadioModule,
     FormsModule,
     MatSliderModule,
+    MatCheckboxModule,
   ],
 })
 export class BeamerSettingsModalComponent {
-  public visuals$ = this.wsService.visuals$;
+  public visuals$ = this.wsService.visualsSettings$;
 
   constructor(private wsService: WSService) {}
 
   onVisualIndexChange(index: number) {
-    const { color, opacity } = this.visuals$.getValue();
-    this.wsService.setVisuals(index, color, opacity);
+    this.wsService.setVisualsSource(index);
   }
 
-  onVisualColorChange(color: 'chase' | 'original') {
-    const { currentIndex, opacity } = this.visuals$.getValue();
-    this.wsService.setVisuals(currentIndex, color, opacity);
+  onSliderChange(
+    direction: 'left' | 'right' | 'top' | 'bottom',
+    event: { value: number }
+  ) {
+    const { currentIndex, ...settings } = this.visuals$.getValue();
+    this.wsService.setVisualsSettings({
+      ...settings,
+      [direction]: event.value,
+    });
   }
 
-  onVisualOpacityChange(opacity: 'chase' | 'off') {
-    const { currentIndex, color } = this.visuals$.getValue();
-    this.wsService.setVisuals(currentIndex, color, opacity);
+  onToggleColor() {
+    const { currentIndex, ...settings } = this.visuals$.getValue();
+    const color = settings.color === 'chase' ? 'original' : 'chase';
+    this.wsService.setVisualsSettings({ ...settings, color });
   }
 
-  onSliderChange(direction: 'left' | 'right' | 'top' | 'bottom', event: any) {
-    console.log(direction, event.value);
+  onToggleOpacity() {
+    const { currentIndex, ...settings } = this.visuals$.getValue();
+    const opacity = settings.opacity === 'chase' ? 'off' : 'chase';
+    this.wsService.setVisualsSettings({ ...settings, opacity });
+  }
+
+  onToggleText() {
+    const { currentIndex, ...settings } = this.visuals$.getValue();
+    this.wsService.setVisualsSettings({ ...settings, text: !settings.text });
   }
 }

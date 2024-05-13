@@ -3,7 +3,7 @@
   class="flex justify-between p-5 border border-cyan-700 rounded-sm flex-wrap"
 >
   <div class="mr-12">
-    <label>Video</label>
+    <label>Source</label>
     <mat-radio-group
       [(ngModel)]="visuals.currentIndex"
       (ngModelChange)="onVisualIndexChange($event)"
@@ -18,44 +18,52 @@
     </mat-radio-group>
   </div>
   <div class="flex flex-col">
-    <div>
-      <label>Color</label>
-      <mat-radio-group
-        class="flex flex-col"
-        [(ngModel)]="visuals.color"
-        (ngModelChange)="onVisualColorChange($event)"
-      >
-        <mat-radio-button [value]="'chase'" color="primary"
-          >Chase</mat-radio-button
-        >
-        <mat-radio-button [value]="'original'" color="primary"
-          >Original</mat-radio-button
-        >
-      </mat-radio-group>
-    </div>
-    <div>
-      <label>Opacity</label>
-      <mat-radio-group
-        class="flex flex-col"
-        [(ngModel)]="visuals.opacity"
-        (ngModelChange)="onVisualOpacityChange($event)"
-      >
-        <mat-radio-button [value]="'chase'" color="primary"
-          >Chase</mat-radio-button
-        >
-        <mat-radio-button [value]="'off'" color="primary">Off</mat-radio-button>
-      </mat-radio-group>
-    </div>
+    <div>Settings</div>
+    <mat-checkbox
+      [checked]="visuals.color === 'chase'"
+      (change)="onToggleColor()"
+      color="primary"
+      >Chase Color</mat-checkbox
+    >
+    <mat-checkbox
+      [checked]="visuals.opacity === 'chase'"
+      (change)="onToggleOpacity()"
+      color="primary"
+      >Chase Opacity</mat-checkbox
+    >
+    <mat-checkbox
+      [checked]="visuals.text"
+      (change)="onToggleText()"
+      color="primary"
+      >Show Text</mat-checkbox
+    >
+
     <div>
       <label>Width</label>
-      <mat-slider [min]="0" [max]="50" [step]="1">
-        <input matSliderStartThumb (dragEnd)="onSliderChange('left', $event)" />
-        <input matSliderEndThumb (dragEnd)="onSliderChange('right', $event)" />
+      <mat-slider [min]="0" [max]="100" [step]="1">
+        <input
+          matSliderStartThumb
+          (dragEnd)="onSliderChange('left', $event)"
+          [(ngModel)]="visuals.left"
+        />
+        <input
+          matSliderEndThumb
+          (dragEnd)="onSliderChange('right', $event)"
+          [(ngModel)]="visuals.right"
+        />
       </mat-slider>
       <label>Height</label>
-      <mat-slider [min]="0" [max]="50" [step]="1">
-        <input matSliderStartThumb (dragEnd)="onSliderChange('top', $event)" />
-        <input matSliderEndThumb (dragEnd)="onSliderChange('bottom', $event)" />
+      <mat-slider [min]="0" [max]="100" [step]="1">
+        <input
+          matSliderStartThumb
+          (dragEnd)="onSliderChange('top', $event)"
+          [(ngModel)]="visuals.top"
+        />
+        <input
+          matSliderEndThumb
+          (dragEnd)="onSliderChange('bottom', $event)"
+          [(ngModel)]="visuals.bottom"
+        />
       </mat-slider>
     </div>
   </div>

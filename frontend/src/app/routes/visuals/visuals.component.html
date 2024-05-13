@@ -1,34 +1,44 @@
-<ng-container *ngrxLet="video$ as video">
-  <div
-    *ngrxLet="color$ as color"
-    class="relative flex-1 flex justify-center items-center"
-    [style.opacity]="video.opacity"
-    [ngClass]="video.strobe.classes"
-    [style.animation-duration]="video.strobe.duration"
-  >
-    <video
-      [muted]="true"
-      [loop]="true"
-      (loadedmetadata)="onLoadedMetadata()"
-      #videoElement
-    ></video>
-    @if (color === 'chase') {
+<div
+  *ngrxLet="crop$ as crop"
+  class="absolute inset-0"
+  [style.left.%]="crop.left"
+  [style.right.%]="crop.right"
+  [style.top.%]="crop.top"
+  [style.bottom.%]="crop.bottom"
+>
+  <ng-container *ngrxLet="video$ as video">
     <div
-      [style.background-color]="video.color"
-      class="absolute inset-0 mix-blend-color"
-    ></div>
-    }
-    <div
-      *ngrxLet="text$ as text"
-      class="absolute inset-0 flex items-center justify-center"
+      *ngrxLet="color$ as color"
+      class="relative w-full h-full"
+      [style.opacity]="video.opacity"
+      [ngClass]="video.strobe.classes"
+      [style.animation-duration]="video.strobe.duration"
     >
-      <p
-        class="text-overlay"
-        [style.-webkit-text-stroke]="'2px ' + video.color"
-        [style.opacity]="text.opacity"
+      <video
+        [muted]="true"
+        [loop]="true"
+        (loadedmetadata)="onLoadedMetadata()"
+        #videoElement
+        class="object-cover w-full h-full"
+      ></video>
+      @if (color === 'chase') {
+      <div
+        [style.background-color]="video.color"
+        class="absolute inset-0 mix-blend-color"
+      ></div>
+      }
+      <div
+        *ngrxLet="text$ as text"
+        class="absolute inset-0 flex items-center justify-center"
       >
-        {{ text.message }}
-      </p>
+        <p
+          class="text-overlay"
+          [style.-webkit-text-stroke]="'2px ' + video.color"
+          [style.opacity]="text.opacity"
+        >
+          {{ text.message }}
+        </p>
+      </div>
     </div>
-  </div>
-</ng-container>
+  </ng-container>
+</div>

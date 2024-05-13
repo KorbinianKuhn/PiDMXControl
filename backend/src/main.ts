@@ -60,7 +60,8 @@ const main = async () => {
         config: dmx.config.getDeviceConfig(device.id),
       });
     }
-    socket.emit('visuals:updated', dmx.config.visuals);
+    socket.emit('visuals:source-updated', dmx.config.visuals.currentIndex);
+    socket.emit('visuals:settings-updated', dmx.config.visuals);
 
     socket.on('set:bpm', (args) => {
       dmx.config.setBpm(args.value);
@@ -106,8 +107,19 @@ const main = async () => {
       dmx.config.setDeviceConfig(args.id, args.config);
     });
 
-    socket.on('set:visuals', (args) => {
-      dmx.config.setVisuals(args.id, args.color, args.opacity);
+    socket.on('set:visuals-source', (args) => {
+      dmx.config.setVisualsSource(args.id);
+    });
+    socket.on('set:visuals-settings', (args) => {
+      dmx.config.setVisualsSettings(
+        args.color,
+        args.opacity,
+        args.text,
+        args.left,
+        args.right,
+        args.top,
+        args.bottom,
+      );
     });
   });
 

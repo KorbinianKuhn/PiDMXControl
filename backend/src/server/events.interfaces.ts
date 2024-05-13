@@ -17,10 +17,15 @@ export interface ClientToServerEvents {
   'set:settings-mode': (payload: { value: boolean }) => void;
   'set:settings-channel': (payload: { address: number; value: number }) => void;
   'set:device-config': (payload: { id: string; config: DeviceConfig }) => void;
-  'set:visuals': (payload: {
-    id: number;
+  'set:visuals-source': (payload: { id: number }) => void;
+  'set:visuals-settings': (payload: {
     color: 'chase' | 'original';
     opacity: 'chase' | 'off';
+    text: boolean;
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
   }) => void;
 }
 
@@ -51,7 +56,8 @@ export interface ServerToClientEvents {
     id: string;
     config: DeviceConfig;
   }) => void;
-  'visuals:updated': (payload: Visuals) => void;
+  'visuals:source-updated': (payload: number) => void;
+  'visuals:settings-updated': (payload: Visuals) => void;
 }
 
 export type TypedServer = Server<ClientToServerEvents, ServerToClientEvents>;

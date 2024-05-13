@@ -27,10 +27,10 @@ export class BeamerComponent {
   public show$ = combineLatest([
     this.configService.visualisation$,
     this.configService.video$,
-    this.wsService.visuals$,
+    this.wsService.visualsSource$,
   ]).pipe(
-    map(([visible, video, visuals]) => {
-      if (!visible || visuals.currentIndex === -1) {
+    map(([visible, video, index]) => {
+      if (!visible || index === -1) {
         return 'hidden';
       }
       return video ? 'video' : 'color';
@@ -41,10 +41,12 @@ export class BeamerComponent {
 
   public text$ = this.videoService.text$;
 
-  public videoSelected$ = this.wsService.visuals$.pipe(
-    map((visuals) => visuals.currentIndex > -1)
+  public videoSelected$ = this.wsService.visualsSource$.pipe(
+    map((index) => index > -1)
   );
-  public color$ = this.wsService.visuals$.pipe(map((visuals) => visuals.color));
+  public color$ = this.wsService.visualsSettings$.pipe(
+    map((visuals) => visuals.color)
+  );
 
   constructor(
     private videoService: VideoService,

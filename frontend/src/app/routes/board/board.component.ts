@@ -52,7 +52,7 @@ export class BoardComponent implements OnInit {
   public overrideProgram = OverrideProgramName;
 
   public visualisation$ = this.configService.visualisation$;
-  public visuals$ = this.wsService.visuals$;
+  public visualsSettings$ = this.wsService.visualsSettings$;
   public black$ = this.wsService.black$;
 
   public currentColor$ = this.wsService.currentActiveProgram$.pipe(

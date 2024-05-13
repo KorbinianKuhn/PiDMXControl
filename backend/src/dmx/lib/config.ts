@@ -29,6 +29,12 @@ interface ConfigStore {
   activeProgram: ActiveProgramName;
   activeColors: ChaseColor[];
   devices: DeviceConfig[];
+  visuals: {
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+  };
 }
 
 export interface Visuals {
@@ -37,6 +43,11 @@ export interface Visuals {
   startedAt: string;
   color: 'chase' | 'original';
   opacity: 'chase' | 'off';
+  text: boolean;
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
 }
 
 export class Config {
@@ -56,6 +67,11 @@ export class Config {
     startedAt: new Date().toISOString(),
     color: 'chase',
     opacity: 'chase',
+    text: false,
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
   };
 
   public devices: DeviceConfig[] = [];
@@ -80,6 +96,12 @@ export class Config {
       activeProgram: this.activeProgram,
       activeColors: this.activeColors,
       devices: this.devices,
+      visuals: {
+        left: this.visuals.left,
+        right: this.visuals.right,
+        top: this.visuals.top,
+        bottom: this.visuals.bottom,
+      },
     };
     const content = JSON.stringify(config, null, 2);
     await writeFile(CONFIG_PATH, content);
@@ -98,6 +120,10 @@ export class Config {
     this.activeProgram = config.activeProgram;
     this.activeColors = config.activeColors;
     this.devices = config.devices;
+    this.visuals.left = config.visuals?.left || 0;
+    this.visuals.right = config.visuals?.right || 100;
+    this.visuals.top = config.visuals?.top || 0;
+    this.visuals.bottom = config.visuals?.bottom || 100;
 
     this.speed$.next(60000 / this.bpm);
   }
@@ -184,21 +210,36 @@ export class Config {
       })),
     };
 
-    this.setVisuals(0, 'chase', 'chase');
+    this.setVisualsSource(0);
   }
 
-  setVisuals(
-    currentIndex: number,
+  setVisualsSource(currentIndex: number) {
+    this.visuals.currentIndex = currentIndex;
+    this.io.emit('visuals:settings-updated', this.visuals);
+    this.io.emit('visuals:source-updated', currentIndex);
+  }
+
+  setVisualsSettings(
     color: 'chase' | 'original',
     opacity: 'chase' | 'off',
+    text: boolean,
+    left: number,
+    right: number,
+    top: number,
+    bottom: number,
   ) {
     this.visuals = {
       ...this.visuals,
-      currentIndex,
       color,
       opacity,
+      text,
+      left,
+      right,
+      top,
+      bottom,
     };
-    this.io.emit('visuals:updated', this.visuals);
+    this.store$.next();
+    this.io.emit('visuals:settings-updated', this.visuals);
   }
 
   registerDevices(devices: Device[]) {

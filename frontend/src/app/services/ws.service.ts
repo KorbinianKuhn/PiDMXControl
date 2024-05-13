@@ -45,12 +45,19 @@ export class WSService {
   public settingsData$ = new BehaviorSubject<number[]>([]);
 
   public devices$ = new BehaviorSubject<DeviceConfig[]>([]);
-  public visuals$ = new BehaviorSubject<Visuals>({
+
+  public visualsSource$ = new BehaviorSubject<number>(-1);
+  public visualsSettings$ = new BehaviorSubject<Visuals>({
     sources: [],
     currentIndex: -1,
     startedAt: '',
     color: 'chase',
     opacity: 'chase',
+    text: false,
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
   });
 
   constructor() {
@@ -134,8 +141,11 @@ export class WSService {
       devices.push(data.config);
       this.devices$.next(devices);
     });
-    this.socket.on('visuals:updated', (data) => {
-      this.visuals$.next(data);
+    this.socket.on('visuals:source-updated', (data) => {
+      this.visualsSource$.next(data);
+    });
+    this.socket.on('visuals:settings-updated', (data) => {
+      this.visualsSettings$.next(data);
     });
   }
 
@@ -183,11 +193,19 @@ export class WSService {
     this.socket.emit('set:device-config', { id, config });
   }
 
-  setVisuals(
-    id: number,
-    color: 'chase' | 'original',
-    opacity: 'chase' | 'off'
-  ) {
-    this.socket.emit('set:visuals', { id, color, opacity });
+  setVisualsSource(id: number) {
+    this.socket.emit('set:visuals-source', { id });
+  }
+
+  setVisualsSettings(settings: {
+    color: 'chase' | 'original';
+    opacity: 'chase' | 'off';
+    text: boolean;
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+  }) {
+    this.socket.emit('set:visuals-settings', settings);
   }
 }
