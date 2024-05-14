@@ -24,7 +24,7 @@ export enum OverrideProgramName {
   BUILDUP_BEAM = 'buildup-beam',
   BUILDUP_BLINDER = 'buildup-blinder',
   BUILDUP_STREAK = 'buildup-streak',
-  BUILDUP_BLINK = 'buildup-blinke',
+  BUILDUP_BLINK = 'buildup-blink',
   STROBE_FLASH = 'strobe-flash',
   STROBE_SLOWMO = 'strobe-slowmo',
   STROBE_COLOR = 'strobe-color',
