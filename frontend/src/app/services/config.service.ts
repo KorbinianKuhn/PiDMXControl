@@ -8,8 +8,13 @@ import { environment } from '../../environments/environment';
 export class ConfigService {
   public visualisation$ = new BehaviorSubject<boolean>(!environment.production);
   public video$ = new BehaviorSubject<boolean>(!environment.production);
+  public performanceMode$ = new BehaviorSubject<boolean>(false);
 
   constructor() {}
+
+  togglePerformanceMode() {
+    this.performanceMode$.next(!this.performanceMode$.getValue());
+  }
 
   toggleVisualisation() {
     this.visualisation$.next(!this.visualisation$.getValue());

@@ -52,6 +52,7 @@ export class BoardComponent implements OnInit {
   public overrideProgram = OverrideProgramName;
 
   public visualisation$ = this.configService.visualisation$;
+  public performanceMode$ = this.configService.performanceMode$;
   public visualsSettings$ = this.wsService.visualsSettings$;
   public black$ = this.wsService.black$;
 
@@ -121,5 +122,9 @@ export class BoardComponent implements OnInit {
       ...config,
       disabled: !config.disabled,
     });
+  }
+
+  onTogglePerformanceMode() {
+    this.configService.togglePerformanceMode();
   }
 }

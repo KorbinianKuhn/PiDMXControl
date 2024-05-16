@@ -1,27 +1,37 @@
+import { AsyncPipe, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
-import { map } from 'rxjs';
+import { PushPipe } from '@ngrx/component';
+import { combineLatest, map } from 'rxjs';
+import { ConfigService } from '../../../services/config.service';
 import { WSService } from '../../../services/ws.service';
-import { NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-bpm-number',
-    templateUrl: './bpm-number.component.html',
-    styleUrls: ['./bpm-number.component.scss'],
-    standalone: true,
-    imports: [
-    NgClass,
-    AsyncPipe
-],
+  selector: 'app-bpm-number',
+  templateUrl: './bpm-number.component.html',
+  styleUrls: ['./bpm-number.component.scss'],
+  standalone: true,
+  imports: [NgClass, AsyncPipe, PushPipe],
 })
 export class BpmNumberComponent {
   public bpm$ = this.wsService.bpm$;
-  public bars$ = this.wsService.tick$.pipe(
-    map((value) => {
+
+  public bars$ = combineLatest([
+    this.configService.performanceMode$,
+    this.wsService.tick$,
+  ]).pipe(
+    map(([performanceMode, tick]) => {
       const values = [false, false, false, false];
-      values[Math.floor(value / 4)] = true;
+
+      if (!performanceMode) {
+        values[Math.floor(tick / 4)] = true;
+      }
+
       return values;
     })
   );
 
-  constructor(private wsService: WSService) {}
+  constructor(
+    private wsService: WSService,
+    private configService: ConfigService
+  ) {}
 }

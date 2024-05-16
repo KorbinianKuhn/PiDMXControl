@@ -1,12 +1,14 @@
 import { NgClass } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
+import { LetDirective } from '@ngrx/component';
+import { ConfigService } from '../../services/config.service';
 
 @Component({
   selector: 'app-pad-button',
   templateUrl: './pad-button.component.html',
   styleUrls: ['./pad-button.component.scss'],
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, LetDirective],
 })
 export class PadButtonComponent implements OnInit {
   @Input() color!: string;
@@ -15,6 +17,8 @@ export class PadButtonComponent implements OnInit {
   @Input() size: 'small' | 'normal' = 'normal';
   @Input() progress!: number;
 
+  public performanceMode$ = this.configService.performanceMode$;
+
   get opacity(): number {
     if (this.current) {
       return 20;
@@ -22,7 +26,7 @@ export class PadButtonComponent implements OnInit {
     return this.active ? 10 : 70;
   }
 
-  constructor() {}
+  constructor(private configService: ConfigService) {}
 
   ngOnInit(): void {}
 

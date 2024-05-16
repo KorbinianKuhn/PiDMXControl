@@ -1,17 +1,15 @@
 <div class="flex flex-col cursor-pointer">
-  <div
-    class="w-100 h-12 bg-gray-900 rounded-md flex justify-center items-center text-3xl"
-    >
-    {{ bpm$ | async }}
+  <div class="w-100 h-10 bg-gray-900 flex justify-center items-center text-3xl">
+    {{ bpm$ | ngrxPush }}
   </div>
   <div class="flex mt-2">
-    @for (bar of bars$ | async; track bar; let first = $first; let last = $last) {
-      <div
-        [class.ml-0]="first"
-        [class.mr-0]="last"
-        [ngClass]="bar ? 'bg-cyan-800' : 'bg-gray-900'"
-        class="w-8 h-4 mx-2"
-      ></div>
+    @for (bar of bars$ | ngrxPush; track bar; let first = $first; let last =
+    $last) {
+    <div
+      [class.mr-2]="!last"
+      [ngClass]="bar ? 'bg-cyan-800' : 'bg-gray-900'"
+      class="w-8 h-4"
+    ></div>
     }
   </div>
 </div>

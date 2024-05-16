@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatSliderModule } from '@angular/material/slider';
-import { Subject, takeUntil } from 'rxjs';
+import { LetDirective } from '@ngrx/component';
 import { WSService } from '../../../services/ws.service';
 import { PadButtonComponent } from '../../pad-button/pad-button.component';
+import { PanelGroupComponent } from '../../panel-group/panel-group.component';
 import { BpmNumberComponent } from '../bpm-number/bpm-number.component';
 
 @Component({
@@ -10,27 +11,22 @@ import { BpmNumberComponent } from '../bpm-number/bpm-number.component';
   templateUrl: './bpm-modal.component.html',
   styleUrls: ['./bpm-modal.component.scss'],
   standalone: true,
-  imports: [BpmNumberComponent, PadButtonComponent, MatSliderModule],
+  imports: [
+    BpmNumberComponent,
+    PadButtonComponent,
+    MatSliderModule,
+    LetDirective,
+    PanelGroupComponent,
+  ],
 })
-export class BpmModalComponent implements OnInit, OnDestroy {
+export class BpmModalComponent {
   private taps: number[] = [];
   private precision = 5;
 
-  private destroy$$ = new Subject<void>();
-
-  public bpm: number = this.wsService.bpm$.getValue();
+  public bpm$ = this.wsService.bpm$;
+  public presets = new Array(35).fill(null).map((_, i) => 110 + i);
 
   constructor(private wsService: WSService) {}
-
-  ngOnInit(): void {
-    this.wsService.bpm$
-      .pipe(takeUntil(this.destroy$$))
-      .subscribe((value) => (this.bpm = value));
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$$.next();
-  }
 
   onClickStart() {
     this.wsService.setStart();
@@ -66,8 +62,8 @@ export class BpmModalComponent implements OnInit, OnDestroy {
         if (ticks.length - i >= this.precision) break;
       }
 
-      this.bpm = Math.round((n / this.precision) * 2) / 2;
-      this.wsService.setBpm(this.bpm);
+      const bpm = Math.round((n / this.precision) * 2) / 2;
+      this.wsService.setBpm(bpm);
     }
   }
 
@@ -106,10 +102,14 @@ export class BpmModalComponent implements OnInit, OnDestroy {
   }
 
   onChangeValue(amount: number) {
-    this.wsService.setBpm(this.bpm + amount);
+    this.wsService.setBpm(this.bpm$.getValue() + amount);
   }
 
   onClickRound() {
-    this.wsService.setBpm(Math.round(this.bpm));
+    this.wsService.setBpm(Math.round(this.bpm$.getValue()));
+  }
+
+  onClickPreset(bpm: number) {
+    this.wsService.setBpm(bpm);
   }
 }

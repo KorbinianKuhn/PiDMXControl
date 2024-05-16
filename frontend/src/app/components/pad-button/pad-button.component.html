@@ -1,4 +1,5 @@
 <button
+  *ngrxLet="performanceMode$ as performanceMode"
   class="relative rounded-md overflow-hidden"
   [ngClass]="color"
   (click)="onClick()"
@@ -11,12 +12,12 @@
     class="absolute inset-0 bg-black"
     [class.opacity-0]="active"
     [class.opacity-70]="!active"
-    [class.animate-pulse]="current"
+    [class.animate-pulse]="!performanceMode && current"
   ></div>
   <div class="relative flex justify-center items-center">
     <ng-content> </ng-content>
   </div>
-  @if (current && progress !== undefined) {
+  @if (!performanceMode && current && progress !== undefined) {
   <div class="progress">
     <div class="progress-current" [style.width.%]="progress"></div>
   </div>

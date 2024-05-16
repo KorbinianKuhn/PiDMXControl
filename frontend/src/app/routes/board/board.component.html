@@ -191,6 +191,14 @@
       <app-panel-group label="BPM">
         <app-bpm></app-bpm>
       </app-panel-group>
+      <div class="flex flex-1 flex-col justify-center items-center">
+        <button mat-icon-button (click)="onRefreshClick()">
+          <mat-icon svgIcon="refresh"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="onOpenChannelMixerModal()">
+          <mat-icon svgIcon="tune"></mat-icon>
+        </button>
+      </div>
     </div>
     <app-panel-group label="Visualisation">
       <app-visualisation></app-visualisation>
@@ -209,7 +217,19 @@
       </app-panel-group>
       <app-panel-group class="flex-1">
         <div class="flex flex-1 justify-center items-center h-16 m-1">
-          <button mat-icon-button (click)="onOpenBrightnessModal()">
+          <button
+            *ngrxLet="performanceMode$ as performanceMode"
+            mat-icon-button
+            (click)="onTogglePerformanceMode()"
+            class="m-2"
+          >
+            <mat-icon
+              svgIcon="tortoise"
+              [ngClass]="performanceMode ? 'text-red-600' : undefined"
+            ></mat-icon>
+          </button>
+
+          <button mat-icon-button (click)="onOpenBrightnessModal()" class="m-2">
             <mat-icon svgIcon="brightness"></mat-icon>
           </button>
 
@@ -217,19 +237,12 @@
             *ngrxLet="neopixelDisabled$ as neopixelDisabled"
             mat-icon-button
             (click)="onToggleNeopixelDisabled()"
+            class="m-2"
           >
             <mat-icon
               svgIcon="neopixel_off"
               [ngClass]="neopixelDisabled ? 'text-red-600' : undefined"
             ></mat-icon>
-          </button>
-
-          <button mat-icon-button (click)="onOpenChannelMixerModal()">
-            <mat-icon svgIcon="tune"></mat-icon>
-          </button>
-
-          <button mat-icon-button (click)="onRefreshClick()">
-            <mat-icon svgIcon="refresh"></mat-icon>
           </button>
         </div>
       </app-panel-group>
