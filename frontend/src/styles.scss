@@ -140,6 +140,11 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+@font-face {
+  font-family: "Nasalization";
+  src: url("assets/nasalization.otf") format("opentype");
+}
+
 .mdc-icon-button {
   display: flex !important;
   justify-content: center;

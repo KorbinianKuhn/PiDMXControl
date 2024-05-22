@@ -33,17 +33,7 @@ export interface VideoState {
 export class VideoService {
   private address = 146;
   private numChannels = 5;
-  private messages: string[] = [
-    `Space`,
-    `Time`,
-    `Universe`,
-    `Life`,
-    `Galaxy`,
-    `Infinity`,
-    `Existence`,
-    `Travel`,
-    `Dimension`,
-  ];
+  private messages: string[] = [`Space Rave`];
 
   public text$ = new BehaviorSubject<AnimatedText>({
     message: '',
