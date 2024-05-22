@@ -13,7 +13,9 @@ import {
   animationFrameScheduler,
   combineLatest,
   filter,
+  interval,
   takeUntil,
+  throttle,
   throttleTime,
 } from 'rxjs';
 import { ColorService } from '../../services/color.service';
@@ -68,6 +70,9 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$$),
         filter(([visible, _, __]) => visible),
+        throttle(() =>
+          interval(this.configService.performanceMode$.getValue() ? 100 : 0)
+        ),
         throttleTime(0, animationFrameScheduler)
       )
       .subscribe(([_, dmx, neopixel]) => {
