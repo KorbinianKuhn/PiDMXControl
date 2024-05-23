@@ -7,8 +7,9 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class MqttService {
-  public neopixel$ = new Subject<number[]>();
   public dmx$ = new Subject<number[]>();
+  public neopixelA$ = new Subject<number[]>();
+  public neopixelB$ = new Subject<number[]>();
 
   constructor() {}
 
@@ -20,8 +21,11 @@ export class MqttService {
         case 'dmx':
           this.dmx$.next(Array.from(message));
           break;
-        case 'neopixel':
-          this.neopixel$.next(Array.from(message));
+        case 'neopixel-a':
+          this.neopixelA$.next(Array.from(message));
+          break;
+        case 'neopixel-b':
+          this.neopixelB$.next(Array.from(message));
           break;
       }
     });

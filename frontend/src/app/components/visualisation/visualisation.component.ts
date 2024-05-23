@@ -65,7 +65,8 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
     combineLatest([
       this.configService.visualisation$,
       this.mqttService.dmx$,
-      this.mqttService.neopixel$,
+      this.mqttService.neopixelA$,
+      this.mqttService.neopixelB$,
     ])
       .pipe(
         takeUntil(this.destroy$$),
@@ -75,9 +76,9 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
         ),
         throttleTime(0, animationFrameScheduler)
       )
-      .subscribe(([_, dmx, neopixel]) => {
+      .subscribe(([_, dmx, neopixelA, neopixelB]) => {
         this.redraw(dmx);
-        this.redrawNeopixel(neopixel);
+        this.redrawNeopixel([...neopixelA, ...neopixelB]);
       });
   }
 

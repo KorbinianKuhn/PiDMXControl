@@ -156,8 +156,7 @@ export class DMX {
 
   async _sendMQTT() {
     const data = this.neopixelData();
-    this.mqtt.send('neopixel', data);
-    this.mqtt.send('neopixel-a', data.slice(0, 600));
-    this.mqtt.send('neopixel-b', data.slice(600, 1200));
+    this.mqtt.send('neopixel-a', data.subarray(0, 600));
+    this.mqtt.send('neopixel-b', data.subarray(600, 1200));
   }
 }
