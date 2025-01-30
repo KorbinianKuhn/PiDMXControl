@@ -184,7 +184,7 @@ const createBallPattern = (
       steps.push(
         flattenChannelStates(
           spot.state({ master: 255, ...color }),
-          dome.state({ master: 255, ...color }),
+          dome.state({ master: 255, ...color, movement: 255 }),
         ),
       );
     }

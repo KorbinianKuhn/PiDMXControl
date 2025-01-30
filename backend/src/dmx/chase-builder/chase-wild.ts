@@ -158,31 +158,6 @@ const createBarPattern = (
   return steps;
 };
 
-const createBallPattern = (
-  devices: DeviceRegistry,
-  colors: Colors,
-): ChannelAnimation => {
-  const steps: ChannelAnimation = [];
-
-  const { dome, spot } = devices.object();
-
-  for (const color of [colors.a, colors.b]) {
-    for (let i = 0; i < 8; i++) {
-      steps.push(
-        flattenChannelStates(
-          spot.state({ master: 255, ...color, strobe: 20 }),
-          dome.state({ master: 255, ...color, strobe: 20 }),
-        ),
-      );
-    }
-    for (let i = 0; i < 24; i++) {
-      steps.push(flattenChannelStates(spot.state({}), dome.state({})));
-    }
-  }
-
-  return repeat(steps, 8);
-};
-
 const createHeadPattern = (
   devices: DeviceRegistry,
   colors: Colors,

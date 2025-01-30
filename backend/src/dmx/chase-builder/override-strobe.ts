@@ -30,7 +30,7 @@ export const createChaseStrobeStorm = (
         ),
         bar.state({ segments: 'all', master: 255, w: 255, strobe: 250 }),
         ...head.all.map((o) => o.state({ master: 255, ...color, strobe: 250 })),
-        dome.state({ master: 255, ...color, strobe: 250 }),
+        dome.state({ master: 255, ...color, strobe: 250, movement: 255 }),
         spot.state({ master: 255, ...color, strobe: 250 }),
         beamer.state({ master: 255, ...color, strobe: 120 }),
       );
@@ -107,6 +107,9 @@ export const createChaseStrobeSlowmo = (
     ...devices
       .object()
       .head.all.map((o) => o.state({ master: 255, ...colors.a, strobe: 120 })),
+    devices
+      .object()
+      .bar.state({ segments: 'all', master: 255, ...colors.a, strobe: 120 }),
   );
 
   for (let i = 0; i < 32; i++) {

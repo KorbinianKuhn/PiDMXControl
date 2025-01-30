@@ -19,12 +19,12 @@ export const createChaseDark = (
   const chase = new Chase(ActiveProgramName.DARK, true, color);
   const colors = getChaseColorValues(color);
 
-  // const bar = createBarPattern(devices, colors);
+  const bar = createBarPattern(devices, colors);
   const hex = createHexPattern(devices, colors);
   const head = createHeadPattern(devices, colors);
   const beamer = createBeamerPattern(devices, colors);
 
-  const steps = mergeDevicePatterns(hex, head, beamer);
+  const steps = mergeDevicePatterns(bar, hex, head, beamer);
 
   const warped = warp(steps, 1);
 
@@ -81,27 +81,25 @@ const createBarPattern = (
 
   const bar = devices.object().bar;
 
-  const fadeInSteps = 2;
-  const fadeOutSteps = 14;
-  const maxBrightness = 255;
+  const off = bar.state({ segments: 'all' });
 
-  for (let i = 0; i < fadeInSteps; i++) {
-    const brightnessStep = Math.round(maxBrightness / fadeInSteps);
+  for (let i = 0; i < 4; i++) {
+    for (const color of [colors.a, { w: 255 }, colors.b, { w: 255 }]) {
+      for (let i2 = 0; i2 < 8; i2++) {
+        steps.push(off);
+      }
 
-    const master = i * brightnessStep;
+      steps.push(
+        bar.state({ segments: 'all', master: 255, ...color, strobe: 220 }),
+      );
 
-    steps.push(bar.state({ segments: 'all', master, ...colors.a }));
+      for (let i2 = 0; i2 < 7; i2++) {
+        steps.push(off);
+      }
+    }
   }
 
-  for (let i = 0; i < fadeOutSteps; i++) {
-    const brightnessStep = Math.round(maxBrightness / fadeOutSteps);
-
-    const master = maxBrightness - brightnessStep * i;
-
-    steps.push(bar.state({ segments: 'all', master, ...colors.a }));
-  }
-
-  return repeat(steps, 16);
+  return steps;
 };
 
 const createHeadPattern = (

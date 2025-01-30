@@ -17,27 +17,9 @@ export const createChaseBuildupFadeout = (
   const chase = new Chase(OverrideProgramName.BUILDUP_FADEOUT, false, color);
   const colors = getChaseColorValues(color);
 
-  const { bar, hex, head, neopixelA, neopixelB } = devices.object();
+  const { bar, hex, head, dome, spot, neopixelA, neopixelB } = devices.object();
 
   const steps: ChannelAnimation = [];
-
-  // steps.push(
-  //   flattenChannelStates(
-  //     ...hex.all.map((o) => o.state({ master: 255, ...colors.a })),
-  //     dome.state({ master: 255, ...colors.a }),
-  //     spot.state({ master: 255, ...colors.a }),
-  //   ),
-  // );
-
-  // for (let i2 = 0; i2 < 7; i2++) {
-  //   steps.push(
-  //     flattenChannelStates(
-  //       ...hex.all.map((o) => o.state({ master: 0, ...colors.a })),
-  //       dome.state({ master: 255, ...colors.a }),
-  //       spot.state({ master: 255, ...colors.a }),
-  //     ),
-  //   );
-  // }
 
   // Fadeout
   for (let i = 8; i > 0; i--) {
@@ -46,6 +28,8 @@ export const createChaseBuildupFadeout = (
       flattenChannelStates(
         ...head.all.map((o) => o.state({ master, ...colors.a })),
         ...hex.all.map((o) => o.state({ master, ...colors.a })),
+        dome.state({ master, ...colors.a, movement: 127 }),
+        spot.state({ master, ...colors.a }),
       ),
     );
   }
@@ -55,6 +39,8 @@ export const createChaseBuildupFadeout = (
       flattenChannelStates(
         ...head.all.map((o) => o.state({ master: 0 })),
         ...hex.all.map((o) => o.state({ master: 0 })),
+        dome.state({ master: 0 }),
+        spot.state({ master: 0 }),
       ),
     );
   }

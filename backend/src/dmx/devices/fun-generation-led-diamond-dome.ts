@@ -37,7 +37,7 @@ export class FunGenerationLedDiamondDome extends Device {
     const channels = this._cloneState();
 
     const sortedKeys = Object.keys(values).sort(
-      (a, b) => (a === 'master' ? 0 : 1) - (b === 'master' ? 0 : 1),
+      (a, b) => (a === 'master' ? 0 : -1) - (b === 'master' ? 0 : 1),
     );
 
     sortedKeys.map((key) => {
@@ -63,7 +63,8 @@ export class FunGenerationLedDiamondDome extends Device {
           break;
         case 'master':
           for (let i = 0; i < 6; i++) {
-            channels[i].value *= value;
+            const newValue = Math.round(channels[i].value * (value / 255));
+            channels[i].value = newValue;
           }
           break;
         case 'strobe':

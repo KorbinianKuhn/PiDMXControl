@@ -143,7 +143,7 @@ export const createChaseWarm = (devices: DeviceRegistry): Chase => {
 
   const hex = d.hex.all.map((hex) => hex.state({ master: 255, a: 255 }));
   const bar = d.bar.state({ segments: 'all', master: 255, a: 255 });
-  const dome = d.dome.state({ master: 255, a: 255 });
+  const dome = d.dome.state({ master: 255, a: 255, movement: 127 });
   const spot = d.spot.state({ master: 255, a: 255 });
   const heads = d.head.all.map((head) => head.state({ master: 255, a: 255 }));
   const beamer = d.beamer.state({ master: 255, a: 255 });
@@ -173,7 +173,7 @@ export const createChaseNight = (devices: DeviceRegistry): Chase => {
 
   const hex = d.hex.all.map((hex) => hex.state({ master: 255, b: 255 }));
   const bar = d.bar.state({ segments: 'all', master: 255, b: 255 });
-  const dome = d.dome.state({ master: 255, b: 255 });
+  const dome = d.dome.state({ master: 255, b: 255, movement: 127 });
   const spot = d.spot.state({ master: 255, b: 255 });
   const heads = d.head.all.map((head) => head.state({ master: 255, b: 255 }));
   const beamer = d.beamer.state({ master: 255, b: 255 });
@@ -203,7 +203,7 @@ export const createChaseWhite = (devices: DeviceRegistry): Chase => {
 
   const hex = d.hex.all.map((hex) => hex.state({ master: 255, w: 255 }));
   const bar = d.bar.state({ segments: 'all', master: 255, w: 255 });
-  const dome = d.dome.state({ master: 255, w: 255 });
+  const dome = d.dome.state({ master: 255, w: 255, movement: 127 });
   const spot = d.spot.state({ master: 255, w: 255 });
   const heads = d.head.all.map((head) => head.state({ master: 255, w: 255 }));
   const beamer = d.beamer.state({ master: 255, w: 255 });
@@ -235,7 +235,7 @@ export const createChaseDay = (devices: DeviceRegistry): Chase => {
     hex.state({ master: 255, w: 127, a: 127 }),
   );
   const bar = d.bar.state({ segments: 'all', master: 255, w: 127, a: 127 });
-  const dome = d.dome.state({ master: 255, w: 127, a: 127 });
+  const dome = d.dome.state({ master: 255, w: 127, a: 127, movement: 127 });
   const spot = d.spot.state({ master: 255, w: 127, a: 127 });
   const heads = d.head.all.map((head) =>
     head.state({ master: 255, w: 127, a: 127 }),

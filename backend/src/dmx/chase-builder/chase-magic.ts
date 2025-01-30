@@ -17,12 +17,13 @@ export const createChaseMagic = (
   const chase = new Chase(ActiveProgramName.MAGIC, true, color);
   const colors = getChaseColorValues(color);
 
+  const bar = createBarPattern(devices, colors);
   const hex = createHexPattern(devices, colors);
-  // const ball = warp(createBallPattern(devices, colors), 4);
+  const ball = createBallPattern(devices, colors);
   const head = createHeadPattern(devices, colors);
   const beamer = createBeamerPattern(devices, colors);
 
-  const steps = mergeDevicePatterns(hex, head, beamer);
+  const steps = mergeDevicePatterns(bar, hex, head, beamer, ball);
 
   const animations = devices
     .object()
@@ -33,6 +34,30 @@ export const createChaseMagic = (
   chase.addPixelSteps(createPixelPattern(devices, colors));
 
   return chase;
+};
+
+const createBarPattern = (
+  devices: DeviceRegistry,
+  colors: Colors,
+): ChannelAnimation => {
+  const steps: ChannelAnimation = [];
+
+  const bar = devices.object().bar;
+  const off = bar.state({ segments: 'all' });
+
+  const brightness = new Array(4).fill(0).map((o, i) => (255 / 4) * (i + 1));
+  brightness.push(...brightness.slice().reverse());
+
+  for (const color of [colors.a, colors.b, colors.a, colors.b]) {
+    for (const master of brightness) {
+      steps.push(bar.state({ segments: 'all', master, ...color }));
+    }
+    for (let j = 0; j < 24; j++) {
+      steps.push(off);
+    }
+  }
+
+  return steps;
 };
 
 const createHexPattern = (
@@ -71,24 +96,30 @@ const createBallPattern = (
 
   const { dome, spot } = devices.object();
 
+  const off = flattenChannelStates(
+    dome.state({ master: 0 }),
+    spot.state({ master: 0 }),
+  );
+
   const a = flattenChannelStates(
     dome.state({ master: 255, ...colors.a, movement: 127 }),
     spot.state({ master: 255, ...colors.a }),
   );
-
   const b = flattenChannelStates(
     dome.state({ master: 255, ...colors.b, movement: 127 }),
     spot.state({ master: 255, ...colors.b }),
   );
 
-  // 1 - 16
-  for (let i = 0; i < 16; i++) {
-    steps.push(a);
-  }
-
-  // 17 - 32
-  for (let i = 0; i < 16; i++) {
-    steps.push(b);
+  for (const color of [a, b]) {
+    for (let j = 0; j < 32; j++) {
+      steps.push(off);
+    }
+    for (let j = 0; j < 16; j++) {
+      steps.push(color);
+    }
+    for (let j = 0; j < 16; j++) {
+      steps.push(off);
+    }
   }
 
   return steps;
