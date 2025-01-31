@@ -108,17 +108,19 @@ const createBallPattern = (devices: DeviceRegistry): ChannelAnimation => {
     spot.state({ master: 0 }),
   );
 
-  const on = flattenChannelStates(
-    dome.state({ master: 255, r: 255, b: 200, movement: 127 }),
-    spot.state({ master: 255, r: 255, b: 200 }),
-  );
+  const rainbowColorsSpot = [{ r: 255 }, { g: 255 }];
 
   for (let i = 0; i < 2; i++) {
     for (let j = 0; j < 24; j++) {
       steps.push(off);
     }
     for (let j = 0; j < 16; j++) {
-      steps.push(on);
+      steps.push(
+        flattenChannelStates(
+          dome.state({ master: 255, r: 127, b: 127, g: 127, movement: 127 }),
+          spot.state({ master: 255, ...rainbowColorsSpot[i] }),
+        ),
+      );
     }
     for (let j = 0; j < 24; j++) {
       steps.push(off);

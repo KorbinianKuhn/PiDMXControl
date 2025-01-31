@@ -30,7 +30,7 @@ export const createChaseStrobeStorm = (
         ),
         bar.state({ segments: 'all', master: 255, w: 255, strobe: 250 }),
         ...head.all.map((o) => o.state({ master: 255, ...color, strobe: 250 })),
-        dome.state({ master: 255, ...color, strobe: 250, movement: 255 }),
+        dome.state({ master: 255, ...color, strobe: 250, movement: 127 }),
         spot.state({ master: 255, ...color, strobe: 250 }),
         beamer.state({ master: 255, ...color, strobe: 120 }),
       );
