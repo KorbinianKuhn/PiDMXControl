@@ -177,18 +177,26 @@ const createBallPattern = (
   const steps: ChannelAnimation = [];
 
   const { dome, spot } = devices.object();
+  const off = flattenChannelStates(
+    spot.state({}),
+    dome.state({ movement: 127 }),
+  );
 
-  for (const color of [colors.a, colors.b]) {
-    for (let i = 0; i < 16; i++) {
-      steps.push(
-        flattenChannelStates(spot.state({}), dome.state({ movement: 127 })),
-      );
+  for (let i = 0; i < 8; i++) {
+    const color = i < 4 ? colors.a : colors.b;
+    for (let j = 0; j < 4; j++) {
+      steps.push(off);
+    }
+    for (let j = 0; j < 2; j++) {
       steps.push(
         flattenChannelStates(
-          spot.state({ master: 255, ...color }),
-          dome.state({ master: 255, ...color, movement: 127 }),
+          spot.state({ master: 255, ...color, strobe: 200 }),
+          dome.state({ master: 255, ...color, movement: 127, strobe: 200 }),
         ),
       );
+    }
+    for (let j = 0; j < 2; j++) {
+      steps.push(off);
     }
   }
 
