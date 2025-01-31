@@ -180,7 +180,9 @@ const createBallPattern = (
 
   for (const color of [colors.a, colors.b]) {
     for (let i = 0; i < 16; i++) {
-      steps.push(flattenChannelStates(spot.state({}), dome.state({})));
+      steps.push(
+        flattenChannelStates(spot.state({}), dome.state({ movement: 127 })),
+      );
       steps.push(
         flattenChannelStates(
           spot.state({ master: 255, ...color }),

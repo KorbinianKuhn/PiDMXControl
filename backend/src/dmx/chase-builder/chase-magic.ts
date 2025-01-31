@@ -97,7 +97,7 @@ const createBallPattern = (
   const { dome, spot } = devices.object();
 
   const off = flattenChannelStates(
-    dome.state({ master: 0 }),
+    dome.state({ master: 0, movement: 127 }),
     spot.state({ master: 0 }),
   );
 
