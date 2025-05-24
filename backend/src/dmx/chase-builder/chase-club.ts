@@ -150,7 +150,7 @@ const createBarPattern = (
       bar.state({
         segments: 'all',
         master: 255,
-        ...color,
+        w: 255,
         strobe: 240,
       }),
     );

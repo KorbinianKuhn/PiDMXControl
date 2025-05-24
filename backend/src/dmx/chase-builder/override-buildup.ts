@@ -1,5 +1,4 @@
 import { ChannelAnimation, Chase, ChaseColor } from '../lib/chase';
-import { DeviceStateValues } from '../lib/device';
 import { DeviceRegistry } from '../lib/device-registry';
 import { OverrideProgramName } from '../lib/program';
 import {
@@ -223,37 +222,23 @@ export const createChaseBuildupStreak = (
 
   const colors = getChaseColorValues(color);
 
-  const { neopixelA, neopixelB } = devices.object();
+  const { bar } = devices.object();
 
-  const steps: Array<number[]> = [];
-
-  const getArray = (length: number, color: DeviceStateValues) => {
-    return new Array(length).fill(null).map((o, index) => ({
-      index,
-      values: { ...color },
-    }));
-  };
-
-  const off = [...neopixelA.clear(), ...neopixelB.clear()];
-
+  const steps: ChannelAnimation = [];
   for (let color of [colors.a, colors.b]) {
-    for (let i = 0; i < 3; i++) {
-      const state = getArray(Math.floor(neopixelA.length / 3) * (i + 1), color);
-      for (let j = 0; j < 16; j++) {
-        steps.push([
-          ...neopixelA.setMultiple(state),
-          ...neopixelB.setMultiple(state),
-        ]);
-      }
+    for (let i = 0; i < 8; i++) {
+      steps.push(
+        flattenChannelStates(bar.state({ segments: i, master: 255, ...color })),
+      );
     }
-    for (let j = 0; j < 16; j++) {
-      steps.push(off);
+    for (let i = 7; i >= 0; i--) {
+      steps.push(
+        flattenChannelStates(bar.state({ segments: i, master: 255, ...color })),
+      );
     }
   }
 
-  chase.addSteps(new Array(steps.length / 4).fill(null).map(() => []));
-
-  chase.addPixelSteps(steps);
+  chase.addSteps(steps);
 
   return chase;
 };

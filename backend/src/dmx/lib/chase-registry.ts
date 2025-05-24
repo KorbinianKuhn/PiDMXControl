@@ -90,7 +90,7 @@ export class ChaseRegistry {
     }
 
     for (const chase of this.chases.filter(
-      (o) => o.color === ChaseColor.UV_PINK,
+      (o) => o.color === ChaseColor.CYAN_BLUE,
     )) {
       this.logger.info(
         `created ${chase.programName} with ${chase.length} steps`,

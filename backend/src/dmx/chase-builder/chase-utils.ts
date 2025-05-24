@@ -41,13 +41,21 @@ export interface Colors {
 
 const COLORS = {
   red: { r: 255 },
-  green: { g: 255 },
-  blue: { b: 255 },
-  uv: { uv: 255, b: 127 },
+  orange: { r: 255, g: 127 },
   amber: { a: 255 },
-  cyan: { b: 255, g: 255 },
-  pink: { r: 255, b: 200 },
+  yellow: { r: 255, g: 255 },
+  lime: { r: 127, g: 255 },
+  green: { g: 255 },
+  emerald: { g: 255, b: 127 },
   teal: { g: 255, b: 200 },
+  cyan: { b: 255, g: 255 },
+  sky: { b: 255, g: 127 },
+  blue: { b: 255 },
+  indigo: { b: 255, r: 127 },
+  violet: { uv: 255, b: 127 },
+  purple: { uv: 255, r: 127 },
+  fuchsia: { uv: 255, r: 255 },
+  pink: { r: 255, b: 200 },
   white: { w: 255 },
 };
 
