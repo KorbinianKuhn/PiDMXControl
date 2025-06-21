@@ -80,7 +80,7 @@ export const getChannelWithLargestColorValue = (
 
   for (const key in c) {
     if (c[key] === max) {
-      result[key] = max;
+      return { [key]: max };
     }
   }
 
