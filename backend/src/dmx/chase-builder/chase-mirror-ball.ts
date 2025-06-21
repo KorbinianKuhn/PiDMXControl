@@ -74,13 +74,13 @@ const createBallPattern = (
   const { dome, spot } = devices.object();
 
   const a = flattenChannelStates(
-    dome.state({ master: 255, ...colors.a, movement: 127 }),
-    spot.state({ master: 255, ...getDomeColorValue(colors.a) }),
+    dome.state({ master: 255, ...getDomeColorValue(colors.a), movement: 127 }),
+    spot.state({ master: 255, ...colors.a }),
   );
 
   const b = flattenChannelStates(
-    dome.state({ master: 255, ...colors.b, movement: 127 }),
-    spot.state({ master: 255, ...getDomeColorValue(colors.b) }),
+    dome.state({ master: 255, ...getDomeColorValue(colors.b), movement: 127 }),
+    spot.state({ master: 255, ...colors.b }),
   );
 
   // 1 - 16
