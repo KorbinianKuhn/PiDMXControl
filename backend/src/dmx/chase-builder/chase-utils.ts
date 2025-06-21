@@ -72,6 +72,21 @@ export const getChaseColorValues = (color: ChaseColor): Colors => {
   return { a, b };
 };
 
+export const getChannelWithLargestColorValue = (
+  c: DeviceStateValues,
+): DeviceStateValues => {
+  const max = Math.max(...Object.values(c));
+  const result: DeviceStateValues = {};
+
+  for (const key in c) {
+    if (c[key] === max) {
+      result[key] = max;
+    }
+  }
+
+  return result;
+};
+
 export const flattenChannelStates = (
   ...states: Array<ChannelState[]>
 ): ChannelState[] => {

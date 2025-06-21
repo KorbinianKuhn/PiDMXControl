@@ -4,6 +4,7 @@ import { DeviceRegistry } from '../lib/device-registry';
 import { OverrideProgramName } from '../lib/program';
 import {
   flattenChannelStates,
+  getChannelWithLargestColorValue,
   mergeDevicePatterns,
   repeat,
   warp,
@@ -132,7 +133,10 @@ const createBallPattern = (devices: DeviceRegistry): ChannelAnimation => {
   for (let i = 0; i < 2; i++) {
     for (const color of colorStates) {
       const on = flattenChannelStates(
-        dome.state({ ...color, movement: 127 }),
+        dome.state({
+          ...getChannelWithLargestColorValue(color),
+          movement: 127,
+        }),
         spot.state({ ...color }),
       );
       const off = flattenChannelStates(

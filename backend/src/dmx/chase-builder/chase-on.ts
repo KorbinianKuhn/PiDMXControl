@@ -3,6 +3,7 @@ import { DeviceRegistry } from '../lib/device-registry';
 import { ActiveProgramName } from '../lib/program';
 import {
   flattenChannelStates,
+  getChannelWithLargestColorValue,
   getChaseColorValues,
   mergeDevicePatterns,
   warp,
@@ -19,7 +20,11 @@ export const createChaseOn = (
 
   const hex = d.hex.all.map((hex) => hex.state({ master: 255, ...colors.a }));
   const bar = d.bar.state({ segments: 'all', master: 255, ...colors.a });
-  const dome = d.dome.state({ master: 255, ...colors.a, movement: 64 });
+  const dome = d.dome.state({
+    master: 255,
+    ...getChannelWithLargestColorValue(colors.a),
+    movement: 64,
+  });
   const spot = d.spot.state({ master: 255, ...colors.a });
   const heads = d.head.all.map((head) =>
     head.state({ master: 255, ...colors.a }),

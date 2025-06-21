@@ -4,6 +4,7 @@ import { ActiveProgramName } from '../lib/program';
 import {
   Colors,
   flattenChannelStates,
+  getChannelWithLargestColorValue,
   getChaseColorValues,
   getPixelGradient,
   mergeDevicePatterns,
@@ -191,7 +192,12 @@ const createBallPattern = (
       steps.push(
         flattenChannelStates(
           spot.state({ master: 255, ...color, strobe: 200 }),
-          dome.state({ master: 255, ...color, movement: 127, strobe: 200 }),
+          dome.state({
+            master: 255,
+            ...getChannelWithLargestColorValue(color),
+            movement: 127,
+            strobe: 200,
+          }),
         ),
       );
     }
