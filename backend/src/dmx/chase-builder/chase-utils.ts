@@ -80,27 +80,27 @@ export const getDomeColorValue = (
     return color;
   }
   if (equalsColor(color, COLORS.orange)) {
-    return { a: 127, r: 64 };
+    return { a: 255 };
   } else if (equalsColor(color, COLORS.yellow)) {
     return { a: 255 };
   } else if (equalsColor(color, COLORS.lime)) {
-    return { g: 200 };
+    return { g: 255 };
   } else if (equalsColor(color, COLORS.emerald)) {
-    return { g: 200 };
+    return { g: 255 };
   } else if (equalsColor(color, COLORS.teal)) {
-    return { b: 200 };
+    return { g: 255 };
   } else if (equalsColor(color, COLORS.cyan)) {
-    return { b: 200, w: 64 };
+    return { b: 255 };
   } else if (equalsColor(color, COLORS.sky)) {
-    return { b: 127, w: 127 };
+    return { b: 255 };
   } else if (equalsColor(color, COLORS.indigo)) {
-    return { b: 200 };
+    return { b: 255 };
   } else if (equalsColor(color, COLORS.violet)) {
-    return { uv: 127, b: 127 };
+    return { uv: 255 };
   } else if (equalsColor(color, COLORS.purple)) {
-    return { uv: 127, r: 64 };
+    return { uv: 255 };
   } else if (equalsColor(color, COLORS.fuchsia)) {
-    return { uv: 127, r: 127 };
+    return { uv: 255 };
   } else if (equalsColor(color, COLORS.pink)) {
     return { uv: 255 };
   } else {
