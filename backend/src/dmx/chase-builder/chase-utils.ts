@@ -59,6 +59,55 @@ const COLORS = {
   white: { w: 255 },
 };
 
+const equalsColor = (a: DeviceStateValues, b: DeviceStateValues): boolean => {
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+  for (const key of keysA) {
+    if (a[key] !== b[key]) {
+      return false;
+    }
+  }
+  return true;
+};
+
+export const getDomeColorValue = (
+  color: DeviceStateValues,
+): DeviceStateValues => {
+  if (Object.keys(color).length < 2) {
+    return color;
+  }
+  if (equalsColor(color, COLORS.orange)) {
+    return { a: 200 };
+  } else if (equalsColor(color, COLORS.yellow)) {
+    return { a: 200 };
+  } else if (equalsColor(color, COLORS.lime)) {
+    return { g: 200 };
+  } else if (equalsColor(color, COLORS.emerald)) {
+    return { g: 200 };
+  } else if (equalsColor(color, COLORS.teal)) {
+    return { b: 200 };
+  } else if (equalsColor(color, COLORS.cyan)) {
+    return { b: 200 };
+  } else if (equalsColor(color, COLORS.sky)) {
+    return { b: 200 };
+  } else if (equalsColor(color, COLORS.indigo)) {
+    return { b: 200 };
+  } else if (equalsColor(color, COLORS.violet)) {
+    return { uv: 200 };
+  } else if (equalsColor(color, COLORS.purple)) {
+    return { uv: 200 };
+  } else if (equalsColor(color, COLORS.fuchsia)) {
+    return { uv: 200 };
+  } else if (equalsColor(color, COLORS.pink)) {
+    return { uv: 200 };
+  } else {
+    throw new Error(`Unknown color: ${JSON.stringify(color)}`);
+  }
+};
+
 export const getChaseColorValues = (color: ChaseColor): Colors => {
   const [first, second] = color.split('-');
 
@@ -70,21 +119,6 @@ export const getChaseColorValues = (color: ChaseColor): Colors => {
   }
 
   return { a, b };
-};
-
-export const getChannelWithLargestColorValue = (
-  c: DeviceStateValues,
-): DeviceStateValues => {
-  const max = Math.max(...Object.values(c));
-  const result: DeviceStateValues = {};
-
-  for (const key in c) {
-    if (c[key] === max) {
-      return { [key]: max };
-    }
-  }
-
-  return result;
 };
 
 export const flattenChannelStates = (

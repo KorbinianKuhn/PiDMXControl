@@ -4,8 +4,8 @@ import { ActiveProgramName } from '../lib/program';
 import {
   Colors,
   flattenChannelStates,
-  getChannelWithLargestColorValue,
   getChaseColorValues,
+  getDomeColorValue,
   mergeDevicePatterns,
   repeat,
   warp,
@@ -166,7 +166,7 @@ const createBallPattern = (
   const a = flattenChannelStates(
     dome.state({
       master: 255,
-      ...getChannelWithLargestColorValue(colors.a),
+      ...getDomeColorValue(colors.a),
       movement: 127,
     }),
     spot.state({ master: 255, ...colors.a }),
@@ -175,7 +175,7 @@ const createBallPattern = (
   const b = flattenChannelStates(
     dome.state({
       master: 255,
-      ...getChannelWithLargestColorValue(colors.b),
+      ...getDomeColorValue(colors.b),
       movement: 127,
     }),
     spot.state({ master: 255, ...colors.b }),

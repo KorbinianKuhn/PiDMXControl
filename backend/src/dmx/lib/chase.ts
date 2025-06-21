@@ -25,7 +25,7 @@ export enum ChaseColor {
   BLUE_EMERALD = 'blue-emerald',
   GREEN_PINK = 'green-pink',
   RED_TEAL = 'red-teal',
-  INDIGO_FUCHSIA = 'indigo-fuchsia',
+  EMERALD_FUCHSIA = 'emerald-fuchsia',
   TEAL_PINK = 'teal-pink',
   BLUE_FUCHSIA = 'blue-fuchsia',
   ORANGE_CYAN = 'orange-cyan',

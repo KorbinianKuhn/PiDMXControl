@@ -4,8 +4,8 @@ import { DeviceRegistry } from '../lib/device-registry';
 import { OverrideProgramName } from '../lib/program';
 import {
   flattenChannelStates,
-  getChannelWithLargestColorValue,
   getChaseColorValues,
+  getDomeColorValue,
   mergeDevicePatterns,
 } from './chase-utils';
 
@@ -33,7 +33,7 @@ export const createChaseStrobeStorm = (
         ...head.all.map((o) => o.state({ master: 255, ...color, strobe: 250 })),
         dome.state({
           master: 255,
-          ...getChannelWithLargestColorValue(color),
+          ...getDomeColorValue(color),
           strobe: 250,
           movement: 127,
         }),
