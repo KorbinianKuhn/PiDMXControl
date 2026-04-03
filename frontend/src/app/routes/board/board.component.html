@@ -41,15 +41,15 @@
     <app-panel-group label="Chases" class="mb-1">
       <div class="flex flex-col">
         <app-pad-button
-          [color]="currentColor()!.gradient"
+          [color]="currentColor().gradient"
           class="m-1 mr-10"
           size="small"
           (click)="onClickOpenColorsModal()"
           [current]="true"
-          [progress]="currentColor()!.progress"
+          [progress]="currentColor().progress"
         >
           <span class="text-xs tracking-widest"
-            >{{ currentColor()!.a }}<br />{{ currentColor()!.b }}</span
+            >{{ currentColor().a }}<br />{{ currentColor().b }}</span
           >
         </app-pad-button>
 
@@ -57,8 +57,8 @@
           class="m-1"
           size="small"
           color="bg-cyan-500"
-          [active]="visualsSettings()!.currentIndex > -1"
-          [current]="visualsSettings()!.currentIndex > -1"
+          [active]="visualsSettings().currentIndex > -1"
+          [current]="visualsSettings().currentIndex > -1"
           (click)="onClickOpenVisualsModal()"
         >
           <span class="text-xs tracking-widest">Video</span>
@@ -218,9 +218,10 @@
             (click)="onTogglePerformanceMode()"
             class="m-2"
           >
-            <mat-icon svgIcon="tortoise"
+            <mat-icon
+              svgIcon="tortoise"
               [ngClass]="performanceMode() ? 'text-red-600' : undefined"
-             />
+            />
           </button>
 
           <button mat-icon-button (click)="onOpenBrightnessModal()" class="m-2">
@@ -232,9 +233,10 @@
             (click)="onToggleNeopixelDisabled()"
             class="m-2"
           >
-            <mat-icon svgIcon="neopixel_off"
+            <mat-icon
+              svgIcon="neopixel_off"
               [ngClass]="neopixelDisabled() ? 'text-red-600' : undefined"
-             />
+            />
           </button>
         </div>
       </app-panel-group>

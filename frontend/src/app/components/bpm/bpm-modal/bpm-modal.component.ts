@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatSliderModule } from '@angular/material/slider';
 import { WSService } from '../../../services/ws.service';
 import { PadButtonComponent } from '../../pad-button/pad-button.component';
@@ -23,8 +22,8 @@ export class BpmModalComponent {
   private taps: number[] = [];
   private precision = 5;
 
-  protected bpm = toSignal(this.wsService.bpm$, { initialValue: 128 });
-  protected presets = new Array(35).fill(null).map((_, i) => 110 + i);
+  protected readonly bpm = this.wsService.bpm;
+  protected readonly presets = new Array(35).fill(null).map((_, i) => 110 + i);
 
   onClickStart() {
     this.wsService.setStart();

@@ -1,5 +1,4 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { PanelGroupComponent } from '../../../../components/panel-group/panel-group.component';
 import { WSService } from '../../../../services/ws.service';
@@ -10,32 +9,36 @@ interface Control {
 }
 
 @Component({
-    selector: 'app-brightness-modal',
-    templateUrl: './brightness-modal.component.html',
-    styleUrls: ['./brightness-modal.component.scss'],
-    imports: [PanelGroupComponent, MatSliderModule, AsyncPipe]
+  selector: 'app-brightness-modal',
+  templateUrl: './brightness-modal.component.html',
+  styleUrls: ['./brightness-modal.component.scss'],
+  imports: [PanelGroupComponent, MatSliderModule],
 })
 export class BrightnessModalComponent {
   private wsService = inject(WSService);
 
-  public master$ = this.wsService.master$;
-  public ambientUV$ = this.wsService.ambientUV$;
-  public controls: Control[] = [];
+  public master = this.wsService.master;
+  public ambientUV = this.wsService.ambientUV;
+  public controls = computed(() => {
+    const devices = this.wsService.devices();
 
-  constructor() {
-    this.wsService.devices$.getValue().map((device) => {
+    const controls: Control[] = [];
+
+    for (const device of devices) {
       const groupId = device.id.split('-')[0];
 
-      if (!this.controls.some((o) => o.id === groupId)) {
-        this.controls.push({
+      if (!controls.some((o) => o.id === groupId)) {
+        controls.push({
           id: groupId,
           value: device.master,
         });
       }
-    });
+    }
 
-    this.controls.sort((a, b) => a.id.localeCompare(b.id));
-  }
+    controls.sort((a, b) => a.id.localeCompare(b.id));
+
+    return controls;
+  });
 
   onMasterChange(value: any) {
     this.wsService.setMaster(value);
@@ -48,8 +51,8 @@ export class BrightnessModalComponent {
   onValueChange(control: Control, event: any) {
     control.value = event;
 
-    const allDevices = this.wsService.devices$
-      .getValue()
+    const allDevices = this.wsService
+      .devices()
       .filter((o) => o.id.startsWith(control.id));
 
     for (const device of allDevices) {

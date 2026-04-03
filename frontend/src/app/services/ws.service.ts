@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { Socket, io } from 'socket.io-client';
 import { environment } from '../../environments/environment';
 import {
@@ -18,36 +17,36 @@ import {
 export class WSService {
   private socket!: Socket<ServerToClientEvents, ClientToServerEvents>;
 
-  public bpm$ = new BehaviorSubject<number>(128);
-  public tick$ = new BehaviorSubject<number>(0);
-  public black$ = new BehaviorSubject<boolean>(false);
-  public strobe$ = new BehaviorSubject<boolean>(false);
-  public master$ = new BehaviorSubject<number>(100);
-  public ambientUV$ = new BehaviorSubject<number>(0);
-  public activeProgramName$ = new BehaviorSubject<ActiveProgramName>(
-    ActiveProgramName.ON
+  public readonly bpm = signal<number>(128);
+  public readonly tick = signal<number>(0);
+  public readonly black = signal<boolean>(false);
+  public readonly strobe = signal<boolean>(false);
+  public readonly master = signal<number>(100);
+  public readonly ambientUV = signal<number>(0);
+  public readonly activeProgramName = signal<ActiveProgramName>(
+    ActiveProgramName.ON,
   );
-  public currentActiveProgram$ = new BehaviorSubject<{
+  public readonly currentActiveProgram = signal<{
     programName: string;
     color: string;
     progress: number;
   }>({ programName: '', color: '', progress: 0 });
-  public activeColors$ = new BehaviorSubject<ChaseColor[]>([]);
-  public overrideProgramName$ = new BehaviorSubject<OverrideProgramName | null>(
-    null
+  public readonly activeColors = signal<ChaseColor[]>([]);
+  public readonly overrideProgramName = signal<OverrideProgramName | null>(
+    null,
   );
-  public currentOverrideProgram$ = new BehaviorSubject<{
+  public readonly currentOverrideProgram = signal<{
     programName: string;
     color: string;
     progress: number;
   }>({ programName: '', color: '', progress: 0 });
-  public settingsMode$ = new BehaviorSubject<boolean>(false);
-  public settingsData$ = new BehaviorSubject<number[]>([]);
+  public readonly settingsMode = signal<boolean>(false);
+  public readonly settingsData = signal<number[]>([]);
 
-  public devices$ = new BehaviorSubject<DeviceConfig[]>([]);
+  public readonly devices = signal<DeviceConfig[]>([]);
 
-  public visualsSource$ = new BehaviorSubject<number>(-1);
-  public visualsSettings$ = new BehaviorSubject<Visuals>({
+  public readonly visualsSource = signal<number>(-1);
+  public readonly visualsSettings = signal<Visuals>({
     sources: [],
     currentIndex: -1,
     startedAt: '',
@@ -89,63 +88,63 @@ export class WSService {
 
   registerEvents() {
     this.socket.on('bpm:updated', (data) => {
-      this.bpm$.next(data.value);
+      this.bpm.set(data.value);
     });
 
     this.socket.on('tick:updated', (data) => {
-      this.tick$.next(data.value);
+      this.tick.set(data.value);
     });
 
     this.socket.on('black:updated', (data) => {
-      this.black$.next(data.value);
+      this.black.set(data.value);
     });
 
     this.socket.on('master:updated', (data) => {
-      this.master$.next(data.value);
+      this.master.set(data.value);
     });
 
     this.socket.on('ambient-uv:updated', (data) => {
-      this.ambientUV$.next(data.value);
+      this.ambientUV.set(data.value);
     });
 
     this.socket.on('override-program:updated', (data) => {
-      this.overrideProgramName$.next(data.value);
+      this.overrideProgramName.set(data.value);
     });
 
     this.socket.on('override-program:progress', (data) => {
-      this.currentOverrideProgram$.next(data);
+      this.currentOverrideProgram.set(data);
     });
 
     this.socket.on('active-program:updated', (data) => {
-      this.activeProgramName$.next(data.value);
+      this.activeProgramName.set(data.value);
     });
 
     this.socket.on('active-program:progress', (data) => {
-      this.currentActiveProgram$.next(data);
+      this.currentActiveProgram.set(data);
     });
 
     this.socket.on('active-colors:updated', (data) => {
-      this.activeColors$.next(data.colors);
+      this.activeColors.set(data.colors);
     });
 
     this.socket.on('settings-mode:updated', (data) => {
-      this.settingsMode$.next(data.value);
+      this.settingsMode.set(data.value);
     });
 
     this.socket.on('settings-data:updated', (data) => {
-      this.settingsData$.next(data.buffer);
+      this.settingsData.set(data.buffer);
     });
 
     this.socket.on('device-config:updated', (data) => {
-      const devices = this.devices$.getValue().filter((o) => o.id !== data.id);
+      const devices = this.devices().filter((o) => o.id !== data.id);
       devices.push(data.config);
-      this.devices$.next(devices);
+      this.devices.set(devices);
     });
     this.socket.on('visuals:source-updated', (data) => {
-      this.visualsSource$.next(data);
+      this.visualsSource.set(data);
     });
     this.socket.on('visuals:settings-updated', (data) => {
-      this.visualsSettings$.next(data);
+      this.visualsSettings.set(data);
     });
   }
 

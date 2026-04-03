@@ -18,12 +18,12 @@
           <mat-slider [min]="0" [max]="255" [step]="1" discrete>
             <input
               matSliderThumb
-              [value]="values[index]"
+              [value]="values()[index]"
               (valueChange)="onValueChange(index + device().address, $event)"
-              />
+            />
           </mat-slider>
         </td>
-        <td class="w-10">{{ values[index] }}</td>
+        <td class="w-10">{{ values()[index] }}</td>
       </tr>
     }
   </tbody>

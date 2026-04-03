@@ -1,6 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -24,7 +23,7 @@ import { WSService } from '../../services/ws.service';
 export class BeamerSettingsModalComponent {
   private wsService = inject(WSService);
 
-  protected readonly visuals = toSignal(this.wsService.visualsSettings$);
+  protected readonly visuals = this.wsService.visualsSettings;
 
   onVisualIndexChange(index: number) {
     this.wsService.setVisualsSource(index);

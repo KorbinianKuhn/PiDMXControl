@@ -25,12 +25,12 @@ export const createChaseBuildupFadeout = (
     const master = (255 / 8) * i;
     steps.push(
       flattenChannelStates(
-        ...head.all.map((o) => o.state({ master, ...colors.a })),
-        ...hex.all.map((o) => o.state({ master, ...colors.a })),
+        ...head.all.map((o) => o.state({ ...colors.a, master })),
+        ...hex.all.map((o) => o.state({ ...colors.a, master })),
         bar.state({
+          ...colors.a,
           segments: 'all',
           master,
-          ...colors.a,
         }),
       ),
     );
@@ -52,12 +52,16 @@ export const createChaseBuildupFadeout = (
         flattenChannelStates(
           bar.state({
             segments: 'all',
-            master: 255,
             ...color,
+            master: 255,
             strobe: 240,
           }),
           ...head.all.map((o) =>
-            o.state({ master: 255, ...color, strobe: 240 }),
+            o.state({
+              ...color,
+              master: 255,
+              strobe: 240,
+            }),
           ),
         ),
       );
@@ -78,8 +82,16 @@ export const createChaseBuildupFadeout = (
   }
 
   const gradient = mergePixelPatterns(
-    getPixelGradient(neopixelA, { master: 255, ...colors.a }, 8, 8),
-    getPixelGradient(neopixelB, { master: 255, ...colors.a }, 8, 8),
+    getPixelGradient(
+      neopixelA,
+      {
+        ...colors.a,
+        master: 255,
+      },
+      8,
+      8,
+    ),
+    getPixelGradient(neopixelB, { ...colors.a, master: 255 }, 8, 8),
   );
   for (let i = 0; i < 8; i++) {
     pixelSteps.push(...gradient);
@@ -107,7 +119,10 @@ export const createChaseBuildupBlink = (
       const masters = [50, 100, 255, 100, 50];
       for (let master of masters) {
         steps.push([
-          ...neopixelA.setAll({ ...color, master }),
+          ...neopixelA.setAll({
+            ...color,
+            master,
+          }),
           ...neopixelB.setAll({ ...color, master }),
         ]);
       }
@@ -133,13 +148,13 @@ export const createChaseBuildupBright = (
   const steps: ChannelAnimation = [];
 
   const on = flattenChannelStates(
-    devices.object().bar.state({ segments: 'all', master: 255, ...colors.a }),
+    devices.object().bar.state({ segments: 'all', ...colors.a, master: 255 }),
     ...devices
       .object()
-      .head.all.map((o) => o.state({ master: 255, ...colors.a })),
+      .head.all.map((o) => o.state({ ...colors.a, master: 255 })),
     ...devices
       .object()
-      .hex.all.map((o) => o.state({ master: 255, ...colors.a })),
+      .hex.all.map((o) => o.state({ ...colors.a, master: 255 })),
   );
 
   for (let i = 0; i < 16; i++) {
@@ -195,10 +210,10 @@ export const createChaseBuildupBlinder = (
       const master = j * 255;
       steps.push(
         flattenChannelStates(
-          devices.object().bar.state({ segments: 'all', master, ...color }),
+          devices.object().bar.state({ segments: 'all', ...color, master }),
           ...devices
             .object()
-            .head.all.map((o) => o.state({ master, ...color })),
+            .head.all.map((o) => o.state({ ...color, master })),
         ),
       );
     }
@@ -228,12 +243,12 @@ export const createChaseBuildupStreak = (
   for (let color of [colors.a, colors.b]) {
     for (let i = 0; i < 8; i++) {
       steps.push(
-        flattenChannelStates(bar.state({ segments: i, master: 255, ...color })),
+        flattenChannelStates(bar.state({ segments: i, ...color, master: 255 })),
       );
     }
     for (let i = 7; i >= 0; i--) {
       steps.push(
-        flattenChannelStates(bar.state({ segments: i, master: 255, ...color })),
+        flattenChannelStates(bar.state({ segments: i, ...color, master: 255 })),
       );
     }
   }
@@ -259,15 +274,15 @@ export const createChaseBuildupBeam = (
       if (i < 16) {
         steps.push(
           flattenChannelStates(
-            left.state({ master: 255, ...color }),
-            right.state({}),
+            left.state({ ...color, master: 255 }),
+            right.state({ ...color, master: 0 }),
           ),
         );
       } else {
         steps.push(
           flattenChannelStates(
-            left.state({}),
-            right.state({ master: 255, ...color }),
+            left.state({ ...color, master: 0 }),
+            right.state({ ...color, master: 255 }),
           ),
         );
       }

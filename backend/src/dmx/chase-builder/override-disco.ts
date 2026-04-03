@@ -134,13 +134,13 @@ const createBallPattern = (devices: DeviceRegistry): ChannelAnimation => {
     for (const color of colorStates) {
       const on = flattenChannelStates(
         dome.state({
-          master: 255,
           ...getDomeColorValue(color),
+          master: 255,
           movement: 127,
         }),
         spot.state({
-          master: 255,
           ...color,
+          master: 255,
         }),
       );
       const off = flattenChannelStates(
@@ -202,8 +202,8 @@ const createBeamerPattern = (devices: DeviceRegistry): ChannelAnimation => {
 
   for (let i = 0; i < 8; i++) {
     for (const color of colors) {
-      steps.push(beamer.state({ master: 255, ...color }));
-      steps.push(beamer.state({ master: 255, ...color }));
+      steps.push(beamer.state({ ...color, master: 255 }));
+      steps.push(beamer.state({ ...color, master: 255 }));
       steps.push(beamer.state({ master: 0 }));
       steps.push(beamer.state({ master: 0 }));
     }

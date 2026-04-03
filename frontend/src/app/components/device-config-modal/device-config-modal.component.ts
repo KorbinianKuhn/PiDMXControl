@@ -1,9 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSliderModule } from '@angular/material/slider';
 import { DeviceConfig } from '../../services/ws.interfaces';
 import { WSService } from '../../services/ws.service';
-import { MatSliderModule } from '@angular/material/slider';
-
 
 interface Control {
   key: string;
@@ -14,10 +13,10 @@ interface Control {
 }
 
 @Component({
-    selector: 'app-device-config-modal',
-    templateUrl: './device-config-modal.component.html',
-    styleUrls: ['./device-config-modal.component.scss'],
-    imports: [MatSliderModule]
+  selector: 'app-device-config-modal',
+  templateUrl: './device-config-modal.component.html',
+  styleUrls: ['./device-config-modal.component.scss'],
+  imports: [MatSliderModule],
 })
 export class DeviceConfigModalComponent {
   private wsService = inject(WSService);
@@ -27,11 +26,11 @@ export class DeviceConfigModalComponent {
 
   constructor() {
     const data = inject<{
-    id: string;
-}>(MAT_DIALOG_DATA);
+      id: string;
+    }>(MAT_DIALOG_DATA);
 
-    this.device = this.wsService.devices$
-      .getValue()
+    this.device = this.wsService
+      .devices()
       .find((o) => o.id === data.id) as DeviceConfig;
 
     if (this.device) {
@@ -68,8 +67,8 @@ export class DeviceConfigModalComponent {
 
     if (control.key === 'master') {
       const deviceGroup = this.device.id.split('-')[0];
-      const allDevices = this.wsService.devices$
-        .getValue()
+      const allDevices = this.wsService
+        .devices()
         .filter((o) => o.id.startsWith(deviceGroup));
 
       for (const device of allDevices) {

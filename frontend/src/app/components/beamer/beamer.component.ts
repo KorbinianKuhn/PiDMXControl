@@ -1,14 +1,13 @@
 import {
   Component,
   ElementRef,
+  computed,
   effect,
   inject,
   input,
-  viewChild
+  viewChild,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
-import { combineLatest, map } from 'rxjs';
 import { ConfigService } from '../../services/config.service';
 import { VideoService } from '../../services/video.service';
 import { WSService } from '../../services/ws.service';
@@ -26,34 +25,32 @@ export class BeamerComponent {
 
   readonly id = input.required<string>();
 
-  private readonly videoElement = viewChild.required<ElementRef<HTMLVideoElement>>('videoElement');
+  private readonly videoElement =
+    viewChild.required<ElementRef<HTMLVideoElement>>('videoElement');
 
   private timer!: NodeJS.Timeout;
 
-  protected readonly show = toSignal(
-    combineLatest([
-      this.configService.visualisation$,
-      this.configService.video$,
-      this.wsService.visualsSource$,
-    ]).pipe(
-      map(([visible, video, index]) => {
-        if (!visible || index === -1) {
-          return 'hidden';
-        }
-        return video ? 'video' : 'color';
-      }),
-    ),
+  protected readonly show = computed(() => {
+    if (
+      !this.configService.visualisation() ||
+      this.wsService.visualsSource() === -1
+    ) {
+      return 'hidden';
+    }
+
+    return this.configService.video() ? 'video' : 'color';
+  });
+
+  protected readonly video = this.videoService.video;
+
+  protected readonly text = this.videoService.text;
+
+  protected readonly videoSelected = computed(
+    () => this.wsService.visualsSource() > -1,
   );
 
-  protected readonly video = toSignal(this.videoService.video$);
-
-  protected readonly text = toSignal(this.videoService.text$);
-
-  protected readonly videoSelected = toSignal(
-    this.wsService.visualsSource$.pipe(map((index) => index > -1)),
-  );
-  protected readonly color = toSignal(
-    this.wsService.visualsSettings$.pipe(map((visuals) => visuals.color)),
+  protected readonly color = computed(
+    () => this.wsService.visualsSettings().color,
   );
 
   constructor() {

@@ -1,7 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { combineLatest, map } from 'rxjs';
+import { Component, computed, inject } from '@angular/core';
 import { ConfigService } from '../../../services/config.service';
 import { WSService } from '../../../services/ws.service';
 
@@ -15,22 +13,15 @@ export class BpmNumberComponent {
   private wsService = inject(WSService);
   private configService = inject(ConfigService);
 
-  public bpm = toSignal(this.wsService.bpm$);
+  protected readonly bpm = this.wsService.bpm;
 
-  public bars = toSignal(
-    combineLatest([
-      this.configService.performanceMode$,
-      this.wsService.tick$,
-    ]).pipe(
-      map(([performanceMode, tick]) => {
-        const values = [false, false, false, false];
+  protected readonly bars = computed(() => {
+    const values = [false, false, false, false];
 
-        if (!performanceMode) {
-          values[Math.floor(tick / 4)] = true;
-        }
+    if (!this.configService.performanceMode()) {
+      values[Math.floor(this.wsService.tick() / 4)] = true;
+    }
 
-        return values;
-      }),
-    ),
-  );
+    return values;
+  });
 }

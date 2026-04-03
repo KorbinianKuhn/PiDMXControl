@@ -1,10 +1,8 @@
 import { NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, computed, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { map } from 'rxjs';
 import { BeamerSettingsModalComponent } from '../../components/beamer-settings-modal/beamer-settings-modal.component';
 import { BpmComponent } from '../../components/bpm/bpm.component';
 import { ChannelMixerModalComponent } from '../../components/channel-mixer-modal/channel-mixer-modal.component';
@@ -41,8 +39,8 @@ import { OverrideProgramButtonComponent } from './components/override-program-bu
     VisualisationComponent,
     MatButtonModule,
     MatIconModule,
-    NgClass
-],
+    NgClass,
+  ],
 })
 export class BoardComponent {
   private dialog = inject(MatDialog);
@@ -52,41 +50,28 @@ export class BoardComponent {
   protected readonly activeProgram = ActiveProgramName;
   protected readonly overrideProgram = OverrideProgramName;
 
-  protected readonly visualisation = toSignal(
-    this.configService.visualisation$,
-  );
-  protected readonly performanceMode = toSignal(
-    this.configService.performanceMode$,
-  );
-  protected readonly visualsSettings = toSignal(
-    this.wsService.visualsSettings$,
-  );
-  protected readonly black = toSignal(this.wsService.black$, {
-    initialValue: false,
+  protected readonly visualisation = this.configService.visualisation;
+  protected readonly performanceMode = this.configService.performanceMode;
+  protected readonly visualsSettings = this.wsService.visualsSettings;
+  protected readonly black = this.wsService.black;
+
+  protected readonly currentColor = computed(() => {
+    const { color, progress } = this.wsService.currentActiveProgram();
+
+    const [a, b] = color.split('-');
+    return {
+      color,
+      gradient: `bg-gradient-to-br ${COLORS_FROM[a]} from-30% ${COLORS_TO[b]} to-70%`,
+      a,
+      b,
+      progress,
+    };
   });
 
-  protected readonly currentColor = toSignal(
-    this.wsService.currentActiveProgram$.pipe(
-      map(({ color, progress }) => {
-        const [a, b] = color.split('-');
-        return {
-          color,
-          gradient: `bg-gradient-to-br ${COLORS_FROM[a]} from-30% ${COLORS_TO[b]} to-70%`,
-          a,
-          b,
-          progress,
-        };
-      }),
-    ),
-  );
-
-  protected neopixelDisabled = toSignal(
-    this.wsService.devices$.pipe(
-      map(
-        (devices) =>
-          devices.find((d) => d.id === 'neopixel-a')?.disabled || false,
-      ),
-    ),
+  protected readonly neopixelDisabled = computed(
+    () =>
+      this.wsService.devices().find((d) => d.id === 'neopixel-a')?.disabled ||
+      false,
   );
 
   onOpenChannelMixerModal() {
@@ -120,9 +105,7 @@ export class BoardComponent {
   }
 
   onToggleNeopixelDisabled() {
-    const config = this.wsService.devices$
-      .getValue()
-      .find((d) => d.id === 'neopixel-a')!;
+    const config = this.wsService.devices().find((d) => d.id === 'neopixel-a')!;
 
     this.wsService.setDeviceConfig('neopixel-a', {
       ...config,

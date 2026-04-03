@@ -1,10 +1,10 @@
 <app-toggle-button
-  [active]="current()!.active"
+  [active]="current().active"
   class="m-1"
   (click)="onClick()"
-  [current]="current()!.active"
+  [current]="current().active"
   [size]="size()"
-  [progress]="current()!.progress"
+  [progress]="current().progress"
   [colorOn]="color()"
 >
   <ng-content />

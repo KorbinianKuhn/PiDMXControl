@@ -1,34 +1,31 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConfigService {
-  public visualisation$ = new BehaviorSubject<boolean>(!environment.production);
-  public video$ = new BehaviorSubject<boolean>(!environment.production);
-  public performanceMode$ = new BehaviorSubject<boolean>(false);
-
-  constructor() {}
+  public readonly visualisation = signal(!environment.production);
+  public readonly video = signal(!environment.production);
+  public readonly performanceMode = signal(false);
 
   togglePerformanceMode() {
-    this.performanceMode$.next(!this.performanceMode$.getValue());
+    this.performanceMode.set(!this.performanceMode());
   }
 
   toggleVisualisation() {
-    this.visualisation$.next(!this.visualisation$.getValue());
+    this.visualisation.set(!this.visualisation());
   }
 
   toggleVideo() {
-    this.video$.next(!this.video$.getValue());
+    this.video.set(!this.video());
   }
 
   stopVideo() {
-    this.video$.next(false);
+    this.video.set(false);
   }
 
   startVideo() {
-    this.video$.next(true);
+    this.video.set(true);
   }
 }

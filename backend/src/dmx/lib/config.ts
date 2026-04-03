@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { readdir, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { BehaviorSubject, Subject, debounceTime } from 'rxjs';
@@ -109,21 +109,45 @@ export class Config {
   }
 
   _readConfigFromFile() {
-    const content = readFileSync(CONFIG_PATH, 'utf-8');
-    const config = JSON.parse(content) as ConfigStore;
+    let config: ConfigStore = {
+      bpm: 128,
+      black: false,
+      master: 1,
+      ambientUV: 1,
+      overrideProgram: null,
+      activeProgram: ActiveProgramName.MIRROR_BALL,
+      activeColors: [ChaseColor.BLUE_EMERALD],
+      devices: [],
+      visuals: {
+        left: 0,
+        right: 100,
+        top: 0,
+        bottom: 100,
+      },
+    };
+
+    if (existsSync(CONFIG_PATH)) {
+      try {
+        const content = readFileSync(CONFIG_PATH, 'utf-8');
+        const savedConfig = JSON.parse(content) as ConfigStore;
+        config = { ...config, ...savedConfig };
+      } catch (error) {
+        this.logger.error('Error reading config file', error);
+      }
+    }
 
     this.bpm = config.bpm;
     this.black = config.black;
     this.master = config.master;
     this.ambientUV = config.ambientUV;
-    this.overrideProgram = null;
+    this.overrideProgram = config.overrideProgram;
     this.activeProgram = config.activeProgram;
     this.activeColors = config.activeColors;
     this.devices = config.devices;
-    this.visuals.left = config.visuals?.left || 0;
-    this.visuals.right = config.visuals?.right || 100;
-    this.visuals.top = config.visuals?.top || 0;
-    this.visuals.bottom = config.visuals?.bottom || 100;
+    this.visuals.left = config.visuals?.left;
+    this.visuals.right = config.visuals?.right;
+    this.visuals.top = config.visuals?.top;
+    this.visuals.bottom = config.visuals?.bottom;
 
     this.speed$.next(60000 / this.bpm);
   }

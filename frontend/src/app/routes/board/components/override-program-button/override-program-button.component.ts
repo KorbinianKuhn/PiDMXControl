@@ -1,6 +1,4 @@
-import { Component, inject, input } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { Component, computed, inject, input } from '@angular/core';
 import { ToggleButtonComponent } from '../../../../components/toggle-button/toggle-button.component';
 import { OverrideProgramName } from '../../../../services/ws.interfaces';
 import { WSService } from '../../../../services/ws.service';
@@ -18,21 +16,17 @@ export class OverrideProgramButtonComponent {
   readonly size = input<'small' | 'normal'>('normal');
   readonly color = input<string>('bg-cyan-500');
 
-  protected readonly current = toSignal(
-    this.wsService.currentOverrideProgram$.pipe(
-      map(({ programName, progress }) => {
-        return {
-          active: programName === this.name(),
-          progress,
-        };
-      }),
-    ),
-  );
+  protected readonly current = computed(() => {
+    const { programName, progress } = this.wsService.currentOverrideProgram();
+    return {
+      active: programName === this.name(),
+      progress,
+    };
+  });
 
   onClick() {
     const name = this.name();
-    const value =
-      this.wsService.overrideProgramName$.getValue() === name ? null : name;
+    const value = this.wsService.overrideProgramName() === name ? null : name;
     this.wsService.setOverrideProgramName(value!);
   }
 }

@@ -1,15 +1,15 @@
 <div
   class="absolute inset-0"
-  [style.left.%]="crop()!.left"
-  [style.right.%]="crop()!.right"
-  [style.top.%]="crop()!.top"
-  [style.bottom.%]="crop()!.bottom"
+  [style.left.%]="crop().left"
+  [style.right.%]="crop().right"
+  [style.top.%]="crop().top"
+  [style.bottom.%]="crop().bottom"
 >
   <div
     class="relative w-full h-full"
-    [style.opacity]="video()!.opacity"
-    [ngClass]="video()!.strobe.classes"
-    [style.animation-duration]="video()!.strobe.duration"
+    [style.opacity]="video().opacity"
+    [ngClass]="video().strobe.classes"
+    [style.animation-duration]="video().strobe.duration"
   >
     <video
       [muted]="true"
@@ -20,17 +20,17 @@
     ></video>
     @if (color() === "chase") {
       <div
-        [style.background-color]="video()!.color"
+        [style.background-color]="video().color"
         class="absolute inset-0 mix-blend-color"
       ></div>
     }
     <div class="absolute inset-0 flex items-center justify-center">
       <p
         class="text-overlay"
-        [style.-webkit-text-stroke]="'2px ' + video()!.color"
-        [style.opacity]="text()!.opacity"
+        [style.-webkit-text-stroke]="'2px ' + video().color"
+        [style.opacity]="text()?.opacity"
       >
-        {{ text()!.message }}
+        {{ text()?.message }}
       </p>
     </div>
   </div>

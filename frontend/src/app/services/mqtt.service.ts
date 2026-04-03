@@ -1,17 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import mqtt from 'mqtt';
-import { Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MqttService {
-  public dmx$ = new Subject<number[]>();
-  public neopixelA$ = new Subject<number[]>();
-  public neopixelB$ = new Subject<number[]>();
-
-  constructor() {}
+  public dmx = signal<number[]>([]);
+  public neopixelA = signal<number[]>([]);
+  public neopixelB = signal<number[]>([]);
 
   async connect() {
     const client = await mqtt.connectAsync(environment.mqttWsUrl);
@@ -19,13 +16,13 @@ export class MqttService {
     client.on('message', (topic, message) => {
       switch (topic) {
         case 'dmx':
-          this.dmx$.next(Array.from(message));
+          this.dmx.set(Array.from(message));
           break;
         case 'neopixel-a':
-          this.neopixelA$.next(Array.from(message));
+          this.neopixelA.set(Array.from(message));
           break;
         case 'neopixel-b':
-          this.neopixelB$.next(Array.from(message));
+          this.neopixelB.set(Array.from(message));
           break;
       }
     });
@@ -35,7 +32,7 @@ export class MqttService {
       {
         qos: 0,
       },
-      (err) => {}
+      (err) => {},
     );
   }
 }

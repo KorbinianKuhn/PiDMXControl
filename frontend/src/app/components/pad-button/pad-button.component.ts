@@ -1,6 +1,5 @@
 import { NgClass } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { ConfigService } from '../../services/config.service';
 
 @Component({
@@ -18,10 +17,7 @@ export class PadButtonComponent {
   readonly size = input<'small' | 'normal'>('normal');
   readonly progress = input<number>(0);
 
-  protected readonly performanceMode = toSignal(
-    this.configService.performanceMode$,
-    { initialValue: false },
-  );
+  protected readonly performanceMode = this.configService.performanceMode;
 
   get opacity(): number {
     if (this.current()) {

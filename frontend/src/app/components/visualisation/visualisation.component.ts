@@ -3,10 +3,11 @@ import {
   Component,
   ElementRef,
   OnDestroy,
+  effect,
   inject,
-  viewChild
+  viewChild,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import {
   Subject,
@@ -14,7 +15,6 @@ import {
   combineLatest,
   filter,
   interval,
-  takeUntil,
   throttle,
   throttleTime,
 } from 'rxjs';
@@ -39,13 +39,37 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
   private destroy$$ = new Subject<void>();
   private bgColor = '#111827';
 
-  protected readonly visualisation = toSignal(
-    this.configService.visualisation$,
-  );
-  protected readonly video = toSignal(this.configService.video$);
+  protected readonly visualisation = this.configService.visualisation;
+  protected readonly video = this.configService.video;
 
   get context() {
     return this.canvas().nativeElement.getContext('2d', { alpha: false })!;
+  }
+
+  private interval = toSignal(
+    combineLatest([
+      toObservable(this.configService.visualisation),
+      toObservable(this.mqttService.dmx),
+      toObservable(this.mqttService.neopixelA),
+      toObservable(this.mqttService.neopixelB),
+    ]).pipe(
+      filter(([visible]) => visible),
+      throttle(() => interval(this.configService.performanceMode() ? 100 : 0)),
+      throttleTime(0, animationFrameScheduler),
+    ),
+  );
+
+  constructor() {
+    effect(() => {
+      this.interval();
+
+      const dmx = this.mqttService.dmx();
+      const neopixelA = this.mqttService.neopixelA();
+      const neopixelB = this.mqttService.neopixelB();
+
+      this.redraw(dmx);
+      this.redrawNeopixel([...neopixelA, ...neopixelB]);
+    });
   }
 
   ngAfterViewInit() {
@@ -60,25 +84,6 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
 
     canvas.style.width = `${rect.width}px`;
     canvas.style.height = `${rect.height}px`;
-
-    combineLatest([
-      this.configService.visualisation$,
-      this.mqttService.dmx$,
-      this.mqttService.neopixelA$,
-      this.mqttService.neopixelB$,
-    ])
-      .pipe(
-        takeUntil(this.destroy$$),
-        filter(([visible, _, __]) => visible),
-        throttle(() =>
-          interval(this.configService.performanceMode$.getValue() ? 100 : 0),
-        ),
-        throttleTime(0, animationFrameScheduler),
-      )
-      .subscribe(([_, dmx, neopixelA, neopixelB]) => {
-        this.redraw(dmx);
-        this.redrawNeopixel([...neopixelA, ...neopixelB]);
-      });
   }
 
   ngOnDestroy(): void {

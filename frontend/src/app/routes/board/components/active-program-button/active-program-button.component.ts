@@ -1,6 +1,4 @@
-import { Component, inject, input } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { Component, computed, inject, input } from '@angular/core';
 import { PadButtonComponent } from '../../../../components/pad-button/pad-button.component';
 import { ActiveProgramName } from '../../../../services/ws.interfaces';
 import { WSService } from '../../../../services/ws.service';
@@ -17,16 +15,13 @@ export class ActiveProgramButtonComponent {
   readonly name = input<ActiveProgramName>(); // TODO make required
   readonly size = input<'small' | 'normal'>('normal');
 
-  protected readonly current = toSignal(
-    this.wsService.currentActiveProgram$.pipe(
-      map(({ programName, progress }) => {
-        return {
-          active: programName === this.name(),
-          progress,
-        };
-      }),
-    ),
-  );
+  protected readonly current = computed(() => {
+    const { programName, progress } = this.wsService.currentActiveProgram();
+    return {
+      active: programName === this.name(),
+      progress,
+    };
+  });
 
   onClick() {
     this.wsService.setActiveProgramName(this.name()!);

@@ -4,12 +4,12 @@
   <div class="mr-12">
     <label>Source</label>
     <mat-radio-group
-      [(ngModel)]="visuals()!.currentIndex"
+      [(ngModel)]="visuals().currentIndex"
       (ngModelChange)="onVisualIndexChange($event)"
       class="flex flex-col"
     >
       <mat-radio-button [value]="-1" color="primary">None</mat-radio-button>
-      @for (source of visuals()!.sources; track source; let index = $index) {
+      @for (source of visuals().sources; track source; let index = $index) {
         <mat-radio-button [value]="index" color="primary">{{
           source.url.replace(".mp4", "").replaceAll("-", " ") | titlecase
         }}</mat-radio-button>
@@ -19,19 +19,19 @@
   <div class="flex flex-col">
     <div>Settings</div>
     <mat-checkbox
-      [checked]="visuals()!.color === 'chase'"
+      [checked]="visuals().color === 'chase'"
       (change)="onToggleColor()"
       color="primary"
       >Chase Color</mat-checkbox
     >
     <mat-checkbox
-      [checked]="visuals()!.opacity === 'chase'"
+      [checked]="visuals().opacity === 'chase'"
       (change)="onToggleOpacity()"
       color="primary"
       >Chase Opacity</mat-checkbox
     >
     <mat-checkbox
-      [checked]="visuals()!.text"
+      [checked]="visuals().text"
       (change)="onToggleText()"
       color="primary"
       >Show Text</mat-checkbox
@@ -43,12 +43,12 @@
         <input
           matSliderStartThumb
           (dragEnd)="onSliderChange('left', $event)"
-          [(ngModel)]="visuals()!.left"
+          [(ngModel)]="visuals().left"
         />
         <input
           matSliderEndThumb
           (dragEnd)="onSliderChange('right', $event)"
-          [(ngModel)]="visuals()!.right"
+          [(ngModel)]="visuals().right"
         />
       </mat-slider>
       <label>Height</label>
@@ -56,12 +56,12 @@
         <input
           matSliderStartThumb
           (dragEnd)="onSliderChange('top', $event)"
-          [(ngModel)]="visuals()!.top"
+          [(ngModel)]="visuals().top"
         />
         <input
           matSliderEndThumb
           (dragEnd)="onSliderChange('bottom', $event)"
-          [(ngModel)]="visuals()!.bottom"
+          [(ngModel)]="visuals().bottom"
         />
       </mat-slider>
     </div>

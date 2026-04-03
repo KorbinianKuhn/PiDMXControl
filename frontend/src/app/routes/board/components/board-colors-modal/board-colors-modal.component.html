@@ -8,8 +8,8 @@
       class="m-1"
       [active]="isColorActive(button.color)"
       (click)="onClickToggleColor(button.color)"
-      [current]="button.color === current()!.color"
-      [progress]="current()!.progress"
+      [current]="button.color === current().color"
+      [progress]="current().progress"
     >
       <span class="text-xs tracking-widest"
         >{{ button.a }}<br />{{ button.b }}</span

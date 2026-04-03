@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { PadButtonComponent } from '../../../../components/pad-button/pad-button.component';
 import { ChaseColor } from '../../../../services/ws.interfaces';
 import { WSService } from '../../../../services/ws.service';
@@ -51,9 +50,9 @@ export const COLORS_TO: { [key: string]: string } = {
 export class BoardColorsModalComponent {
   private wsService = inject(WSService);
 
-  private readonly colors = toSignal(this.wsService.activeColors$);
+  private readonly colors = this.wsService.activeColors;
 
-  protected readonly current = toSignal(this.wsService.currentActiveProgram$);
+  protected readonly current = this.wsService.currentActiveProgram;
 
   protected readonly buttons: Array<{
     color: ChaseColor;
@@ -72,7 +71,7 @@ export class BoardColorsModalComponent {
   });
 
   isColorActive(color: ChaseColor) {
-    return this.colors()!.includes(color);
+    return this.colors().includes(color);
   }
 
   onClickToggleColor(color: ChaseColor) {

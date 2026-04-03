@@ -2,7 +2,7 @@
   @if (show() !== "hidden") {
     <div
       class="relative flex-1 flex justify-center items-center overflow-hidden"
-      [style.opacity]="video()?.opacity"
+      [style.opacity]="video().opacity"
     >
       @if (show() === "video") {
         <video
@@ -14,7 +14,7 @@
         ></video>
         @if (color() === "chase") {
           <div
-            [style.background-color]="video()?.color"
+            [style.background-color]="video().color"
             class="absolute inset-0 mix-blend-color"
           ></div>
         }
@@ -22,7 +22,7 @@
       @if (show() === "color") {
         <div
           [style.background-color]="
-            color() === 'chase' ? video()?.color : '#555'
+            color() === 'chase' ? video().color : '#555'
           "
           class="absolute inset-0 flex items-center justify-center"
         >

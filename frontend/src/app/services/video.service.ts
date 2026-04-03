@@ -1,12 +1,6 @@
-import { Injectable, inject } from '@angular/core';
-import {
-  BehaviorSubject,
-  Subject,
-  combineLatest,
-  filter,
-  interval,
-  map,
-} from 'rxjs';
+import { Injectable, computed, inject } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { combineLatest, filter, interval, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ColorService } from './color.service';
 import { MqttService } from './mqtt.service';
@@ -39,64 +33,57 @@ export class VideoService {
   private numChannels = 5;
   private messages: string[] = [`Space Rave`];
 
-  public text$ = new BehaviorSubject<AnimatedText>({
-    message: '',
-    opacity: 0,
-    transform: '',
+  public readonly visualsSource$ = this.wsService.visualsSource;
+  public readonly visualsSettings$ = this.wsService.visualsSettings;
+
+  public readonly video = computed(() => {
+    const channels = this.mqttService
+      .dmx()
+      .slice(this.address, this.address + this.numChannels);
+
+    const [r, g, b, master, strobe] = channels;
+
+    const color = this.colorService.toRGB(255, r, g, b, 0, 0, 0);
+    const opacity =
+      this.visualsSettings$().opacity === 'chase' ? master / 255 : 1;
+
+    const { classes, duration } = this.colorService.getStrobeClasses(
+      strobe,
+      0,
+      255,
+    );
+
+    return {
+      color,
+      opacity,
+      strobe: {
+        classes,
+        duration,
+      },
+    };
   });
-  public video$ = new Subject<VideoState>();
-  public visualsSource$ = this.wsService.visualsSource$;
-  public visualsSettings$ = this.wsService.visualsSettings$;
 
-  constructor() {
-    this.mqttService.dmx$
-      .pipe(
-        map((data) => data.slice(this.address, this.address + this.numChannels))
-      )
-      .subscribe((channels) => {
-        const [r, g, b, master, strobe] = channels;
-
-        const color = this.colorService.toRGB(255, r, g, b, 0, 0, 0);
-        const opacity =
-          this.visualsSettings$.getValue().opacity === 'chase'
-            ? master / 255
-            : 1;
-
-        const { classes, duration } = this.colorService.getStrobeClasses(
-          strobe,
-          0,
-          255
-        );
-
-        this.video$.next({
-          color,
-          opacity,
-          strobe: {
-            classes,
-            duration,
-          },
-        });
-      });
-
-    combineLatest([this.visualsSettings$, interval(10000)])
-      .pipe(filter(([visuals, counter]) => visuals.text))
-      .subscribe(([_, counter]) => {
+  public readonly text = toSignal(
+    combineLatest([toObservable(this.visualsSettings$), interval(10000)]).pipe(
+      filter(([visuals, _]) => visuals.text),
+      map(([_, counter]) => {
         const show = counter % 5 === 0;
-        let message = this.text$.getValue().message;
+        let message = this.messages[0];
         if (show) {
           const index = this.messages.indexOf(message) ?? 0;
           message = this.messages[(index + 1) % this.messages.length];
         }
-        this.text$.next({
+        return {
           message,
           opacity: show ? 1 : 0,
           transform: '',
-        });
-      });
-  }
+        };
+      }),
+    ),
+  );
 
   setVideoElement(element: HTMLVideoElement) {
-    const visuals = this.wsService.visualsSettings$.getValue();
+    const visuals = this.wsService.visualsSettings();
 
     element.pause();
     if (visuals.currentIndex < 0) {
@@ -112,7 +99,7 @@ export class VideoService {
   }
 
   onVideoElementMetadataLoaded(element: HTMLVideoElement) {
-    const visuals = this.wsService.visualsSettings$.getValue();
+    const visuals = this.wsService.visualsSettings();
     if (visuals.currentIndex >= 0) {
       const timeElapsed =
         (new Date().valueOf() - new Date(visuals.startedAt).valueOf()) / 1000;

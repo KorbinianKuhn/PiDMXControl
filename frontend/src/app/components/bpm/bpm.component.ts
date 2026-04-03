@@ -1,22 +1,19 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { WSService } from '../../services/ws.service';
-import { BpmModalComponent } from './bpm-modal/bpm-modal.component';
 import { PadButtonComponent } from '../pad-button/pad-button.component';
+import { BpmModalComponent } from './bpm-modal/bpm-modal.component';
 import { BpmNumberComponent } from './bpm-number/bpm-number.component';
 
 @Component({
-    selector: 'app-bpm',
-    templateUrl: './bpm.component.html',
-    styleUrls: ['./bpm.component.scss'],
-    imports: [BpmNumberComponent, PadButtonComponent]
+  selector: 'app-bpm',
+  templateUrl: './bpm.component.html',
+  styleUrls: ['./bpm.component.scss'],
+  imports: [BpmNumberComponent, PadButtonComponent],
 })
-export class BpmComponent implements OnInit {
+export class BpmComponent {
   private matDialog = inject(MatDialog);
   private wsService = inject(WSService);
-
-
-  ngOnInit(): void {}
 
   onClick() {
     this.matDialog.open(BpmModalComponent);
