@@ -3,11 +3,11 @@ import {
   Component,
   ElementRef,
   OnDestroy,
-  ViewChild,
+  inject,
+  viewChild
 } from '@angular/core';
-import { MatIconButton } from '@angular/material/button';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
-import { LetDirective } from '@ngrx/component';
 import {
   Subject,
   animationFrameScheduler,
@@ -27,30 +27,29 @@ import { BeamerComponent } from '../beamer/beamer.component';
   selector: 'app-visualisation',
   templateUrl: './visualisation.component.html',
   styleUrls: ['./visualisation.component.scss'],
-  standalone: true,
-  imports: [BeamerComponent, MatIconButton, LetDirective, MatIconModule],
+  imports: [BeamerComponent, MatIconModule],
 })
 export class VisualisationComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
+  private colorService = inject(ColorService);
+  private mqttService = inject(MqttService);
+  private configService = inject(ConfigService);
+
+  readonly canvas = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
 
   private destroy$$ = new Subject<void>();
   private bgColor = '#111827';
 
-  public visualisation$ = this.configService.visualisation$;
-  public video$ = this.configService.video$;
-
-  constructor(
-    private colorService: ColorService,
-    private mqttService: MqttService,
-    private configService: ConfigService
-  ) {}
+  protected readonly visualisation = toSignal(
+    this.configService.visualisation$,
+  );
+  protected readonly video = toSignal(this.configService.video$);
 
   get context() {
-    return this.canvas.nativeElement.getContext('2d', { alpha: false })!;
+    return this.canvas().nativeElement.getContext('2d', { alpha: false })!;
   }
 
   ngAfterViewInit() {
-    const canvas = this.canvas.nativeElement;
+    const canvas = this.canvas().nativeElement;
     const dpr = window.devicePixelRatio;
     const rect = canvas.getBoundingClientRect();
 
@@ -72,9 +71,9 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
         takeUntil(this.destroy$$),
         filter(([visible, _, __]) => visible),
         throttle(() =>
-          interval(this.configService.performanceMode$.getValue() ? 100 : 0)
+          interval(this.configService.performanceMode$.getValue() ? 100 : 0),
         ),
-        throttleTime(0, animationFrameScheduler)
+        throttleTime(0, animationFrameScheduler),
       )
       .subscribe(([_, dmx, neopixelA, neopixelB]) => {
         this.redraw(dmx);
@@ -90,11 +89,6 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
     this.configService.toggleVisualisation();
     this.redraw(new Array(513).fill(0));
     this.redrawNeopixel(new Array(1200).fill(0));
-    // if (this.configService.visualisation$.getValue()) {
-    //   this.configService.startVideo();
-    // } else {
-    //   this.configService.stopVideo();
-    // }
   }
 
   onClickBeamer(event: MouseEvent) {
@@ -159,11 +153,11 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
     y: number,
     vertical: boolean,
     address: number,
-    data: number[]
+    data: number[],
   ) {
     const [r, g, b, w, a, uv, master, strobe] = data.slice(
       address,
-      address + 9
+      address + 9,
     );
 
     const radius = 8;
@@ -214,7 +208,7 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
     for (let i = 0; i < 8; i++) {
       const [master, strobe, r, g, b] = data.slice(
         address + i * 6,
-        address + i * 6 + 6
+        address + i * 6 + 6,
       );
       const color = this.colorService.toRGB(master, r, g, b, 0, 0, 0);
 
@@ -228,7 +222,7 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
   updateDiamondDome(x: number, y: number, address: number, data: number[]) {
     const [r, g, b, w, a, uv, strobe, movement] = data.slice(
       address,
-      address + 9
+      address + 9,
     );
     const color = this.colorService.toRGB(255, r, g, b, w, a, uv);
 

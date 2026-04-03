@@ -1,6 +1,6 @@
-import { AsyncPipe, NgClass } from '@angular/common';
-import { Component } from '@angular/core';
-import { PushPipe } from '@ngrx/component';
+import { NgClass } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { combineLatest, map } from 'rxjs';
 import { ConfigService } from '../../../services/config.service';
 import { WSService } from '../../../services/ws.service';
@@ -9,29 +9,28 @@ import { WSService } from '../../../services/ws.service';
   selector: 'app-bpm-number',
   templateUrl: './bpm-number.component.html',
   styleUrls: ['./bpm-number.component.scss'],
-  standalone: true,
-  imports: [NgClass, AsyncPipe, PushPipe],
+  imports: [NgClass],
 })
 export class BpmNumberComponent {
-  public bpm$ = this.wsService.bpm$;
+  private wsService = inject(WSService);
+  private configService = inject(ConfigService);
 
-  public bars$ = combineLatest([
-    this.configService.performanceMode$,
-    this.wsService.tick$,
-  ]).pipe(
-    map(([performanceMode, tick]) => {
-      const values = [false, false, false, false];
+  public bpm = toSignal(this.wsService.bpm$);
 
-      if (!performanceMode) {
-        values[Math.floor(tick / 4)] = true;
-      }
+  public bars = toSignal(
+    combineLatest([
+      this.configService.performanceMode$,
+      this.wsService.tick$,
+    ]).pipe(
+      map(([performanceMode, tick]) => {
+        const values = [false, false, false, false];
 
-      return values;
-    })
+        if (!performanceMode) {
+          values[Math.floor(tick / 4)] = true;
+        }
+
+        return values;
+      }),
+    ),
   );
-
-  constructor(
-    private wsService: WSService,
-    private configService: ConfigService
-  ) {}
 }

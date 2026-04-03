@@ -1,36 +1,32 @@
 import { NgClass } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
-import { LetDirective } from '@ngrx/component';
+import { Component, inject, input } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ConfigService } from '../../services/config.service';
 
 @Component({
   selector: 'app-pad-button',
   templateUrl: './pad-button.component.html',
   styleUrls: ['./pad-button.component.scss'],
-  standalone: true,
-  imports: [NgClass, LetDirective],
+  imports: [NgClass],
 })
-export class PadButtonComponent implements OnInit {
-  @Input() color!: string;
-  @Input() active: boolean = true;
-  @Input() current: boolean | null = false;
-  @Input() size: 'small' | 'normal' = 'normal';
-  @Input() progress!: number;
+export class PadButtonComponent {
+  private configService = inject(ConfigService);
 
-  public performanceMode$ = this.configService.performanceMode$;
+  readonly color = input.required<string>();
+  readonly active = input<boolean>(true);
+  readonly current = input<boolean | null>(false);
+  readonly size = input<'small' | 'normal'>('normal');
+  readonly progress = input<number>(0);
+
+  protected readonly performanceMode = toSignal(
+    this.configService.performanceMode$,
+    { initialValue: false },
+  );
 
   get opacity(): number {
-    if (this.current) {
+    if (this.current()) {
       return 20;
     }
-    return this.active ? 10 : 70;
-  }
-
-  constructor(private configService: ConfigService) {}
-
-  ngOnInit(): void {}
-
-  onClick() {
-    // this.active = !this.active;
+    return this.active() ? 10 : 70;
   }
 }

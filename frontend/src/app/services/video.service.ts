@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   BehaviorSubject,
   Subject,
@@ -31,6 +31,10 @@ export interface VideoState {
   providedIn: 'root',
 })
 export class VideoService {
+  private wsService = inject(WSService);
+  private colorService = inject(ColorService);
+  private mqttService = inject(MqttService);
+
   private address = 146;
   private numChannels = 5;
   private messages: string[] = [`Space Rave`];
@@ -44,11 +48,7 @@ export class VideoService {
   public visualsSource$ = this.wsService.visualsSource$;
   public visualsSettings$ = this.wsService.visualsSettings$;
 
-  constructor(
-    private wsService: WSService,
-    private colorService: ColorService,
-    private mqttService: MqttService
-  ) {
+  constructor() {
     this.mqttService.dmx$
       .pipe(
         map((data) => data.slice(this.address, this.address + this.numChannels))

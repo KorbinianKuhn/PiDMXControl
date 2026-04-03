@@ -1,8 +1,14 @@
-import { AsyncPipe, NgClass } from '@angular/common';
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  effect,
+  inject,
+  input,
+  viewChild
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
-import { LetDirective } from '@ngrx/component';
-import { Subject, combineLatest, filter, map, takeUntil } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 import { ConfigService } from '../../services/config.service';
 import { VideoService } from '../../services/video.service';
 import { WSService } from '../../services/ws.service';
@@ -11,65 +17,51 @@ import { WSService } from '../../services/ws.service';
   selector: 'app-beamer',
   templateUrl: './beamer.component.html',
   styleUrls: ['./beamer.component.scss'],
-  standalone: true,
-  imports: [LetDirective, NgClass, AsyncPipe, MatIconModule],
+  imports: [MatIconModule],
 })
 export class BeamerComponent {
-  @Input() id!: string;
+  private videoService = inject(VideoService);
+  private configService = inject(ConfigService);
+  private wsService = inject(WSService);
 
-  @ViewChild('videoElement', { static: false })
-  private videoElement!: ElementRef<HTMLVideoElement>;
+  readonly id = input.required<string>();
 
-  private destroy$$ = new Subject<void>();
+  private readonly videoElement = viewChild.required<ElementRef<HTMLVideoElement>>('videoElement');
 
   private timer!: NodeJS.Timeout;
 
-  public show$ = combineLatest([
-    this.configService.visualisation$,
-    this.configService.video$,
-    this.wsService.visualsSource$,
-  ]).pipe(
-    map(([visible, video, index]) => {
-      if (!visible || index === -1) {
-        return 'hidden';
-      }
-      return video ? 'video' : 'color';
-    })
+  protected readonly show = toSignal(
+    combineLatest([
+      this.configService.visualisation$,
+      this.configService.video$,
+      this.wsService.visualsSource$,
+    ]).pipe(
+      map(([visible, video, index]) => {
+        if (!visible || index === -1) {
+          return 'hidden';
+        }
+        return video ? 'video' : 'color';
+      }),
+    ),
   );
 
-  public video$ = this.videoService.video$;
+  protected readonly video = toSignal(this.videoService.video$);
 
-  public text$ = this.videoService.text$;
+  protected readonly text = toSignal(this.videoService.text$);
 
-  public videoSelected$ = this.wsService.visualsSource$.pipe(
-    map((index) => index > -1)
+  protected readonly videoSelected = toSignal(
+    this.wsService.visualsSource$.pipe(map((index) => index > -1)),
   );
-  public color$ = this.wsService.visualsSettings$.pipe(
-    map((visuals) => visuals.color)
+  protected readonly color = toSignal(
+    this.wsService.visualsSettings$.pipe(map((visuals) => visuals.color)),
   );
 
-  constructor(
-    private videoService: VideoService,
-    private configService: ConfigService,
-    private wsService: WSService
-  ) {}
-
-  ngOnInit(): void {}
-
-  ngAfterViewInit(): void {
-    this.show$
-      .pipe(
-        takeUntil(this.destroy$$),
-        // debounceTime(100),
-        filter((show) => show === 'video')
-      )
-      .subscribe(() => {
+  constructor() {
+    effect(() => {
+      if (this.show() === 'video') {
         this.updateVideo();
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$$.next();
+      }
+    });
   }
 
   updateVideo() {
@@ -78,8 +70,9 @@ export class BeamerComponent {
     }
 
     this.timer = setInterval(() => {
-      if (this.videoElement?.nativeElement) {
-        this.videoService.setVideoElement(this.videoElement.nativeElement);
+      const videoElement = this.videoElement();
+      if (videoElement?.nativeElement) {
+        this.videoService.setVideoElement(videoElement.nativeElement);
         clearInterval(this.timer);
       }
     }, 50);
@@ -87,7 +80,7 @@ export class BeamerComponent {
 
   onLoadedMetadata() {
     this.videoService.onVideoElementMetadataLoaded(
-      this.videoElement.nativeElement
+      this.videoElement().nativeElement,
     );
   }
 }

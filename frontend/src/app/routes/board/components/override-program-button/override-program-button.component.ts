@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { LetDirective } from '@ngrx/component';
+import { Component, inject, input } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { ToggleButtonComponent } from '../../../../components/toggle-button/toggle-button.component';
 import { OverrideProgramName } from '../../../../services/ws.interfaces';
@@ -9,30 +9,30 @@ import { WSService } from '../../../../services/ws.service';
   selector: 'app-override-program-button',
   templateUrl: './override-program-button.component.html',
   styleUrls: ['./override-program-button.component.scss'],
-  standalone: true,
-  imports: [LetDirective, ToggleButtonComponent],
+  imports: [ToggleButtonComponent],
 })
 export class OverrideProgramButtonComponent {
-  @Input() name!: OverrideProgramName;
-  @Input() size: 'small' | 'normal' = 'normal';
-  @Input() color: string = 'bg-cyan-500';
+  private wsService = inject(WSService);
 
-  public current$ = this.wsService.currentOverrideProgram$.pipe(
-    map(({ programName, progress }) => {
-      return {
-        active: programName === this.name,
-        progress,
-      };
-    })
+  readonly name = input<OverrideProgramName>(); // TODO make required
+  readonly size = input<'small' | 'normal'>('normal');
+  readonly color = input<string>('bg-cyan-500');
+
+  protected readonly current = toSignal(
+    this.wsService.currentOverrideProgram$.pipe(
+      map(({ programName, progress }) => {
+        return {
+          active: programName === this.name(),
+          progress,
+        };
+      }),
+    ),
   );
 
-  constructor(private wsService: WSService) {}
-
   onClick() {
+    const name = this.name();
     const value =
-      this.wsService.overrideProgramName$.getValue() === this.name
-        ? null
-        : this.name;
-    this.wsService.setOverrideProgramName(value);
+      this.wsService.overrideProgramName$.getValue() === name ? null : name;
+    this.wsService.setOverrideProgramName(value!);
   }
 }

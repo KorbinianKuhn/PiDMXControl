@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { LetDirective } from '@ngrx/component';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { PadButtonComponent } from '../../../../components/pad-button/pad-button.component';
 import { ChaseColor } from '../../../../services/ws.interfaces';
 import { WSService } from '../../../../services/ws.service';
@@ -46,15 +46,16 @@ export const COLORS_TO: { [key: string]: string } = {
   selector: 'app-board-colors-modal',
   templateUrl: './board-colors-modal.component.html',
   styleUrls: ['./board-colors-modal.component.scss'],
-  standalone: true,
-  imports: [LetDirective, PadButtonComponent],
+  imports: [PadButtonComponent],
 })
 export class BoardColorsModalComponent {
-  public chaseColorEnum = ChaseColor;
-  public colors$ = this.wsService.activeColors$;
-  public current$ = this.wsService.currentActiveProgram$;
+  private wsService = inject(WSService);
 
-  public buttons: Array<{
+  private readonly colors = toSignal(this.wsService.activeColors$);
+
+  protected readonly current = toSignal(this.wsService.currentActiveProgram$);
+
+  protected readonly buttons: Array<{
     color: ChaseColor;
     gradient: string;
     a: string;
@@ -70,14 +71,12 @@ export class BoardColorsModalComponent {
     };
   });
 
-  constructor(private wsService: WSService) {}
-
   isColorActive(color: ChaseColor) {
-    return this.colors$.getValue().includes(color);
+    return this.colors()!.includes(color);
   }
 
   onClickToggleColor(color: ChaseColor) {
-    const colors = this.colors$.getValue();
+    const colors = this.colors()!;
     const index = colors.indexOf(color);
     if (index === -1) {
       colors.push(color);

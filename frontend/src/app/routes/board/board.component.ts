@@ -1,9 +1,9 @@
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { LetDirective } from '@ngrx/component';
 import { map } from 'rxjs';
 import { BeamerSettingsModalComponent } from '../../components/beamer-settings-modal/beamer-settings-modal.component';
 import { BpmComponent } from '../../components/bpm/bpm.component';
@@ -31,57 +31,63 @@ import { OverrideProgramButtonComponent } from './components/override-program-bu
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
-  standalone: true,
   imports: [
     PanelGroupComponent,
     ToggleButtonComponent,
     OverrideProgramButtonComponent,
-    LetDirective,
     PadButtonComponent,
     ActiveProgramButtonComponent,
     BpmComponent,
     VisualisationComponent,
     MatButtonModule,
     MatIconModule,
-    AsyncPipe,
-    CommonModule,
-  ],
+    NgClass
+],
 })
-export class BoardComponent implements OnInit {
-  public activeProgram = ActiveProgramName;
-  public overrideProgram = OverrideProgramName;
+export class BoardComponent {
+  private dialog = inject(MatDialog);
+  private configService = inject(ConfigService);
+  private wsService = inject(WSService);
 
-  public visualisation$ = this.configService.visualisation$;
-  public performanceMode$ = this.configService.performanceMode$;
-  public visualsSettings$ = this.wsService.visualsSettings$;
-  public black$ = this.wsService.black$;
+  protected readonly activeProgram = ActiveProgramName;
+  protected readonly overrideProgram = OverrideProgramName;
 
-  public currentColor$ = this.wsService.currentActiveProgram$.pipe(
-    map(({ color, progress }) => {
-      const [a, b] = color.split('-');
-      return {
-        color,
-        gradient: `bg-gradient-to-br ${COLORS_FROM[a]} from-30% ${COLORS_TO[b]} to-70%`,
-        a,
-        b,
-        progress,
-      };
-    })
+  protected readonly visualisation = toSignal(
+    this.configService.visualisation$,
+  );
+  protected readonly performanceMode = toSignal(
+    this.configService.performanceMode$,
+  );
+  protected readonly visualsSettings = toSignal(
+    this.wsService.visualsSettings$,
+  );
+  protected readonly black = toSignal(this.wsService.black$, {
+    initialValue: false,
+  });
+
+  protected readonly currentColor = toSignal(
+    this.wsService.currentActiveProgram$.pipe(
+      map(({ color, progress }) => {
+        const [a, b] = color.split('-');
+        return {
+          color,
+          gradient: `bg-gradient-to-br ${COLORS_FROM[a]} from-30% ${COLORS_TO[b]} to-70%`,
+          a,
+          b,
+          progress,
+        };
+      }),
+    ),
   );
 
-  public neopixelDisabled$ = this.wsService.devices$.pipe(
-    map(
-      (devices) => devices.find((d) => d.id === 'neopixel-a')?.disabled || false
-    )
+  protected neopixelDisabled = toSignal(
+    this.wsService.devices$.pipe(
+      map(
+        (devices) =>
+          devices.find((d) => d.id === 'neopixel-a')?.disabled || false,
+      ),
+    ),
   );
-
-  constructor(
-    private dialog: MatDialog,
-    private configService: ConfigService,
-    private wsService: WSService
-  ) {}
-
-  ngOnInit(): void {}
 
   onOpenChannelMixerModal() {
     this.dialog.open(ChannelMixerModalComponent, {
@@ -105,7 +111,7 @@ export class BoardComponent implements OnInit {
   }
 
   onClickBlack() {
-    const value = this.black$.getValue();
+    const value = this.black();
     this.wsService.setBlack(!value);
   }
 

@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { PanelGroupComponent } from '../../../../components/panel-group/panel-group.component';
 import { WSService } from '../../../../services/ws.service';
@@ -10,18 +10,19 @@ interface Control {
 }
 
 @Component({
-  selector: 'app-brightness-modal',
-  templateUrl: './brightness-modal.component.html',
-  styleUrls: ['./brightness-modal.component.scss'],
-  standalone: true,
-  imports: [PanelGroupComponent, MatSliderModule, AsyncPipe],
+    selector: 'app-brightness-modal',
+    templateUrl: './brightness-modal.component.html',
+    styleUrls: ['./brightness-modal.component.scss'],
+    imports: [PanelGroupComponent, MatSliderModule, AsyncPipe]
 })
 export class BrightnessModalComponent {
+  private wsService = inject(WSService);
+
   public master$ = this.wsService.master$;
   public ambientUV$ = this.wsService.ambientUV$;
   public controls: Control[] = [];
 
-  constructor(private wsService: WSService) {
+  constructor() {
     this.wsService.devices$.getValue().map((device) => {
       const groupId = device.id.split('-')[0];
 

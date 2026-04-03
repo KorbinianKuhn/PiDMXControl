@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { BoardComponent } from './routes/board/board.component';
-import { VisualsComponent } from './routes/visuals/visuals.component';
+
+
 
 const routes: Routes = [
   {
     path: 'board',
-    component: BoardComponent,
+    loadComponent: () => import('./routes/board/board.component').then(m => m.BoardComponent),
   },
   {
     path: 'visuals',
-    component: VisualsComponent,
+    loadComponent: () => import('./routes/visuals/visuals.component').then(m => m.VisualsComponent),
   },
   {
     path: '**',

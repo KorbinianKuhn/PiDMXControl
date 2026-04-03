@@ -9,17 +9,17 @@
     </tr>
   </thead>
   <tbody>
-    @for (channel of device.channels; track channel; let index = $index) {
+    @for (channel of device().channels; track channel; let index = $index) {
       <tr>
         <td class="w-10">{{ index + 1 }}</td>
-        <td class="w-10">{{ index + device.address }}</td>
+        <td class="w-10">{{ index + device().address }}</td>
         <td class="w-15">{{ channel }}</td>
         <td>
           <mat-slider [min]="0" [max]="255" [step]="1" discrete>
             <input
               matSliderThumb
               [value]="values[index]"
-              (valueChange)="onValueChange(index + device.address, $event)"
+              (valueChange)="onValueChange(index + device().address, $event)"
               />
           </mat-slider>
         </td>

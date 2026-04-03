@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DeviceConfig } from '../../services/ws.interfaces';
 import { WSService } from '../../services/ws.service';
@@ -17,17 +17,19 @@ interface Control {
     selector: 'app-device-config-modal',
     templateUrl: './device-config-modal.component.html',
     styleUrls: ['./device-config-modal.component.scss'],
-    standalone: true,
-    imports: [MatSliderModule],
+    imports: [MatSliderModule]
 })
 export class DeviceConfigModalComponent {
+  private wsService = inject(WSService);
+
   public controls: Control[] = [];
   public device!: DeviceConfig;
 
-  constructor(
-    private wsService: WSService,
-    @Inject(MAT_DIALOG_DATA) data: { id: string }
-  ) {
+  constructor() {
+    const data = inject<{
+    id: string;
+}>(MAT_DIALOG_DATA);
+
     this.device = this.wsService.devices$
       .getValue()
       .find((o) => o.id === data.id) as DeviceConfig;

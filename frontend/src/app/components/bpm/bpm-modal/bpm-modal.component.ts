@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatSliderModule } from '@angular/material/slider';
-import { LetDirective } from '@ngrx/component';
 import { WSService } from '../../../services/ws.service';
 import { PadButtonComponent } from '../../pad-button/pad-button.component';
 import { PanelGroupComponent } from '../../panel-group/panel-group.component';
@@ -10,23 +10,21 @@ import { BpmNumberComponent } from '../bpm-number/bpm-number.component';
   selector: 'app-bpm-modal',
   templateUrl: './bpm-modal.component.html',
   styleUrls: ['./bpm-modal.component.scss'],
-  standalone: true,
   imports: [
     BpmNumberComponent,
     PadButtonComponent,
     MatSliderModule,
-    LetDirective,
     PanelGroupComponent,
   ],
 })
 export class BpmModalComponent {
+  private wsService = inject(WSService);
+
   private taps: number[] = [];
   private precision = 5;
 
-  public bpm$ = this.wsService.bpm$;
-  public presets = new Array(35).fill(null).map((_, i) => 110 + i);
-
-  constructor(private wsService: WSService) {}
+  protected bpm = toSignal(this.wsService.bpm$, { initialValue: 128 });
+  protected presets = new Array(35).fill(null).map((_, i) => 110 + i);
 
   onClickStart() {
     this.wsService.setStart();
@@ -43,8 +41,8 @@ export class BpmModalComponent {
           // calc bpm between last two taps
           ticks.push(
             Math.round(
-              (60 / (this.taps[i] / 1000 - this.taps[i - 1] / 1000)) * 100
-            ) / 100
+              (60 / (this.taps[i] / 1000 - this.taps[i - 1] / 1000)) * 100,
+            ) / 100,
           );
         }
       }
@@ -102,11 +100,11 @@ export class BpmModalComponent {
   }
 
   onChangeValue(amount: number) {
-    this.wsService.setBpm(this.bpm$.getValue() + amount);
+    this.wsService.setBpm(this.bpm() + amount);
   }
 
   onClickRound() {
-    this.wsService.setBpm(Math.round(this.bpm$.getValue()));
+    this.wsService.setBpm(Math.round(this.bpm()));
   }
 
   onClickPreset(bpm: number) {

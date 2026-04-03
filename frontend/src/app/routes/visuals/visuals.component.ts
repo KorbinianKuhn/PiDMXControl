@@ -5,9 +5,10 @@ import {
   ElementRef,
   HostListener,
   OnDestroy,
-  ViewChild,
+  inject,
+  viewChild
 } from '@angular/core';
-import { LetDirective } from '@ngrx/component';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Subject, map, takeUntil, tap } from 'rxjs';
 import { VideoService } from '../../services/video.service';
 import { WSService } from '../../services/ws.service';
@@ -16,38 +17,34 @@ import { WSService } from '../../services/ws.service';
   selector: 'app-visuals',
   templateUrl: './visuals.component.html',
   styleUrls: ['./visuals.component.scss'],
-  standalone: true,
-  imports: [LetDirective, NgClass],
+  imports: [NgClass],
 })
 export class VisualsComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('videoElement')
-  private videoElement!: ElementRef<HTMLVideoElement>;
+  private elementRef = inject(ElementRef);
+  private videoService = inject(VideoService);
+  private wsService = inject(WSService);
+
+  private readonly videoElement = viewChild.required<ElementRef<HTMLVideoElement>>('videoElement');
 
   private destroy$$ = new Subject<void>();
   private timer!: NodeJS.Timeout;
 
-  public text$ = this.videoService.text$;
-  public video$ = this.videoService.video$;
-  public crop$ = this.wsService.visualsSettings$.pipe(
-    tap((visuals) => console.log(visuals)),
-    map((visuals) => ({
-      left: visuals.left,
-      right: 100 - visuals.right,
-      top: visuals.top,
-      bottom: 100 - visuals.bottom,
-    }))
+  public text = toSignal(this.videoService.text$);
+  public video = toSignal(this.videoService.video$);
+  public crop = toSignal(
+    this.wsService.visualsSettings$.pipe(
+      tap((visuals) => console.log(visuals)),
+      map((visuals) => ({
+        left: visuals.left,
+        right: 100 - visuals.right,
+        top: visuals.top,
+        bottom: 100 - visuals.bottom,
+      })),
+    ),
   );
-  public color$ = this.wsService.visualsSettings$.pipe(
-    map((visuals) => visuals.color)
+  public color = toSignal(
+    this.wsService.visualsSettings$.pipe(map((visuals) => visuals.color)),
   );
-
-  constructor(
-    private elementRef: ElementRef,
-    private videoService: VideoService,
-    private wsService: WSService
-  ) {}
-
-  ngOnInit() {}
 
   @HostListener('click')
   onClick() {
@@ -73,8 +70,9 @@ export class VisualsComponent implements AfterViewInit, OnDestroy {
     }
 
     this.timer = setInterval(() => {
-      if (this.videoElement?.nativeElement) {
-        this.videoService.setVideoElement(this.videoElement.nativeElement);
+      const videoElement = this.videoElement();
+      if (videoElement?.nativeElement) {
+        this.videoService.setVideoElement(videoElement.nativeElement);
         clearInterval(this.timer);
       }
     }, 50);
@@ -82,7 +80,7 @@ export class VisualsComponent implements AfterViewInit, OnDestroy {
 
   onLoadedMetadata() {
     this.videoService.onVideoElementMetadataLoaded(
-      this.videoElement.nativeElement
+      this.videoElement().nativeElement,
     );
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DEVICES } from '../../constants/devices.constants';
 import { Device } from '../../interfaces/general.interfaces';
 import { WSService } from '../../services/ws.service';
@@ -10,20 +10,19 @@ import { NgClass, AsyncPipe } from '@angular/common';
     selector: 'app-channel-mixer-modal',
     templateUrl: './channel-mixer-modal.component.html',
     styleUrls: ['./channel-mixer-modal.component.scss'],
-    standalone: true,
     imports: [
-    NgClass,
-    MatExpansionModule,
-    DeviceTesterComponent,
-    AsyncPipe
-],
+        NgClass,
+        MatExpansionModule,
+        DeviceTesterComponent,
+        AsyncPipe
+    ]
 })
 export class ChannelMixerModalComponent {
+  private wsService = inject(WSService);
+
   public devices: Device[] = DEVICES;
 
   public enabled = this.wsService.settingsMode$;
-
-  constructor(private wsService: WSService) {}
 
   onToggle() {
     this.wsService.setSettingsMode(!this.enabled.getValue());

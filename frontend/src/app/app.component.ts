@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
@@ -19,22 +19,23 @@ const ICONS = [
   'tortoise',
 ];
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  standalone: true,
-  imports: [RouterOutlet],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    imports: [RouterOutlet]
 })
 export class AppComponent {
+  private wsService = inject(WSService);
+  private mqttService = inject(MqttService);
+  private router = inject(Router);
+  private matIconRegistry = inject(MatIconRegistry);
+  private domSanitizer = inject(DomSanitizer);
+
   public board: boolean = true;
 
-  constructor(
-    private wsService: WSService,
-    private mqttService: MqttService,
-    private router: Router,
-    private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer
-  ) {
+  constructor() {
+    const router = this.router;
+
     ICONS.map((o) =>
       this.matIconRegistry.addSvgIcon(
         o,

@@ -2,19 +2,13 @@
   <app-panel-group>
     <div class="flex flex-col">
       <div class="flex justify-center">
-        <app-bpm-number></app-bpm-number>
+        <app-bpm-number />
       </div>
       <div class="flex">
-        <mat-slider
-          *ngrxLet="bpm$ as bpm"
-          [min]="60"
-          [max]="240"
-          [step]="0.5"
-          discrete
-        >
+        <mat-slider [min]="60" [max]="240" [step]="0.5" discrete>
           <input
             matSliderThumb
-            [value]="bpm"
+            [value]="bpm()"
             (dragEnd)="onSliderChange($event)"
           />
         </mat-slider>
@@ -73,15 +67,4 @@
       </div>
     </div>
   </app-panel-group>
-
-  <!-- <div class="flex flex-1 justify-center items-center flex-wrap">
-    @for (preset of presets; track $index) {
-    <app-pad-button
-      size="small"
-      (click)="onClickPreset(preset)"
-      class="m-0.5 text-gray-600"
-      >{{ preset }}</app-pad-button
-    >
-    }
-  </div> -->
 </div>

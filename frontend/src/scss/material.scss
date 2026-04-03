@@ -3,15 +3,15 @@
 }
 
 .mat-mdc-dialog-container {
-  --mdc-dialog-container-color: #000;
+  --mat-dialog-container-color: #000;
 }
 
 .mdc-slider__value-indicator {
-  --mdc-slider-label-container-color: #000;
+  --mat-slider-label-container-color: #000;
 }
 
 .mat-mdc-slider .mdc-slider__value-indicator {
-  --mdc-slider-label-label-text-color: #fff;
+  --mat-slider-label-label-text-color: #fff;
 }
 
 .mat-expansion-panel {
@@ -23,5 +23,5 @@ mat-slider {
 }
 
 .mat-mdc-progress-bar {
-  --mdc-linear-progress-active-indicator-color: #fff;
+  --mat-progress-bar-active-indicator-color: #fff;
 }
