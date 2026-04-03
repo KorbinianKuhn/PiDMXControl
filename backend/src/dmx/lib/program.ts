@@ -83,8 +83,8 @@ export class Program {
       }
 
       this.stepIndex++;
-    } catch (err) {
-      this.logger.error(err.message, err);
+    } catch (err: unknown) {
+      this.logger.error((err as Error).message, err);
     }
   }
 
@@ -101,8 +101,8 @@ export class Program {
       } else {
         this.pixelStepIndex++;
       }
-    } catch (err) {
-      this.logger.error(err.message, err);
+    } catch (err: unknown) {
+      this.logger.error((err as Error).message, err);
     }
   }
 
@@ -143,8 +143,8 @@ export class Program {
           buffer[i] = data[i];
         }
       }
-    } catch (err) {
-      this.logger.error(err.message, err);
+    } catch (err: unknown) {
+      this.logger.error((err as Error).message, err);
     }
 
     return buffer;

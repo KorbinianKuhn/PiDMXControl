@@ -3,13 +3,16 @@ import { TypedServer } from '../../server/events.interfaces';
 import { Config } from './config';
 
 export class Clock {
-  private timer: NodeJS.Timer;
+  private timer: NodeJS.Timeout;
 
   public tick$ = new Subject<number>();
   public microtick$ = new Subject<number>();
   public counter = 0; // 0-64
 
-  constructor(private io: TypedServer, private config: Config) {
+  constructor(
+    private io: TypedServer,
+    private config: Config,
+  ) {
     this.config.speed$.subscribe((speed) => this._start(speed));
   }
 

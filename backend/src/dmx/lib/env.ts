@@ -15,6 +15,9 @@ switch (process.env.CONFIG) {
   case 'sender':
     MQTT_HOST = 'mqtt://dmx:1883';
     break;
+  case 'dev':
+    MQTT_HOST = 'mqtt://mosquitto:1883';
+    break;
   default:
     break;
 }
