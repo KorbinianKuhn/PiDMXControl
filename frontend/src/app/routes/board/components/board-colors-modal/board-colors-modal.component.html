@@ -1,19 +1,48 @@
-<div
-  class="flex flex-wrap p-5 overflow-hidden border border-cyan-700 rounded-sm"
-  tabindex="0"
->
-  @for (button of buttons; track button) {
+<app-panel-group label="All colors" class="max-w-[602px]">
+  @for (button of colorButtons(); track button.color) {
     <app-pad-button
       [color]="button.gradient"
       class="m-1"
-      [active]="isColorActive(button.color)"
+      [active]="button.active"
       (click)="onClickToggleColor(button.color)"
-      [current]="button.color === current().color"
+      [current]="button.current"
       [progress]="current().progress"
     >
-      <span class="text-xs tracking-widest"
-        >{{ button.a }}<br />{{ button.b }}</span
-      >
+      <span>{{ button.a }}<br />{{ button.b }}</span>
     </app-pad-button>
   }
-</div>
+</app-panel-group>
+
+<app-panel-group label="Switch">
+  <app-toggle-button
+    [active]="allOn()"
+    class="m-1"
+    (click)="onClickSwitch(true)"
+    colorOn="bg-cyan-500"
+  >
+    On
+  </app-toggle-button>
+
+  <app-toggle-button
+    [active]="allOff()"
+    class="m-1"
+    (click)="onClickSwitch(false)"
+    colorOn="bg-cyan-500"
+  >
+    Off
+  </app-toggle-button>
+</app-panel-group>
+
+<app-panel-group label="Quick filter" class="max-w-[418px]">
+  @for (button of filterButtons(); track button.color) {
+    <app-pad-button
+      [color]="button.gradient"
+      size="small"
+      class="m-1"
+      [active]="button.active"
+      (click)="onClickToggleFilter(button.color)"
+    >
+      <span>{{ button.color }}</span>
+    </app-pad-button>
+  }
+</app-panel-group>

@@ -1,7 +1,7 @@
-import { ChannelAnimation, Chase, ChaseColor } from '../lib/chase';
+import { ChannelAnimation, Chase } from '../lib/chase';
 import { DeviceStateValues } from '../lib/device';
 import { DeviceRegistry } from '../lib/device-registry';
-import { ActiveProgramName } from '../lib/program';
+import { OverrideProgramName } from '../lib/program';
 import { flattenChannelStates, mergeDevicePatterns } from './chase-utils';
 
 const colors = [
@@ -13,11 +13,8 @@ const colors = [
   { r: 127, b: 255 },
 ];
 
-export const createChasePride = (
-  devices: DeviceRegistry,
-  color: ChaseColor,
-): Chase => {
-  const chase = new Chase(ActiveProgramName.PRIDE, true, color);
+export const createChasePride = (devices: DeviceRegistry): Chase => {
+  const chase = new Chase(OverrideProgramName.PRIDE, true);
 
   const bar = createBarPattern(devices);
   const beamer = createBeamerPattern(devices);

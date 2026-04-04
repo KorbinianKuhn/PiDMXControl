@@ -10,8 +10,8 @@ import {
   warp,
 } from './chase-utils';
 
-export const createChaseStrobeDisco = (devices: DeviceRegistry): Chase => {
-  const chase = new Chase(OverrideProgramName.STROBE_DISCO, true);
+export const createChaseDisco = (devices: DeviceRegistry): Chase => {
+  const chase = new Chase(OverrideProgramName.DISCO, true);
 
   const bar = createBarPattern(devices);
   const hex = createHexPattern(devices);

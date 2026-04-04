@@ -2,7 +2,11 @@
   @if (show() !== "hidden") {
     <div
       class="relative flex-1 flex justify-center items-center overflow-hidden"
-      [style.opacity]="video().opacity"
+      [style.opacity]="performanceMode() ? undefined : video().opacity"
+      [ngClass]="performanceMode() ? undefined : video().strobe.classes"
+      [style.animation-duration]="
+        performanceMode() ? undefined : video().strobe.duration
+      "
     >
       @if (show() === "video") {
         <video

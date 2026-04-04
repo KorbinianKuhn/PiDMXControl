@@ -12,7 +12,7 @@ import { WSService } from '../../../../services/ws.service';
 export class ActiveProgramButtonComponent {
   private wsService = inject(WSService);
 
-  readonly name = input<ActiveProgramName>(); // TODO make required
+  readonly name = input.required<ActiveProgramName>();
   readonly size = input<'small' | 'normal'>('normal');
 
   protected readonly current = computed(() => {

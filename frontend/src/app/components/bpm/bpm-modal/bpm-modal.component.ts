@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatSliderModule } from '@angular/material/slider';
 import { WSService } from '../../../services/ws.service';
 import { PadButtonComponent } from '../../pad-button/pad-button.component';
@@ -18,12 +19,13 @@ import { BpmNumberComponent } from '../bpm-number/bpm-number.component';
 })
 export class BpmModalComponent {
   private wsService = inject(WSService);
+  private dialogRef = inject(MatDialogRef<BpmModalComponent>);
 
   private taps: number[] = [];
   private precision = 5;
 
   protected readonly bpm = this.wsService.bpm;
-  protected readonly presets = new Array(35).fill(null).map((_, i) => 110 + i);
+  protected readonly presets = [70, 90, 110, 120, 128, 135, 140, 145, 150, 160];
 
   onClickStart() {
     this.wsService.setStart();
@@ -108,5 +110,6 @@ export class BpmModalComponent {
 
   onClickPreset(bpm: number) {
     this.wsService.setBpm(bpm);
+    this.dialogRef.close();
   }
 }

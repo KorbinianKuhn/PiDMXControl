@@ -213,4 +213,36 @@ export class VarytecHeroWash extends Device {
 
     return steps;
   }
+
+  animationWatching(numSteps: number): ChannelAnimation {
+    const steps: ChannelAnimation = [];
+
+    const panMin = this.config.minPan ?? 127;
+    const panMax = this.config.maxPan ?? 212;
+
+    // PAN
+    const panSteps = numSteps / 2;
+    const panStepValue = (panMax - panMin) / panSteps;
+    const panRight = new Array(panSteps)
+      .fill(null)
+      .map((o, i) => panMin + i * panStepValue);
+
+    const animationPan = [...panRight, ...panRight.slice().reverse()];
+
+    // ANIMATION
+    for (let i = 0; i < numSteps; i++) {
+      steps.push([
+        {
+          address: this.address + 0,
+          value: animationPan[i],
+        },
+        {
+          address: this.address + 2,
+          value: 0,
+        },
+      ]);
+    }
+
+    return steps;
+  }
 }

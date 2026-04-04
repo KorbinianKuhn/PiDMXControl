@@ -13,7 +13,11 @@ export class NeopixelStrip extends Device {
     return this.numPixels;
   }
 
-  constructor(id: string, public numPixels: number, config: Config) {
+  constructor(
+    id: string,
+    public numPixels: number,
+    config: Config,
+  ) {
     super(-1, id, [], config);
   }
 
@@ -128,8 +132,6 @@ export class NeopixelStrip extends Device {
     g = Math.floor(g);
     b = Math.floor(b);
     w = Math.floor(w);
-
-    // TODO: optimize for energy
 
     return { r, g, b, w };
   }

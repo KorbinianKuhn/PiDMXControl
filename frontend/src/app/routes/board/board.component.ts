@@ -47,8 +47,167 @@ export class BoardComponent {
   private configService = inject(ConfigService);
   private wsService = inject(WSService);
 
-  protected readonly activeProgram = ActiveProgramName;
-  protected readonly overrideProgram = OverrideProgramName;
+  protected readonly overridePrograms: Array<{
+    name: OverrideProgramName;
+    title: string;
+  }> = [
+    {
+      name: OverrideProgramName.WHITE,
+      title: 'White',
+    },
+    {
+      name: OverrideProgramName.DAY,
+      title: 'Day',
+    },
+    {
+      name: OverrideProgramName.NIGHT,
+      title: 'Night',
+    },
+    {
+      name: OverrideProgramName.WARM,
+      title: 'Warm',
+    },
+    {
+      name: OverrideProgramName.FADE,
+      title: 'Fade',
+    },
+    {
+      name: OverrideProgramName.PRIDE,
+      title: 'Pride',
+    },
+    {
+      name: OverrideProgramName.DISCO,
+      title: 'Disco',
+    },
+  ];
+
+  protected readonly activePrograms: Array<{
+    name: ActiveProgramName;
+    title: string;
+  }> = [
+    {
+      name: ActiveProgramName.MIRROR_BALL,
+      title: 'Ball',
+    },
+    {
+      name: ActiveProgramName.GLOW,
+      title: 'Glow',
+    },
+    {
+      name: ActiveProgramName.MAGIC,
+      title: 'Magic',
+    },
+    {
+      name: ActiveProgramName.MOODY,
+      title: 'Moody',
+    },
+    {
+      name: ActiveProgramName.BOUNCY,
+      title: 'Bouncy',
+    },
+    {
+      name: ActiveProgramName.CLUB,
+      title: 'Club',
+    },
+    {
+      name: ActiveProgramName.PULSE,
+      title: 'Pulse',
+    },
+    {
+      name: ActiveProgramName.LATE,
+      title: 'Late',
+    },
+    {
+      name: ActiveProgramName.DARK,
+      title: 'Dark',
+    },
+    {
+      name: ActiveProgramName.ROUGH,
+      title: 'Rough',
+    },
+    {
+      name: ActiveProgramName.WILD,
+      title: 'Wild',
+    },
+    {
+      name: ActiveProgramName.RAVE,
+      title: 'Rave',
+    },
+  ];
+
+  protected readonly buildupPrograms: Array<{
+    name: OverrideProgramName;
+    duration: number;
+    title: string;
+  }> = [
+    {
+      name: OverrideProgramName.BUILDUP_BRIGHT,
+      title: 'Bright (Todo)',
+      duration: 8,
+    },
+    {
+      name: OverrideProgramName.BUILDUP_BEAM,
+      title: 'Beam',
+      duration: -1,
+    },
+    {
+      name: OverrideProgramName.BUILDUP_BLINDER,
+      title: 'Blinder',
+      duration: -1,
+    },
+    {
+      name: OverrideProgramName.BUILDUP_STREAK,
+      title: 'Streak (Todo)',
+      duration: -1,
+    },
+    {
+      name: OverrideProgramName.BUILDUP_BLINK,
+      title: 'Blink (Todo)',
+      duration: -1,
+    },
+    {
+      name: OverrideProgramName.BUILDUP_FADEOUT,
+      title: 'Fadeout',
+      duration: 8,
+    },
+  ];
+
+  protected readonly strobePrograms: Array<{
+    name: OverrideProgramName;
+    title: string;
+    duration: number;
+  }> = [
+    {
+      name: OverrideProgramName.STROBE_FLAT,
+      title: 'Flat',
+      duration: -1,
+    },
+    {
+      name: OverrideProgramName.STROBE_SLOWMO,
+      title: 'Slow',
+      duration: -1,
+    },
+    {
+      name: OverrideProgramName.STROBE_COLOR,
+      title: 'Color',
+      duration: -1,
+    },
+    {
+      name: OverrideProgramName.STROBE_WHITE,
+      title: 'White',
+      duration: -1,
+    },
+    {
+      name: OverrideProgramName.STROBE_STORM,
+      title: 'Storm',
+      duration: -1,
+    },
+    {
+      name: OverrideProgramName.STROBE_SHORT,
+      title: 'Short',
+      duration: 8,
+    },
+  ];
 
   protected readonly visualisation = this.configService.visualisation;
   protected readonly performanceMode = this.configService.performanceMode;

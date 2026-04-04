@@ -9,7 +9,11 @@
     </tr>
   </thead>
   <tbody>
-    @for (channel of device().channels; track channel; let index = $index) {
+    @for (
+      channel of device().channels;
+      track $index + device().address;
+      let index = $index
+    ) {
       <tr>
         <td class="w-10">{{ index + 1 }}</td>
         <td class="w-10">{{ index + device().address }}</td>

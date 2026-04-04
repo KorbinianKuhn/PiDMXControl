@@ -1,3 +1,9 @@
 <div class="container flex min-h-full min-w-full justify-center items-center">
   <router-outlet />
 </div>
+
+@if (!connected()) {
+  <div class="overlay">
+    <span>Waiting for connection...</span>
+  </div>
+}

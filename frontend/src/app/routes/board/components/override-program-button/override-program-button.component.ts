@@ -12,7 +12,7 @@ import { WSService } from '../../../../services/ws.service';
 export class OverrideProgramButtonComponent {
   private wsService = inject(WSService);
 
-  readonly name = input<OverrideProgramName>(); // TODO make required
+  readonly name = input.required<OverrideProgramName>();
   readonly size = input<'small' | 'normal'>('normal');
   readonly color = input<string>('bg-cyan-500');
 

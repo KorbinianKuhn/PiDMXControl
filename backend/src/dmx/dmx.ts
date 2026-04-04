@@ -22,8 +22,8 @@ export class DMX {
 
   private chases = new ChaseRegistry(this.config, this.devices);
 
-  private activeProgram = new Program(this.io, this.clock, this.config, false);
-  private overrideProgram = new Program(this.io, this.clock, this.config, true);
+  private activeProgram = new Program(this.clock, this.config, false);
+  private overrideProgram = new Program(this.clock, this.config, true);
 
   constructor(private io: TypedServer) {}
 

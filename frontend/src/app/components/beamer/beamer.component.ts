@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -16,7 +17,7 @@ import { WSService } from '../../services/ws.service';
   selector: 'app-beamer',
   templateUrl: './beamer.component.html',
   styleUrls: ['./beamer.component.scss'],
-  imports: [MatIconModule],
+  imports: [MatIconModule, NgClass],
 })
 export class BeamerComponent {
   private videoService = inject(VideoService);
@@ -30,6 +31,7 @@ export class BeamerComponent {
 
   private timer!: NodeJS.Timeout;
 
+  protected readonly performanceMode = this.configService.performanceMode;
   protected readonly show = computed(() => {
     if (
       !this.configService.visualisation() ||
@@ -38,26 +40,32 @@ export class BeamerComponent {
       return 'hidden';
     }
 
+    if (this.performanceMode()) {
+      return 'color';
+    }
+
     return this.configService.video() ? 'video' : 'color';
   });
-
   protected readonly video = this.videoService.video;
-
   protected readonly text = this.videoService.text;
-
   protected readonly videoSelected = computed(
     () => this.wsService.visualsSource() > -1,
   );
-
   protected readonly color = computed(
     () => this.wsService.visualsSettings().color,
   );
 
   constructor() {
     effect(() => {
-      if (this.show() === 'video') {
-        this.updateVideo();
+      if (this.show() === 'hidden') {
+        return;
       }
+
+      const _ = this.wsService.visualsSource();
+
+      // TODO: detect changes to video
+
+      this.updateVideo();
     });
   }
 

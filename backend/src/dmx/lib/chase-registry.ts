@@ -1,12 +1,14 @@
 import { Logger } from '../../utils/logger';
+import { createChaseBouncy } from '../chase-builder/chase-bouncy';
 import { createChaseClub } from '../chase-builder/chase-club';
 import { createChaseDark } from '../chase-builder/chase-dark';
+import { createChaseGlow } from '../chase-builder/chase-glow';
 import { createChaseLate } from '../chase-builder/chase-late';
 import { createChaseMagic } from '../chase-builder/chase-magic';
 import { createChaseMirrorBall } from '../chase-builder/chase-mirror-ball';
 import { createChaseMoody } from '../chase-builder/chase-moody';
-import { createChasePride } from '../chase-builder/chase-pride';
 import { createChasePulse } from '../chase-builder/chase-pulse';
+import { createChaseRave } from '../chase-builder/chase-rave';
 import { createChaseRough } from '../chase-builder/chase-rough';
 import { createChaseWild } from '../chase-builder/chase-wild';
 import {
@@ -16,8 +18,10 @@ import {
   createChaseBuildupBright,
   createChaseBuildupFadeout,
   createChaseBuildupStreak,
+  createChaseBuildupTest,
 } from '../chase-builder/override-buildup';
-import { createChaseStrobeDisco } from '../chase-builder/override-disco';
+import { createChaseDisco } from '../chase-builder/override-disco';
+import { createChasePride } from '../chase-builder/override-pride';
 import {
   createChaseDay,
   createChaseFade,
@@ -28,7 +32,8 @@ import {
 import {
   createChaseStrobeColor,
   createChaseStrobeFlash,
-  createChaseStrobePixels,
+  createChaseStrobeFlat,
+  createChaseStrobeShort,
   createChaseStrobeSlowmo,
   createChaseStrobeStorm,
   createChaseStrobeWhite,
@@ -43,7 +48,10 @@ export class ChaseRegistry {
   private chases: Chase[] = [];
   private logger = new Logger('chase-registry');
 
-  constructor(private config: Config, private devices: DeviceRegistry) {
+  constructor(
+    private config: Config,
+    private devices: DeviceRegistry,
+  ) {
     this._createChases();
   }
 
@@ -56,22 +64,31 @@ export class ChaseRegistry {
     this.chases.push(createChaseWhite(this.devices));
     this.chases.push(createChaseWarm(this.devices));
     this.chases.push(createChaseFade(this.devices));
-    this.chases.push(createChaseStrobeDisco(this.devices));
+    this.chases.push(createChasePride(this.devices));
+    this.chases.push(createChaseDisco(this.devices));
+
+    this.chases.push(createChaseStrobeSlowmo(this.devices));
     this.chases.push(createChaseStrobeWhite(this.devices));
+    this.chases.push(createChaseStrobeShort(this.devices));
+    // this.chases.push(createChaseStrobeDots(this.devices));
+    this.chases.push(createChaseStrobeFlat(this.devices));
+    this.chases.push(createChaseBuildupTest(this.devices));
 
     for (const color of Object.values(ChaseColor)) {
       // Chases
       // this.chases.push(createChaseOn(this.devices, color));
-      this.chases.push(createChasePride(this.devices, color));
       this.chases.push(createChaseMirrorBall(this.devices, color));
+      this.chases.push(createChaseGlow(this.devices, color));
       this.chases.push(createChaseMagic(this.devices, color));
       this.chases.push(createChaseMoody(this.devices, color));
+      this.chases.push(createChaseBouncy(this.devices, color));
       this.chases.push(createChaseClub(this.devices, color));
       this.chases.push(createChaseRough(this.devices, color));
       this.chases.push(createChasePulse(this.devices, color));
       this.chases.push(createChaseDark(this.devices, color));
       this.chases.push(createChaseLate(this.devices, color));
       this.chases.push(createChaseWild(this.devices, color));
+      this.chases.push(createChaseRave(this.devices, color));
 
       // Buildups
       this.chases.push(createChaseBuildupBright(this.devices, color));
@@ -83,9 +100,8 @@ export class ChaseRegistry {
 
       // Strobes
       this.chases.push(createChaseStrobeFlash(this.devices, color));
-      this.chases.push(createChaseStrobeSlowmo(this.devices, color));
       this.chases.push(createChaseStrobeColor(this.devices, color));
-      this.chases.push(createChaseStrobePixels(this.devices, color));
+      // this.chases.push(createChaseStrobePixels(this.devices, color));
       this.chases.push(createChaseStrobeStorm(this.devices, color));
     }
 

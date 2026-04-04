@@ -9,7 +9,7 @@
       class="flex flex-col"
     >
       <mat-radio-button [value]="-1" color="primary">None</mat-radio-button>
-      @for (source of visuals().sources; track source; let index = $index) {
+      @for (source of visuals().sources; track $index; let index = $index) {
         <mat-radio-button [value]="index" color="primary">{{
           source.url.replace(".mp4", "").replaceAll("-", " ") | titlecase
         }}</mat-radio-button>

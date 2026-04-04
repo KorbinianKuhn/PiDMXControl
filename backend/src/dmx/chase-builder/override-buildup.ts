@@ -297,3 +297,42 @@ export const createChaseBuildupBeam = (
 
   return chase;
 };
+
+export const createChaseBuildupTest = (devices: DeviceRegistry): Chase => {
+  const chase = new Chase(OverrideProgramName.BUILDUP_TEST, true);
+
+  const steps: ChannelAnimation = [];
+
+  const { bar } = devices.object();
+
+  const color = { master: 255, w: 255 };
+
+  const a = bar.state({ segments: [2, 5], ...color });
+  const b = bar.state({ segments: [1, 6], ...color });
+
+  const one = bar.state({ segments: [0, 7], ...color });
+  const two = bar.state({ segments: [1, 6], ...color });
+  const three = bar.state({ segments: [2, 5], ...color });
+  const four = bar.state({ segments: [3, 4], ...color });
+
+  steps.push(a);
+  steps.push(a);
+  steps.push(a);
+  steps.push([]);
+  steps.push(b);
+  steps.push(b);
+  steps.push(b);
+  steps.push([]);
+  steps.push(one);
+  steps.push([]);
+  steps.push(two);
+  steps.push([]);
+  steps.push(three);
+  steps.push([]);
+  steps.push(four);
+  steps.push([]);
+
+  chase.addSteps(steps);
+
+  return chase;
+};

@@ -17,6 +17,8 @@ import {
 export class WSService {
   private socket!: Socket<ServerToClientEvents, ClientToServerEvents>;
 
+  public readonly connected = signal(false);
+
   public readonly bpm = signal<number>(128);
   public readonly tick = signal<number>(0);
   public readonly black = signal<boolean>(false);
@@ -87,6 +89,13 @@ export class WSService {
   }
 
   registerEvents() {
+    this.socket.on('connect', () => {
+      this.connected.set(true);
+    });
+    this.socket.on('disconnect', () => {
+      this.connected.set(false);
+    });
+
     this.socket.on('bpm:updated', (data) => {
       this.bpm.set(data.value);
     });

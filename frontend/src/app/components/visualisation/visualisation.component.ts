@@ -15,6 +15,7 @@ import {
   combineLatest,
   filter,
   interval,
+  map,
   throttle,
   throttleTime,
 } from 'rxjs';
@@ -54,21 +55,22 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
       toObservable(this.mqttService.neopixelB),
     ]).pipe(
       filter(([visible]) => visible),
-      throttle(() => interval(this.configService.performanceMode() ? 100 : 0)),
+      throttle(() => interval(this.configService.performanceMode() ? 250 : 0)),
       throttleTime(0, animationFrameScheduler),
+      map(([_, dmx, neopixelA, neopixelB]) => ({ dmx, neopixelA, neopixelB })),
     ),
   );
 
   constructor() {
     effect(() => {
-      this.interval();
+      const values = this.interval();
 
-      const dmx = this.mqttService.dmx();
-      const neopixelA = this.mqttService.neopixelA();
-      const neopixelB = this.mqttService.neopixelB();
+      if (!values) {
+        return;
+      }
 
-      this.redraw(dmx);
-      this.redrawNeopixel([...neopixelA, ...neopixelB]);
+      this.redraw(values.dmx);
+      this.redrawNeopixel([...values.neopixelA, ...values.neopixelB]);
     });
   }
 
@@ -122,7 +124,25 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
     this.updateNeopixelStrip(300 - 60, 20, message.slice(150 * 4, 2 * 150 * 4));
   }
 
+  private strobeMultiplier(strobe: number) {
+    if (strobe === 0 || strobe === 255) {
+      return 1;
+    }
+
+    // Map strobe 0–255 → speed 0.02–1
+    const minSpeed = 0.02; // minimum oscillation
+    const maxSpeed = 1; // max oscillation
+    const speed = minSpeed + (strobe / 255) * (maxSpeed - minSpeed);
+
+    // Sine wave -1..1 → 0..1
+    const phase = (Math.sin(Date.now() * speed * 0.05) + 1) / 2;
+
+    // Use 50% threshold
+    return phase > 0.5 ? 1 : 0;
+  }
+
   updateHeroWash(x: number, y: number, address: number, data: number[]) {
+    // TODO: draw animation position
     const [
       pan,
       panFine,
@@ -139,7 +159,8 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
       uv,
     ] = data.slice(address, address + 16);
 
-    const color = this.colorService.toRGB(master, r, g, b, w, a, uv);
+    const masterWithStrobe = this.strobeMultiplier(strobe) * master;
+    const color = this.colorService.toRGB(masterWithStrobe, r, g, b, w, a, uv);
 
     const ctx = this.context;
 
@@ -147,7 +168,6 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
     ctx.fillRect(x, y, 40, 40);
 
     ctx.fillStyle = color;
-
     ctx.beginPath();
     ctx.arc(x + 20, y + 20, 16, 0, 2 * Math.PI);
     ctx.fill();
@@ -164,13 +184,14 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
       address,
       address + 9,
     );
+    const masterWithStrobe = this.strobeMultiplier(strobe) * master;
 
     const radius = 8;
     const margin = 4;
     const width = radius * 6 + margin * 4;
     const height = radius * 2 + margin * 2;
 
-    const color = this.colorService.toRGB(master, r, g, b, w, a, uv);
+    const color = this.colorService.toRGB(masterWithStrobe, r, g, b, w, a, uv);
 
     const ctx = this.context;
 
@@ -210,12 +231,26 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
     ctx.fillStyle = this.bgColor;
     ctx.fillRect(x, y, width, height);
 
+    let strobeMultiplier = 1;
     for (let i = 0; i < 8; i++) {
       const [master, strobe, r, g, b] = data.slice(
         address + i * 6,
         address + i * 6 + 6,
       );
-      const color = this.colorService.toRGB(master, r, g, b, 0, 0, 0);
+
+      if (i === 0) {
+        strobeMultiplier = this.strobeMultiplier(strobe);
+      }
+
+      const color = this.colorService.toRGB(
+        master * strobeMultiplier,
+        r,
+        g,
+        b,
+        0,
+        0,
+        0,
+      );
 
       const posX = x + margin + i * (margin + segmentWidth);
 
@@ -229,7 +264,16 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
       address,
       address + 9,
     );
-    const color = this.colorService.toRGB(255, r, g, b, w, a, uv);
+    const strobeMultiplier = this.strobeMultiplier(strobe);
+    const color = this.colorService.toRGB(
+      255,
+      r * strobeMultiplier,
+      g * strobeMultiplier,
+      b * strobeMultiplier,
+      w * strobeMultiplier,
+      a * strobeMultiplier,
+      uv * strobeMultiplier,
+    );
 
     const ctx = this.context;
 
@@ -244,7 +288,8 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
 
   updateSpot(x: number, y: number, address: number, data: number[]) {
     const [strobe, r, g, b, w, master] = data.slice(address, address + 6);
-    const color = this.colorService.toRGB(master, r, g, b, w, 0, 0);
+    const masterWithStrobe = this.strobeMultiplier(strobe) * master;
+    const color = this.colorService.toRGB(masterWithStrobe, r, g, b, w, 0, 0);
 
     const ctx = this.context;
 

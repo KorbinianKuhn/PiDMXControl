@@ -12,7 +12,7 @@
     [class.opacity-70]="!active()"
     [class.animate-pulse]="!performanceMode() && current()"
   ></div>
-  <div class="relative flex justify-center items-center">
+  <div class="relative flex justify-center items-center tracking-wide text-xs">
     <ng-content />
   </div>
   @if (!performanceMode() && current() && progress() !== undefined) {

@@ -1,70 +1,87 @@
 <div class="flex flex-wrap items-center" tabindex="0">
-  <app-panel-group>
-    <div class="flex flex-col">
-      <div class="flex justify-center">
+  <div class="flex flex-col flex-wrap">
+    <app-panel-group label="Current">
+      <div class="flex justify-center flex-1">
         <app-bpm-number />
       </div>
-      <div class="flex">
-        <mat-slider [min]="60" [max]="240" [step]="0.5" discrete>
-          <input
-            matSliderThumb
-            [value]="bpm()"
-            (dragEnd)="onSliderChange($event)"
-          />
-        </mat-slider>
-      </div>
+    </app-panel-group>
 
-      <div class="flex justify-between mt-2">
-        <app-pad-button
-          size="small"
-          color="bg-gray-900"
-          (click)="onChangeValue(-2)"
-          class="mr-1"
-          >--</app-pad-button
-        >
-        <app-pad-button
-          size="small"
-          color="bg-gray-900"
-          (click)="onChangeValue(-1)"
-          class="mr-1"
-          >-</app-pad-button
-        >
-        <app-pad-button
-          size="small"
-          color="bg-gray-900"
-          (click)="onChangeValue(1)"
-          class="mr-1"
-          >+</app-pad-button
-        >
-        <app-pad-button
-          size="small"
-          color="bg-gray-900"
-          (click)="onChangeValue(2)"
-          >++</app-pad-button
-        >
-      </div>
+    <app-panel-group label="Manual">
+      <div class="flex flex-col">
+        <div class="flex justify-between mt-2">
+          <app-pad-button
+            size="small"
+            color="bg-gray-900"
+            (click)="onChangeValue(-2)"
+            class="mr-1"
+            >--</app-pad-button
+          >
+          <app-pad-button
+            size="small"
+            color="bg-gray-900"
+            (click)="onChangeValue(-1)"
+            class="mr-1"
+            >-</app-pad-button
+          >
+          <app-pad-button
+            size="small"
+            color="bg-gray-900"
+            (click)="onChangeValue(1)"
+            class="mr-1"
+            >+</app-pad-button
+          >
+          <app-pad-button
+            size="small"
+            color="bg-gray-900"
+            (click)="onChangeValue(2)"
+            >++</app-pad-button
+          >
+        </div>
 
-      <div class="flex justify-between mt-2">
-        <app-pad-button
-          color="bg-gray-900"
-          [active]="true"
-          (click)="onClickStart()"
-          class="mr-1"
-          >Start</app-pad-button
-        >
-        <app-pad-button
-          color="bg-gray-900"
-          (click)="onClickRound()"
-          class="mr-1"
-          >Round</app-pad-button
-        >
-        <app-pad-button
-          color="bg-gray-900"
-          [active]="true"
-          (click)="onClickTap()"
-          >Tap</app-pad-button
-        >
+        <div class="flex mt-2">
+          <mat-slider [min]="60" [max]="240" [step]="0.5" discrete>
+            <input
+              matSliderThumb
+              [value]="bpm()"
+              (dragEnd)="onSliderChange($event)"
+            />
+          </mat-slider>
+        </div>
+
+        <div class="flex justify-between mt-2">
+          <app-pad-button
+            color="bg-gray-900"
+            [active]="true"
+            (click)="onClickStart()"
+            class="mr-1"
+            >Start</app-pad-button
+          >
+          <app-pad-button
+            color="bg-gray-900"
+            (click)="onClickRound()"
+            class="mr-1"
+            >Round</app-pad-button
+          >
+          <app-pad-button
+            color="bg-gray-900"
+            [active]="true"
+            (click)="onClickTap()"
+            >Tap</app-pad-button
+          >
+        </div>
       </div>
-    </div>
+    </app-panel-group>
+  </div>
+
+  <app-panel-group label="Presets" style="max-width: 140px">
+    @for (preset of presets; track preset) {
+      <app-pad-button
+        size="small"
+        [color]="preset === bpm() ? 'bg-cyan-900' : 'bg-gray-900'"
+        class="m-1"
+        (click)="onClickPreset(preset)"
+        >{{ preset }}</app-pad-button
+      >
+    }
   </app-panel-group>
 </div>

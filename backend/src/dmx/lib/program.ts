@@ -1,4 +1,3 @@
-import { TypedServer } from '../../server/events.interfaces';
 import { Logger } from '../../utils/logger';
 import { Chase } from './chase';
 import { Clock } from './clock';
@@ -10,33 +9,40 @@ export enum OverrideProgramName {
   FADE = 'fade',
   WHITE = 'white',
   WARM = 'warm',
+  PRIDE = 'pride',
+  DISCO = 'disco',
   BUILDUP_BRIGHT = 'buildup-bright',
   BUILDUP_FADEOUT = 'buildup-fadeout',
   BUILDUP_BEAM = 'buildup-beam',
   BUILDUP_BLINDER = 'buildup-blinder',
   BUILDUP_STREAK = 'buildup-streak',
   BUILDUP_BLINK = 'buildup-blink',
+  BUILDUP_TEST = 'buildup-test',
   STROBE_FLASH = 'strobe-flash',
   STROBE_SLOWMO = 'strobe-slowmo',
   STROBE_COLOR = 'strobe-color',
   STROBE_WHITE = 'strobe-white',
   STROBE_PIXELS = 'strobe-pixels',
-  STROBE_DISCO = 'strobe-disco',
   STROBE_STORM = 'strobe-storm',
+  STROBE_SHORT = 'strobe-short',
+  STROBE_DOTS = 'strobe-dots',
+  STROBE_FLAT = 'strobe-flat',
 }
 
 export enum ActiveProgramName {
   ON = 'on',
-  PRIDE = 'pride',
   MIRROR_BALL = 'mirror-ball',
+  GLOW = 'glow',
   MAGIC = 'magic',
   MOODY = 'moody',
+  BOUNCY = 'bouncy',
   CLUB = 'club',
   ROUGH = 'rough',
   PULSE = 'pulse',
   DARK = 'dark',
   LATE = 'late',
   WILD = 'wild',
+  RAVE = 'rave',
 }
 
 export class Program {
@@ -51,7 +57,6 @@ export class Program {
   }
 
   constructor(
-    private io: TypedServer,
     private clock: Clock,
     private config: Config,
     private isOverride: boolean,
@@ -73,7 +78,7 @@ export class Program {
       const chase = this.chases[this.chaseIndex];
 
       if (this.stepIndex >= chase.length - 1) {
-        if (!this.chases[this.chaseIndex].loop) {
+        if (this.isOverride && !this.chases[this.chaseIndex].loop) {
           this.config.setOverrideProgram(null);
         }
 
@@ -92,6 +97,10 @@ export class Program {
     try {
       if (this.chases.length === 0) {
         return;
+      }
+
+      if (this.chaseIndex >= this.chases.length) {
+        this.chaseIndex = 0;
       }
 
       const chase = this.chases[this.chaseIndex];

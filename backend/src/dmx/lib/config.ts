@@ -25,7 +25,6 @@ interface ConfigStore {
   black: boolean;
   master: number;
   ambientUV: number;
-  overrideProgram: OverrideProgramName;
   activeProgram: ActiveProgramName;
   activeColors: ChaseColor[];
   devices: DeviceConfig[];
@@ -81,6 +80,7 @@ export class Config {
 
   constructor(private io: TypedServer) {
     this._readConfigFromFile();
+
     this.store$.pipe(debounceTime(5000)).subscribe(() => this._saveToFile());
 
     this.scanVisualSources();
@@ -92,7 +92,6 @@ export class Config {
       black: this.black,
       master: this.master,
       ambientUV: this.ambientUV,
-      overrideProgram: this.overrideProgram,
       activeProgram: this.activeProgram,
       activeColors: this.activeColors,
       devices: this.devices,
@@ -113,10 +112,9 @@ export class Config {
       bpm: 128,
       black: false,
       master: 1,
-      ambientUV: 1,
-      overrideProgram: null,
+      ambientUV: 0,
       activeProgram: ActiveProgramName.MIRROR_BALL,
-      activeColors: [ChaseColor.BLUE_EMERALD],
+      activeColors: Object.values(ChaseColor),
       devices: [],
       visuals: {
         left: 0,
@@ -136,14 +134,20 @@ export class Config {
       }
     }
 
-    this.bpm = config.bpm;
-    this.black = config.black;
-    this.master = config.master;
-    this.ambientUV = config.ambientUV;
-    this.overrideProgram = config.overrideProgram;
-    this.activeProgram = config.activeProgram;
-    this.activeColors = config.activeColors;
+    // TODO: check init order
+    this.setBpm(config.bpm);
+    this.setBlack(config.black);
+    this.setMaster(config.master);
+    this.setAmbientUV(config.ambientUV);
+    this.setActiveColors(config.activeColors);
+    this.setOverrideProgram(null);
+    this.setActiveProgram(config.activeProgram);
+    this.setActiveColors(config.activeColors);
+
     this.devices = config.devices;
+
+    // TODO: save visual settings
+
     this.visuals.left = config.visuals?.left;
     this.visuals.right = config.visuals?.right;
     this.visuals.top = config.visuals?.top;
@@ -186,7 +190,6 @@ export class Config {
   setActiveProgram(value: ActiveProgramName) {
     this.activeProgram = value;
     this.io.emit('active-program:updated', { value });
-    this.store$.next();
   }
 
   setActiveColors(colors: ChaseColor[]) {
