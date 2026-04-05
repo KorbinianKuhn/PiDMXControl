@@ -1,6 +1,6 @@
-import { Injectable, signal } from '@angular/core';
-import { Socket, io } from 'socket.io-client';
-import { environment } from '../../environments/environment';
+import { inject, Injectable, signal } from '@angular/core';
+import { io, Socket } from 'socket.io-client';
+import { EnvService } from './env.service';
 import {
   ActiveProgramName,
   ChaseColor,
@@ -15,6 +15,8 @@ import {
   providedIn: 'root',
 })
 export class WSService {
+  private envService = inject(EnvService);
+
   private socket!: Socket<ServerToClientEvents, ClientToServerEvents>;
 
   public readonly connected = signal(false);
@@ -61,17 +63,29 @@ export class WSService {
     bottom: 0,
   });
 
+  private getWsUrl(): {
+    url: string;
+    path: string;
+  } {
+    const url = this.envService.baseRestApi.replace('http://', '');
+
+    const [hostname, ...paths] = url.split('/');
+    const path = '/' + [...paths, 'socket.io'].join('/');
+
+    return {
+      url: `ws://${hostname}`,
+      path,
+    };
+  }
+
   constructor() {
     this.createSocket();
   }
 
   private createSocket() {
-    const url = environment.baseRestApi.replace('http://', '');
+    const { url, path } = this.getWsUrl();
 
-    const [hostname, ...paths] = url.split('/');
-    const path = '/' + [...paths, 'socket.io'].join('/');
-
-    this.socket = io(`ws://${hostname}`, {
+    this.socket = io(url, {
       autoConnect: false,
       path,
     });
@@ -80,19 +94,18 @@ export class WSService {
   }
 
   connect() {
-    // Connect
+    const { url } = this.getWsUrl();
+    console.log(`ws connect: ${url}`);
     this.socket.connect();
-  }
-
-  async disconnect() {
-    this.socket.disconnect();
   }
 
   registerEvents() {
     this.socket.on('connect', () => {
+      console.log('ws connected');
       this.connected.set(true);
     });
     this.socket.on('disconnect', () => {
+      console.log('ws disconnected');
       this.connected.set(false);
     });
 

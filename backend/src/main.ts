@@ -1,9 +1,9 @@
 import cors from 'cors';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { createServer } from 'http';
-import { join } from 'path';
 import { Server } from 'socket.io';
 import { DMX } from './dmx/dmx';
+import { STATIC_DIRECTORY } from './env';
 import {
   ClientToServerEvents,
   ServerToClientEvents,
@@ -23,7 +23,11 @@ const main = async () => {
     }),
   );
 
-  app.use('/static', express.static(join(__dirname, '..', 'static')));
+  app.use('/static', express.static(STATIC_DIRECTORY));
+
+  app.get('/ping', (req: Request, res: Response) => {
+    res.status(200).send();
+  });
 
   const httpServer = createServer(app);
 

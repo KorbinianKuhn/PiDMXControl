@@ -1,21 +1,18 @@
 import {
   AfterViewInit,
   Component,
+  DestroyRef,
   ElementRef,
-  OnDestroy,
-  effect,
   inject,
   viewChild,
 } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import {
-  Subject,
   animationFrameScheduler,
   combineLatest,
   filter,
   interval,
-  map,
   throttle,
   throttleTime,
 } from 'rxjs';
@@ -30,16 +27,17 @@ import { BeamerComponent } from '../beamer/beamer.component';
   styleUrls: ['./visualisation.component.scss'],
   imports: [BeamerComponent, MatIconModule],
 })
-export class VisualisationComponent implements AfterViewInit, OnDestroy {
+export class VisualisationComponent implements AfterViewInit {
   private colorService = inject(ColorService);
   private mqttService = inject(MqttService);
   private configService = inject(ConfigService);
+  private destroyRef = inject(DestroyRef);
 
   readonly canvas = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
 
-  private destroy$$ = new Subject<void>();
   private bgColor = '#111827';
 
+  protected readonly mqttConnected = this.mqttService.connected;
   protected readonly visualisation = this.configService.visualisation;
   protected readonly video = this.configService.video;
 
@@ -47,32 +45,16 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
     return this.canvas().nativeElement.getContext('2d', { alpha: false })!;
   }
 
-  private interval = toSignal(
-    combineLatest([
-      toObservable(this.configService.visualisation),
-      toObservable(this.mqttService.dmx),
-      toObservable(this.mqttService.neopixelA),
-      toObservable(this.mqttService.neopixelB),
-    ]).pipe(
-      filter(([visible]) => visible),
-      throttle(() => interval(this.configService.performanceMode() ? 250 : 0)),
-      throttleTime(0, animationFrameScheduler),
-      map(([_, dmx, neopixelA, neopixelB]) => ({ dmx, neopixelA, neopixelB })),
-    ),
+  private interval = combineLatest([
+    toObservable(this.configService.visualisation),
+    toObservable(this.mqttService.dmx),
+    toObservable(this.mqttService.neopixelA),
+    toObservable(this.mqttService.neopixelB),
+  ]).pipe(
+    filter(([visible]) => visible),
+    throttle(() => interval(this.configService.performanceMode() ? 250 : 0)),
+    throttleTime(0, animationFrameScheduler),
   );
-
-  constructor() {
-    effect(() => {
-      const values = this.interval();
-
-      if (!values) {
-        return;
-      }
-
-      this.redraw(values.dmx);
-      this.redrawNeopixel([...values.neopixelA, ...values.neopixelB]);
-    });
-  }
 
   ngAfterViewInit() {
     const canvas = this.canvas().nativeElement;
@@ -86,10 +68,13 @@ export class VisualisationComponent implements AfterViewInit, OnDestroy {
 
     canvas.style.width = `${rect.width}px`;
     canvas.style.height = `${rect.height}px`;
-  }
 
-  ngOnDestroy(): void {
-    this.destroy$$.next();
+    this.interval
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(([_, dmx, neopixelA, neopixelB]) => {
+        this.redraw(dmx);
+        this.redrawNeopixel([...neopixelA, ...neopixelB]);
+      });
   }
 
   onClick() {

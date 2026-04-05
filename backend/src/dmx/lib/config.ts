@@ -2,14 +2,15 @@ import { existsSync, readFileSync } from 'fs';
 import { readdir, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { BehaviorSubject, Subject, debounceTime } from 'rxjs';
+import { STATIC_DIRECTORY } from '../../env';
 import { TypedServer } from '../../server/events.interfaces';
 import { Logger } from '../../utils/logger';
 import { ChaseColor } from './chase';
 import { Device } from './device';
 import { ActiveProgramName, OverrideProgramName } from './program';
 
-const CONFIG_PATH = join(__dirname, '../../..', 'static/config.json');
-const VISUALS_PATH = join(__dirname, '../../..', 'static/visuals');
+const CONFIG_PATH = join(STATIC_DIRECTORY, 'config.json');
+const VISUALS_PATH = join(STATIC_DIRECTORY, 'visuals');
 
 export interface DeviceConfig {
   id: string;
@@ -130,11 +131,12 @@ export class Config {
         const savedConfig = JSON.parse(content) as ConfigStore;
         config = { ...config, ...savedConfig };
       } catch (error) {
-        this.logger.error('Error reading config file', error);
+        this.logger.warn(
+          'Error reading config file. Creating new default config.',
+        );
       }
     }
 
-    // TODO: check init order
     this.setBpm(config.bpm);
     this.setBlack(config.black);
     this.setMaster(config.master);

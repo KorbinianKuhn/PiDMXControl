@@ -27,7 +27,7 @@ export class BeamerComponent {
   readonly id = input.required<string>();
 
   private readonly videoElement =
-    viewChild.required<ElementRef<HTMLVideoElement>>('videoElement');
+    viewChild<ElementRef<HTMLVideoElement>>('videoElement');
 
   private timer!: NodeJS.Timeout;
 
@@ -61,31 +61,18 @@ export class BeamerComponent {
         return;
       }
 
+      const videoElement = this.videoElement();
+      if (!videoElement) {
+        return;
+      }
+
       const _ = this.wsService.visualsSource();
 
-      // TODO: detect changes to video
-
-      this.updateVideo();
+      this.videoService.setVideoElement(videoElement.nativeElement);
     });
   }
 
-  updateVideo() {
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
-
-    this.timer = setInterval(() => {
-      const videoElement = this.videoElement();
-      if (videoElement?.nativeElement) {
-        this.videoService.setVideoElement(videoElement.nativeElement);
-        clearInterval(this.timer);
-      }
-    }, 50);
-  }
-
-  onLoadedMetadata() {
-    this.videoService.onVideoElementMetadataLoaded(
-      this.videoElement().nativeElement,
-    );
+  onLoadedMetadata(videoElement: HTMLVideoElement) {
+    this.videoService.onVideoElementMetadataLoaded(videoElement);
   }
 }

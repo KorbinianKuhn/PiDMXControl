@@ -5,10 +5,23 @@
       <th>Addr</th>
       <th>Type</th>
       <th>Value</th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td>-</td>
+      <td>-</td>
+      <td>override</td>
+      <td>
+        <button
+          class="px-4 py-2 rounded-sm"
+          [ngClass]="enabled() ? 'bg-cyan-500' : 'bg-gray-900'"
+          (click)="onToggle()"
+        >
+          {{ enabled() ? "On" : "Off" }}
+        </button>
+      </td>
+    </tr>
     @for (
       channel of device().channels;
       track $index + device().address;

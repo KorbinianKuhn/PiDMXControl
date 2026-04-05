@@ -1,19 +1,16 @@
-# build
+FROM node:24-alpine AS builder
 
-FROM node:24 AS node
-
-WORKDIR /usr/src/app
-
-COPY package*.json ./
-
-RUN npm ci
+WORKDIR /app
 
 COPY . .
 
-RUN npm run build
+RUN npm ci
+RUN npm run build:docker
 
-# runtime
+FROM nginx:latest
 
-FROM nginx:alpine
-COPY --from=node /usr/src/app/dist/dmx-frontend/browser /usr/share/nginx/html
-COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY --from=builder /app/dist/dmx-frontend/browser /usr/share/nginx/html
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx.sh /nginx.sh
+
+ENTRYPOINT ["bash", "./nginx.sh"]

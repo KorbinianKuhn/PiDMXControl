@@ -1,17 +1,36 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import mqtt from 'mqtt';
-import { environment } from '../../environments/environment';
+import { EnvService } from './env.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MqttService {
-  public dmx = signal<number[]>([]);
-  public neopixelA = signal<number[]>([]);
-  public neopixelB = signal<number[]>([]);
+  private envService = inject(EnvService);
 
-  async connect() {
-    const client = await mqtt.connectAsync(environment.mqttWsUrl);
+  public readonly dmx = signal<number[]>([]);
+  public readonly neopixelA = signal<number[]>([]);
+  public readonly neopixelB = signal<number[]>([]);
+
+  public readonly connected = signal(false);
+
+  connect() {
+    console.log(`mqtt connect: ${this.envService.mqttWsUrl}`);
+    const client = mqtt.connect(this.envService.mqttWsUrl);
+
+    client.on('connect', () => {
+      this.connected.set(true);
+      console.log(`mqtt connected`);
+    });
+
+    client.on('disconnect', () => {
+      this.connected.set(false);
+      console.log(`mqtt disconnected`);
+    });
+
+    client.on('error', (err) => {
+      console.log(`mqtt error`, err);
+    });
 
     client.on('message', (topic, message) => {
       switch (topic) {

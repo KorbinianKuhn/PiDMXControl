@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { MatIconRegistry } from '@angular/material/icon';
+import { MatIcon, MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import { MqttService } from './services/mqtt.service';
@@ -21,7 +21,7 @@ const ICONS = [
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, MatIcon],
 })
 export class AppComponent {
   private wsService = inject(WSService);
@@ -29,7 +29,7 @@ export class AppComponent {
   private matIconRegistry = inject(MatIconRegistry);
   private domSanitizer = inject(DomSanitizer);
 
-  public readonly connected = this.wsService.connected;
+  protected readonly wsConnected = this.wsService.connected;
 
   constructor() {
     ICONS.map((o) =>
@@ -43,5 +43,9 @@ export class AppComponent {
 
     this.wsService.connect();
     this.mqttService.connect();
+  }
+
+  onRefreshClick() {
+    location.reload();
   }
 }

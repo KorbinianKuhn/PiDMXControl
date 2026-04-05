@@ -16,7 +16,10 @@ export class BpmComponent {
   private wsService = inject(WSService);
 
   onClick() {
-    this.matDialog.open(BpmModalComponent);
+    this.matDialog.open(BpmModalComponent, {
+      panelClass: 'custom-dialog',
+      backdropClass: 'custom-backdrop',
+    });
   }
 
   onClickStart() {

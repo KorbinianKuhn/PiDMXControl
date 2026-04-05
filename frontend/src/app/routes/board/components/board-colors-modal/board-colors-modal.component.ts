@@ -1,4 +1,5 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, HostListener, inject } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { PadButtonComponent } from '../../../../components/pad-button/pad-button.component';
 import { PanelGroupComponent } from '../../../../components/panel-group/panel-group.component';
 import { ToggleButtonComponent } from '../../../../components/toggle-button/toggle-button.component';
@@ -89,6 +90,7 @@ export const COLORS_TO_DARKER: { [key: string]: string } = {
 })
 export class BoardColorsModalComponent {
   private wsService = inject(WSService);
+  private dialogRef = inject(MatDialogRef<BoardColorsModalComponent>);
 
   private readonly allColors = Object.values(ChaseColor);
   private readonly activeColors = this.wsService.activeColors;
@@ -134,11 +136,8 @@ export class BoardColorsModalComponent {
     }));
   });
 
-  isColorActive(color: ChaseColor) {
-    return this.activeColors().includes(color);
-  }
-
-  onClickToggleColor(color: ChaseColor) {
+  onClickToggleColor(event: MouseEvent, color: ChaseColor) {
+    event.stopImmediatePropagation();
     const colors = this.activeColors()!;
     const index = colors.indexOf(color);
     if (index === -1) {
@@ -149,7 +148,8 @@ export class BoardColorsModalComponent {
     this.wsService.setColors(colors);
   }
 
-  onClickToggleFilter(color: string) {
+  onClickToggleFilter(event: MouseEvent, color: string) {
+    event.stopImmediatePropagation();
     const active = this.isFilterActive(color);
     const affectedColors = this.allColors.filter((o) => o.includes(color));
     if (active) {
@@ -165,7 +165,13 @@ export class BoardColorsModalComponent {
     }
   }
 
-  onClickSwitch(on: boolean) {
+  onClickSwitch(event: MouseEvent, on: boolean) {
+    event.stopImmediatePropagation();
     this.wsService.setColors(on ? this.allColors : []);
+  }
+
+  @HostListener('click')
+  onComponentClick() {
+    this.dialogRef.close();
   }
 }

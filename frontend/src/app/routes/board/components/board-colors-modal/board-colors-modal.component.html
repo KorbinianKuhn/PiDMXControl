@@ -4,7 +4,7 @@
       [color]="button.gradient"
       class="m-1"
       [active]="button.active"
-      (click)="onClickToggleColor(button.color)"
+      (click)="onClickToggleColor($event, button.color)"
       [current]="button.current"
       [progress]="current().progress"
     >
@@ -17,7 +17,7 @@
   <app-toggle-button
     [active]="allOn()"
     class="m-1"
-    (click)="onClickSwitch(true)"
+    (click)="onClickSwitch($event, true)"
     colorOn="bg-cyan-500"
   >
     On
@@ -26,7 +26,7 @@
   <app-toggle-button
     [active]="allOff()"
     class="m-1"
-    (click)="onClickSwitch(false)"
+    (click)="onClickSwitch($event, false)"
     colorOn="bg-cyan-500"
   >
     Off
@@ -40,7 +40,7 @@
       size="small"
       class="m-1"
       [active]="button.active"
-      (click)="onClickToggleFilter(button.color)"
+      (click)="onClickToggleFilter($event, button.color)"
     >
       <span>{{ button.color }}</span>
     </app-pad-button>

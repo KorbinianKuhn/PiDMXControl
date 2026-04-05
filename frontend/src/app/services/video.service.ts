@@ -1,8 +1,8 @@
 import { Injectable, computed, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { combineLatest, filter, interval, map } from 'rxjs';
-import { environment } from '../../environments/environment';
 import { ColorService } from './color.service';
+import { EnvService } from './env.service';
 import { MqttService } from './mqtt.service';
 import { WSService } from './ws.service';
 
@@ -28,6 +28,7 @@ export class VideoService {
   private wsService = inject(WSService);
   private colorService = inject(ColorService);
   private mqttService = inject(MqttService);
+  private envService = inject(EnvService);
 
   private address = 146;
   private numChannels = 5;
@@ -89,7 +90,7 @@ export class VideoService {
     if (visuals.currentIndex < 0) {
       element.removeAttribute('src');
     } else {
-      const src = `${environment.baseRestApi}/static/visuals/${
+      const src = `${this.envService.baseRestApi}/static/visuals/${
         visuals.sources[visuals.currentIndex].url
       }`;
       element.setAttribute('src', src);

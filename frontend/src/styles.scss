@@ -80,6 +80,10 @@ $dmx-frontend-theme: mat.m2-define-dark-theme(
 // that you are using.
 @include mat.all-component-themes($dmx-frontend-theme);
 
+:root {
+  --mat-sys-surface: #000;
+}
+
 button {
   touch-action: manipulation;
 }
@@ -153,6 +157,19 @@ body {
 
 .mdc-icon-button {
   display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-dialog {
+}
+
+.custom-backdrop {
+  background: #000;
+}
+
+.mdc-dialog__surface {
+  display: flex;
   justify-content: center;
   align-items: center;
 }

@@ -2,8 +2,11 @@
   <router-outlet />
 </div>
 
-@if (!connected()) {
+@if (!wsConnected()) {
   <div class="overlay">
     <span>Waiting for connection...</span>
+    <button mat-icon-button (click)="onRefreshClick()">
+      <mat-icon svgIcon="refresh" />
+    </button>
   </div>
 }

@@ -1,11 +1,11 @@
 import { throttleTime } from 'rxjs';
+import { SEND_DATA, UART_SERIAL } from '../env';
 import { TypedServer } from '../server/events.interfaces';
 import { ChaseColor } from './lib/chase';
 import { ChaseRegistry } from './lib/chase-registry';
 import { Clock } from './lib/clock';
 import { Config } from './lib/config';
 import { DeviceRegistry } from './lib/device-registry';
-import { SEND_DATA, UART_SERIAL } from './lib/env';
 import { MQTT } from './lib/mqtt/mqtt';
 import { ActiveProgramName, OverrideProgramName, Program } from './lib/program';
 import { DummySerial } from './lib/serial/dummy-serial';

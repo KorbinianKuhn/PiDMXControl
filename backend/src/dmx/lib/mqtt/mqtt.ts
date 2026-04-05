@@ -1,5 +1,5 @@
 import mqtt from 'mqtt';
-import { MQTT_HOST } from '../env';
+import { MQTT_HOST } from '../../../env';
 
 export class MQTT {
   private client: mqtt.MqttClient;

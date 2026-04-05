@@ -30,13 +30,12 @@
           >
         </app-pad-button>
 
-        <!-- TODO: expression has been changed (when selection no video) -->
         <app-pad-button
           class="m-1"
           size="small"
           color="bg-cyan-500"
-          [active]="visualsSettings().currentIndex > -1"
-          [current]="visualsSettings().currentIndex > -1"
+          [active]="isVideoActive()"
+          [current]="isVideoActive()"
           (click)="onClickOpenVisualsModal()"
         >
           <span class="text-xs">Video</span>

@@ -141,9 +141,14 @@ export class BoardComponent {
     title: string;
   }> = [
     {
-      name: OverrideProgramName.BUILDUP_BRIGHT,
-      title: 'Bright (Todo)',
-      duration: 8,
+      name: OverrideProgramName.BUILDUP_STREAK,
+      title: 'Streak',
+      duration: -1,
+    },
+    {
+      name: OverrideProgramName.BUILDUP_BLINK,
+      title: 'Blink',
+      duration: -1,
     },
     {
       name: OverrideProgramName.BUILDUP_BEAM,
@@ -156,14 +161,9 @@ export class BoardComponent {
       duration: -1,
     },
     {
-      name: OverrideProgramName.BUILDUP_STREAK,
-      title: 'Streak (Todo)',
-      duration: -1,
-    },
-    {
-      name: OverrideProgramName.BUILDUP_BLINK,
-      title: 'Blink (Todo)',
-      duration: -1,
+      name: OverrideProgramName.BUILDUP_BRIGHT,
+      title: 'Bright',
+      duration: 8,
     },
     {
       name: OverrideProgramName.BUILDUP_FADEOUT,
@@ -233,10 +233,15 @@ export class BoardComponent {
       false,
   );
 
+  protected isVideoActive = computed(
+    () => this.visualsSettings().currentIndex > -1,
+  );
+
   onOpenChannelMixerModal() {
     this.dialog.open(ChannelMixerModalComponent, {
-      width: '90vw',
-      height: '90vh',
+      panelClass: 'custom-dialog',
+      backdropClass: 'custom-backdrop',
+      maxWidth: '90vw',
     });
   }
 
@@ -246,12 +251,18 @@ export class BoardComponent {
 
   onOpenBrightnessModal() {
     this.dialog.open(BrightnessModalComponent, {
-      width: '90vw',
+      panelClass: 'custom-dialog',
+      backdropClass: 'custom-backdrop',
+      maxWidth: '90vw',
     });
   }
 
   onClickOpenColorsModal() {
-    this.dialog.open(BoardColorsModalComponent);
+    this.dialog.open(BoardColorsModalComponent, {
+      panelClass: 'custom-dialog',
+      backdropClass: 'custom-backdrop',
+      maxWidth: '602px',
+    });
   }
 
   onClickBlack() {
@@ -260,7 +271,10 @@ export class BoardComponent {
   }
 
   onClickOpenVisualsModal() {
-    this.dialog.open(BeamerSettingsModalComponent);
+    this.dialog.open(BeamerSettingsModalComponent, {
+      panelClass: 'custom-dialog',
+      backdropClass: 'custom-backdrop',
+    });
   }
 
   onToggleNeopixelDisabled() {

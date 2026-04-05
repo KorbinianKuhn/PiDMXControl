@@ -3,6 +3,9 @@
   <div class="beamer-wrapper">
     <app-beamer id="beamer" (click)="onClickBeamer($event)" />
   </div>
+  @if (!mqttConnected()) {
+    <div class="message text-xs tracking-wider">Waiting for dmx connection</div>
+  }
   @if (!visualisation()) {
     <div class="message text-xs tracking-wider">Click to enable preview</div>
   }

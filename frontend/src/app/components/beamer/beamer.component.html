@@ -13,7 +13,7 @@
           class="w-20 h-10 max-w-none"
           [muted]="true"
           [loop]="true"
-          (loadedmetadata)="onLoadedMetadata()"
+          (loadedmetadata)="onLoadedMetadata(videoElement)"
           #videoElement
         ></video>
         @if (color() === "chase") {

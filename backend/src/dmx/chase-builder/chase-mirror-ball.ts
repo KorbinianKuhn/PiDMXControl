@@ -2,9 +2,11 @@ import { ChannelAnimation, Chase, ChaseColor } from '../lib/chase';
 import { DeviceRegistry } from '../lib/device-registry';
 import { ActiveProgramName } from '../lib/program';
 import {
+  Colors,
   flattenChannelStates,
   getChaseColorValues,
   getDomeColorValue,
+  mergeDevicePatterns,
 } from './chase-utils';
 
 export const createChaseMirrorBall = (
@@ -16,7 +18,7 @@ export const createChaseMirrorBall = (
 
   const { dome, spot } = devices.object();
 
-  const steps: ChannelAnimation = [];
+  const ball: ChannelAnimation = [];
 
   const a = flattenChannelStates(
     dome.state({ master: 255, ...getDomeColorValue(colors.a), movement: 127 }),
@@ -29,14 +31,39 @@ export const createChaseMirrorBall = (
   );
 
   for (let i = 0; i < 32; i++) {
-    steps.push(a);
+    ball.push(a);
   }
 
   for (let i = 0; i < 32; i++) {
-    steps.push(b);
+    ball.push(b);
   }
+
+  const beamer = createBeamerPattern(devices, colors);
+
+  const steps = mergeDevicePatterns(ball, beamer);
 
   chase.addSteps(steps);
 
   return chase;
+};
+
+const createBeamerPattern = (
+  devices: DeviceRegistry,
+  colors: Colors,
+): ChannelAnimation => {
+  const steps: ChannelAnimation = [];
+
+  const beamer = devices.object().beamer;
+
+  const a = beamer.state({ master: 255, ...colors.a });
+  const b = beamer.state({ master: 255, ...colors.b });
+
+  for (let i = 0; i < 32; i++) {
+    steps.push(a);
+  }
+  for (let i = 0; i < 32; i++) {
+    steps.push(b);
+  }
+
+  return steps;
 };

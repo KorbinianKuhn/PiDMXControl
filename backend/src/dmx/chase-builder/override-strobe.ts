@@ -293,7 +293,7 @@ export const createChaseStrobeFlat = (devices: DeviceRegistry): Chase => {
       o.state({
         master: 255,
         w: 255,
-        strobe: 200,
+        strobe: 150,
       }),
     ),
   );

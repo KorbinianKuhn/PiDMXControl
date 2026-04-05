@@ -255,6 +255,20 @@ export const createChaseBuildupStreak = (
 
   chase.addSteps(steps);
 
+  const { neopixelA, neopixelB } = devices.object();
+
+  const pixelSteps: Array<number[]> = [];
+
+  for (const color of [colors.a, colors.b]) {
+    const a = getPixelGradient(neopixelA, color, 32, 64);
+    const b = getPixelGradient(neopixelB, color, 32, 64, 64);
+    for (let j = 0; j < a.length; j++) {
+      pixelSteps.push([...a[j], ...b[j]]);
+    }
+  }
+
+  chase.addPixelSteps(pixelSteps);
+
   return chase;
 };
 
