@@ -19,16 +19,16 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
-strategy:
-  matrix:
-    service: [backend, frontend]
-
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+
+    strategy:
+      matrix:
+        service: [backend, frontend]
 
     steps:
       - name: Set up QEMU
