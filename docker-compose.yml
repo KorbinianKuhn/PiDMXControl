@@ -21,6 +21,8 @@ services:
       - STATIC_DIRECTORY=/usr/src/app/static
     volumes:
       - ./static:/usr/src/app/static
+    devices:
+      - /dev/ttyAMA0:/dev/ttyAMA0
     depends_on:
       - mosquitto
     ports:
