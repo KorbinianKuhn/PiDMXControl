@@ -42,94 +42,146 @@ const main = async () => {
 
   const dmx = new DMX(io);
 
-  await dmx.init();
-
   io.on('connection', (socket) => {
-    socket.emit('bpm:updated', { value: dmx.config.bpm });
-    socket.emit('black:updated', { value: dmx.config.black });
-    socket.emit('master:updated', { value: dmx.config.master });
-    socket.emit('ambient-uv:updated', { value: dmx.config.ambientUV });
-    socket.emit('override-program:updated', {
-      value: dmx.config.overrideProgram,
-    });
-    socket.emit('active-program:updated', { value: dmx.config.activeProgram });
-    socket.emit('active-colors:updated', { colors: dmx.config.activeColors });
-    socket.emit('settings-mode:updated', { value: dmx.config.settingsMode });
-    socket.emit('settings-data:updated', {
-      buffer: [...dmx.config.settingsData],
-    });
-    for (const device of dmx.config.devices) {
-      socket.emit('device-config:updated', {
-        id: device.id,
-        config: dmx.config.getDeviceConfig(device.id),
+    const sendInitialValues = () => {
+      socket.emit('bpm:updated', { value: dmx.config.bpm });
+      socket.emit('black:updated', { value: dmx.config.black });
+      socket.emit('master:updated', { value: dmx.config.master });
+      socket.emit('ambient-uv:updated', { value: dmx.config.ambientUV });
+      socket.emit('override-program:updated', {
+        value: dmx.config.overrideProgram,
       });
+      socket.emit('active-program:updated', {
+        value: dmx.config.activeProgram,
+      });
+      socket.emit('active-colors:updated', {
+        colors: dmx.config.activeColors,
+      });
+      socket.emit('settings-mode:updated', {
+        value: dmx.config.settingsMode,
+      });
+      socket.emit('settings-data:updated', {
+        buffer: [...dmx.config.settingsData],
+      });
+      for (const device of dmx.config.devices) {
+        socket.emit('device-config:updated', {
+          id: device.id,
+          config: dmx.config.getDeviceConfig(device.id),
+        });
+      }
+      socket.emit('visuals:source-updated', dmx.config.visuals.currentIndex);
+      socket.emit('visuals:settings-updated', dmx.config.visuals);
+    };
+
+    socket.emit('status', dmx.status$.getValue());
+
+    if (dmx.isReady) {
+      sendInitialValues();
     }
-    socket.emit('visuals:source-updated', dmx.config.visuals.currentIndex);
-    socket.emit('visuals:settings-updated', dmx.config.visuals);
+
+    const subscription = dmx.status$.subscribe((status) => {
+      socket.emit('status', status);
+
+      if (dmx.isReady) {
+        sendInitialValues();
+      }
+    });
+
+    socket.on('disconnect', () => {
+      subscription.unsubscribe();
+    });
 
     socket.on('set:bpm', (args) => {
-      dmx.config.setBpm(args.value);
+      if (dmx.isReady) {
+        dmx.config.setBpm(args.value);
+      }
     });
 
     socket.on('set:start', () => {
-      dmx.setStart();
+      if (dmx.isReady) {
+        dmx.setStart();
+      }
     });
 
     socket.on('set:black', (args) => {
-      dmx.config.setBlack(args.value);
+      if (dmx.isReady) {
+        dmx.config.setBlack(args.value);
+      }
     });
 
     socket.on('set:master', (args) => {
-      dmx.config.setMaster(args.value);
+      if (dmx.isReady) {
+        dmx.config.setMaster(args.value);
+      }
     });
 
     socket.on('set:ambient-uv', (args) => {
-      dmx.config.setAmbientUV(args.value);
+      if (dmx.isReady) {
+        dmx.config.setAmbientUV(args.value);
+      }
     });
 
     socket.on('set:override-program', (args) => {
-      dmx.setOverrideProgram(args.value);
+      if (dmx.isReady) {
+        dmx.setOverrideProgram(args.value);
+      }
     });
 
     socket.on('set:active-program', (args) => {
-      dmx.setActiveProgram(args.value);
+      if (dmx.isReady) {
+        dmx.setActiveProgram(args.value);
+      }
     });
 
     socket.on('set:active-colors', (args) => {
-      dmx.setActiveColors(args.colors);
+      if (dmx.isReady) {
+        dmx.setActiveColors(args.colors);
+      }
     });
 
     socket.on('set:settings-mode', (args) => {
-      dmx.config.setSettingsMode(args.value);
+      if (dmx.isReady) {
+        dmx.config.setSettingsMode(args.value);
+      }
     });
 
     socket.on('set:settings-channel', (args) => {
-      dmx.config.setSettingsChannel(args.address, args.value);
+      if (dmx.isReady) {
+        dmx.config.setSettingsChannel(args.address, args.value);
+      }
     });
 
     socket.on('set:device-config', (args) => {
-      dmx.config.setDeviceConfig(args.id, args.config);
+      if (dmx.isReady) {
+        dmx.config.setDeviceConfig(args.id, args.config);
+      }
     });
 
     socket.on('set:visuals-source', (args) => {
-      dmx.config.setVisualsSource(args.id);
+      if (dmx.isReady) {
+        dmx.config.setVisualsSource(args.id);
+      }
     });
     socket.on('set:visuals-settings', (args) => {
-      dmx.config.setVisualsSettings(
-        args.color,
-        args.opacity,
-        args.text,
-        args.left,
-        args.right,
-        args.top,
-        args.bottom,
-      );
+      if (dmx.isReady) {
+        dmx.config.setVisualsSettings(
+          args.color,
+          args.opacity,
+          args.text,
+          args.left,
+          args.right,
+          args.top,
+          args.bottom,
+        );
+      }
     });
   });
 
   httpServer.listen(PORT, () => {
     logger.info(`Listen on port ${PORT}`);
   });
+
+  await dmx.init();
 };
 
 logger.info('setup');
@@ -145,5 +197,5 @@ process.on('unhandledRejection', function (reason, p) {
 });
 
 main()
-  .then(() => logger.info('started'))
+  .then(() => logger.info('ready'))
   .catch((err) => logger.error(err.message, err));

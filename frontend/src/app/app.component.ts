@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { MatIcon, MatIconRegistry } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import { MqttService } from './services/mqtt.service';
@@ -21,7 +22,7 @@ const ICONS = [
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  imports: [RouterOutlet, MatIcon],
+  imports: [RouterOutlet, MatIcon, MatProgressBarModule],
 })
 export class AppComponent {
   private wsService = inject(WSService);
@@ -29,7 +30,12 @@ export class AppComponent {
   private matIconRegistry = inject(MatIconRegistry);
   private domSanitizer = inject(DomSanitizer);
 
-  protected readonly wsConnected = this.wsService.connected;
+  protected readonly status = this.wsService.status;
+  protected readonly connected = this.wsService.connected;
+
+  protected readonly showOverlay = computed(
+    () => this.connected() === false || this.status().value !== 'ready',
+  );
 
   constructor() {
     ICONS.map((o) =>

@@ -8,9 +8,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc -p tsconfig.build.json",
-    "start": "tsx watch src/main.ts",
-    "start:sender": "CONFIG=sender tsx watch src/main.ts",
-    "start:build": "CONFIG=pi node dist/main.js"
+    "start": "tsx watch src/main.ts"
   },
   "dependencies": {
     "cors": "^2.8.6",

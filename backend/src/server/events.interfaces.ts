@@ -29,7 +29,15 @@ export interface ClientToServerEvents {
   }) => void;
 }
 
+type ServerStatusValue = 'init' | 'ready';
+
+export interface ServerStatus {
+  value: ServerStatusValue;
+  progress?: number;
+}
+
 export interface ServerToClientEvents {
+  status: (payload: ServerStatus) => void;
   'black:updated': (payload: { value: boolean }) => void;
   'bpm:updated': (payload: { value: number }) => void;
   'tick:updated': (payload: { value: number }) => void;

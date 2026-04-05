@@ -22,11 +22,8 @@ export class VisualsComponent {
   private videoService = inject(VideoService);
   private wsService = inject(WSService);
 
-  // TODO
   private readonly videoElement =
     viewChild.required<ElementRef<HTMLVideoElement>>('videoElement');
-
-  private timer!: NodeJS.Timeout;
 
   protected readonly text = this.videoService.text;
   protected readonly video = this.videoService.video;

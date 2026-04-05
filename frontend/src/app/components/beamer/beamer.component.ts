@@ -29,8 +29,6 @@ export class BeamerComponent {
   private readonly videoElement =
     viewChild<ElementRef<HTMLVideoElement>>('videoElement');
 
-  private timer!: NodeJS.Timeout;
-
   protected readonly performanceMode = this.configService.performanceMode;
   protected readonly show = computed(() => {
     if (

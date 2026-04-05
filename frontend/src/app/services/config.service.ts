@@ -5,7 +5,8 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class ConfigService {
-  public readonly visualisation = signal(!environment.production);
+  // public readonly visualisation = signal(!environment.production);
+  public readonly visualisation = signal(false);
   public readonly video = signal(!environment.production);
   public readonly performanceMode = signal(false);
 

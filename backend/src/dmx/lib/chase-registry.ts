@@ -1,3 +1,5 @@
+import { BehaviorSubject } from 'rxjs';
+import { TypedServer } from '../../server/events.interfaces';
 import { Logger } from '../../utils/logger';
 import { createChaseBouncy } from '../chase-builder/chase-bouncy';
 import { createChaseClub } from '../chase-builder/chase-club';
@@ -18,7 +20,6 @@ import {
   createChaseBuildupBright,
   createChaseBuildupFadeout,
   createChaseBuildupStreak,
-  createChaseBuildupTest,
 } from '../chase-builder/override-buildup';
 import { createChaseDisco } from '../chase-builder/override-disco';
 import { createChasePride } from '../chase-builder/override-pride';
@@ -39,6 +40,7 @@ import {
   createChaseStrobeWhite,
 } from '../chase-builder/override-strobe';
 
+import { wait } from '../../utils/time';
 import { Chase, ChaseColor } from './chase';
 import { Config } from './config';
 import { DeviceRegistry } from './device-registry';
@@ -48,75 +50,85 @@ export class ChaseRegistry {
   private chases: Chase[] = [];
   private logger = new Logger('chase-registry');
 
+  public progress$ = new BehaviorSubject(0);
+
   constructor(
+    private io: TypedServer,
     private config: Config,
     private devices: DeviceRegistry,
-  ) {
-    this._createChases();
-  }
+  ) {}
 
-  _createChases() {
-    this.logger.info(`create chases`);
+  async init() {
+    this.chases = [];
 
-    // Overrides
-    this.chases.push(createChaseDay(this.devices));
-    this.chases.push(createChaseNight(this.devices));
-    this.chases.push(createChaseWhite(this.devices));
-    this.chases.push(createChaseWarm(this.devices));
-    this.chases.push(createChaseFade(this.devices));
-    this.chases.push(createChasePride(this.devices));
-    this.chases.push(createChaseDisco(this.devices));
-
-    this.chases.push(createChaseStrobeSlowmo(this.devices));
-    this.chases.push(createChaseStrobeWhite(this.devices));
-    this.chases.push(createChaseStrobeShort(this.devices));
-    // this.chases.push(createChaseStrobeDots(this.devices));
-    this.chases.push(createChaseStrobeFlat(this.devices));
-    this.chases.push(createChaseBuildupTest(this.devices));
-
-    for (const color of Object.values(ChaseColor)) {
+    const overrides = [
       // Chases
-      // this.chases.push(createChaseOn(this.devices, color));
-      this.chases.push(createChaseMirrorBall(this.devices, color));
-      this.chases.push(createChaseGlow(this.devices, color));
-      this.chases.push(createChaseMagic(this.devices, color));
-      this.chases.push(createChaseMoody(this.devices, color));
-      this.chases.push(createChaseBouncy(this.devices, color));
-      this.chases.push(createChaseClub(this.devices, color));
-      this.chases.push(createChaseRough(this.devices, color));
-      this.chases.push(createChasePulse(this.devices, color));
-      this.chases.push(createChaseDark(this.devices, color));
-      this.chases.push(createChaseLate(this.devices, color));
-      this.chases.push(createChaseWild(this.devices, color));
-      this.chases.push(createChaseRave(this.devices, color));
-
-      // Buildups
-      this.chases.push(createChaseBuildupBright(this.devices, color));
-      this.chases.push(createChaseBuildupFadeout(this.devices, color));
-      this.chases.push(createChaseBuildupBeam(this.devices, color));
-      this.chases.push(createChaseBuildupBlinder(this.devices, color));
-      this.chases.push(createChaseBuildupStreak(this.devices, color));
-      this.chases.push(createChaseBuildupBlink(this.devices, color));
+      createChaseDay,
+      createChaseNight,
+      createChaseWhite,
+      createChaseWarm,
+      createChaseFade,
+      createChasePride,
+      createChaseDisco,
 
       // Strobes
-      this.chases.push(createChaseStrobeFlash(this.devices, color));
-      this.chases.push(createChaseStrobeColor(this.devices, color));
-      // this.chases.push(createChaseStrobePixels(this.devices, color));
-      this.chases.push(createChaseStrobeStorm(this.devices, color));
-    }
+      createChaseStrobeSlowmo,
+      createChaseStrobeWhite,
+      createChaseStrobeShort,
+      createChaseStrobeFlat,
+    ];
 
-    for (const chase of this.chases.filter(
-      (o) => o.color === ChaseColor.CYAN_BLUE,
-    )) {
+    const chases = [
+      createChaseMirrorBall,
+      createChaseGlow,
+      createChaseMagic,
+      createChaseMoody,
+      createChaseBouncy,
+      createChaseClub,
+      createChaseRough,
+      createChasePulse,
+      createChaseDark,
+      createChaseLate,
+      createChaseWild,
+      createChaseRave,
+
+      // Buildups
+      createChaseBuildupBright,
+      createChaseBuildupFadeout,
+      createChaseBuildupBeam,
+      createChaseBuildupBlinder,
+      createChaseBuildupStreak,
+      createChaseBuildupBlink,
+
+      // Strobes
+      createChaseStrobeFlash,
+      createChaseStrobeColor,
+      createChaseStrobeStorm,
+    ];
+
+    const tasks = [
+      ...overrides.map((func) => () => func(this.devices)),
+      ...Object.values(ChaseColor).map((color) =>
+        chases.map((func) => () => func(this.devices, color)),
+      ),
+    ].flat();
+
+    this.logger.info(`creating chases`);
+    this.progress$.next(0);
+    for (let i = 0; i < tasks.length; i++) {
+      const task = tasks[i];
+
+      const chase = task();
+      this.chases.push(chase);
+
+      const progress = i / tasks.length;
       this.logger.info(
-        `created ${chase.programName} with ${chase.length} steps`,
+        `${(progress * 100).toFixed(0)}% (${i + 1}/${tasks.length})`,
       );
+      this.progress$.next(parseInt((progress * 100).toFixed(0)));
+      await wait(1);
     }
-  }
-
-  update() {
-    this.chases = [];
-    this._createChases();
+    this.logger.info('chases created');
   }
 
   active(name: ActiveProgramName): Chase[] {

@@ -9,11 +9,21 @@ export class Clock {
   public microtick$ = new Subject<number>();
   public counter = 0; // 0-64
 
+  private enabled = false;
+
   constructor(
     private io: TypedServer,
     private config: Config,
   ) {
     this.config.speed$.subscribe((speed) => this._start(speed));
+  }
+
+  enable() {
+    this.enabled = true;
+  }
+
+  disable() {
+    this.enabled = false;
   }
 
   _start(speed: number) {
@@ -25,6 +35,9 @@ export class Clock {
   }
 
   _next() {
+    if (!this.enabled) {
+      return;
+    }
     this.counter = this.counter === 63 ? 0 : this.counter + 1;
     if (this.counter % 4 === 0) {
       this.tick$.next(this.counter / 4);

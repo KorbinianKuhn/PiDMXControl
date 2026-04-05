@@ -2,11 +2,28 @@
   <router-outlet />
 </div>
 
-@if (!wsConnected()) {
-  <div class="overlay">
-    <span>Waiting for connection...</span>
-    <button mat-icon-button (click)="onRefreshClick()">
-      <mat-icon svgIcon="refresh" />
-    </button>
+@if (showOverlay()) {
+  <div class="overlay-container">
+    <div class="flex flex-col p-6 bg-black text-xs w-[400px] max-w-100">
+      @if (!connected()) {
+        <span class="flex-1 text-center">Waiting for connection...</span>
+      } @else if (status().value === "init") {
+        <div class="flex flex-col flex-1">
+          <div class="flex flex-1 mb-2">
+            <span class="flex-1">Creating chases</span>
+            <span>{{ status().progress }} %</span>
+          </div>
+          <mat-progress-bar [value]="status().progress"></mat-progress-bar>
+        </div>
+      }
+      <div class="flex flex-1 justify-center">
+        <button mat-icon-button (click)="onRefreshClick()" class="mt-4">
+          <div class="flex items-center">
+            <mat-icon svgIcon="refresh" />
+            <span>Reload</span>
+          </div>
+        </button>
+      </div>
+    </div>
   </div>
 }

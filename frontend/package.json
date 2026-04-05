@@ -4,10 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start:sender": "ng serve --configuration sender",
-    "build:docker": "ng build --configuration docker",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "build:docker": "ng build --configuration docker"
   },
   "private": true,
   "dependencies": {

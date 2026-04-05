@@ -1,6 +1,6 @@
-import { throttleTime } from 'rxjs';
+import { BehaviorSubject, throttleTime } from 'rxjs';
 import { SEND_DATA, UART_SERIAL } from '../env';
-import { TypedServer } from '../server/events.interfaces';
+import { ServerStatus, TypedServer } from '../server/events.interfaces';
 import { ChaseColor } from './lib/chase';
 import { ChaseRegistry } from './lib/chase-registry';
 import { Clock } from './lib/clock';
@@ -20,16 +20,40 @@ export class DMX {
   private devices = new DeviceRegistry(this.config);
   private clock = new Clock(this.io, this.config);
 
-  private chases = new ChaseRegistry(this.config, this.devices);
+  private chases = new ChaseRegistry(this.io, this.config, this.devices);
 
   private activeProgram = new Program(this.clock, this.config, false);
   private overrideProgram = new Program(this.clock, this.config, true);
 
-  constructor(private io: TypedServer) {}
+  public status$ = new BehaviorSubject<ServerStatus>({
+    value: 'init',
+    progress: 0,
+  });
+
+  get isReady() {
+    return this.status$.getValue().value === 'ready';
+  }
+
+  constructor(private io: TypedServer) {
+    this.chases.progress$.subscribe((progress) =>
+      this.status$.next({
+        value: 'init',
+        progress,
+      }),
+    );
+  }
 
   async init(): Promise<void> {
+    this.clock.disable();
+
     await this.serial.init();
     await this.mqtt.init();
+
+    await this.chases.init();
+
+    this.status$.next({
+      value: 'ready',
+    });
 
     this.mqtt.subscribe((topic, message) => {
       if (topic === 'dmx') {
@@ -47,6 +71,7 @@ export class DMX {
     }
 
     this.setActiveProgram(this.config.activeProgram);
+    this.clock.enable();
   }
 
   setStart() {

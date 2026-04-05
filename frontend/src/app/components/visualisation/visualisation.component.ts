@@ -69,6 +69,8 @@ export class VisualisationComponent implements AfterViewInit {
     canvas.style.width = `${rect.width}px`;
     canvas.style.height = `${rect.height}px`;
 
+    this.clear();
+
     this.interval
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(([_, dmx, neopixelA, neopixelB]) => {
@@ -79,13 +81,17 @@ export class VisualisationComponent implements AfterViewInit {
 
   onClick() {
     this.configService.toggleVisualisation();
-    this.redraw(new Array(513).fill(0));
-    this.redrawNeopixel(new Array(1200).fill(0));
+    this.clear();
   }
 
   onClickBeamer(event: MouseEvent) {
     event.stopPropagation();
     this.configService.toggleVideo();
+  }
+
+  clear() {
+    this.redraw(new Array(513).fill(0));
+    this.redrawNeopixel(new Array(1200).fill(0));
   }
 
   redraw(data: number[]) {

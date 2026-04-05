@@ -7,9 +7,14 @@ import {
   ClientToServerEvents,
   DeviceConfig,
   OverrideProgramName,
+  ServerStatus,
   ServerToClientEvents,
   Visuals,
 } from './ws.interfaces';
+
+interface ClientStatus extends ServerStatus {
+  connected: boolean;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +24,9 @@ export class WSService {
 
   private socket!: Socket<ServerToClientEvents, ClientToServerEvents>;
 
+  public readonly status = signal<ServerStatus>({
+    value: 'init',
+  });
   public readonly connected = signal(false);
 
   public readonly bpm = signal<number>(128);
@@ -107,6 +115,9 @@ export class WSService {
     this.socket.on('disconnect', () => {
       console.log('ws disconnected');
       this.connected.set(false);
+    });
+    this.socket.on('status', (status) => {
+      this.status.set(status);
     });
 
     this.socket.on('bpm:updated', (data) => {
