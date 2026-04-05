@@ -11,7 +11,7 @@ services:
       - 8883:8883
 
   backend:
-    image: ghcr.io/korbiniankuhn/pidmxcontrol/backend:1.0.0-dev.2
+    image: ghcr.io/korbiniankuhn/pidmxcontrol/backend:1.0.0-dev.3
     container_name: dmx-backend
     restart: always
     environment:
@@ -29,7 +29,7 @@ services:
       - 3000:3000
 
   frontend:
-    image: ghcr.io/korbiniankuhn/pidmxcontrol/frontend:1.0.0-dev.2
+    image: ghcr.io/korbiniankuhn/pidmxcontrol/frontend:1.0.0-dev.3
     container_name: dmx-frontend
     restart: always
     environment:
