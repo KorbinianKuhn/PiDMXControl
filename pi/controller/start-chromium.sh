@@ -1,0 +1,1 @@
+chromium --noerrdialogs --disable-infobars --disable-restore-session-state --kiosk --incognito --display=:0 --window-position=0,0 http://dmx.local
