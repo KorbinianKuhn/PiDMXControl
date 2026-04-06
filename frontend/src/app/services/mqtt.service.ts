@@ -9,6 +9,7 @@ export class MqttService {
   private envService = inject(EnvService);
 
   public readonly dmx = signal<number[]>([]);
+  public readonly visualisation = signal<number[]>([]);
   public readonly neopixelA = signal<number[]>([]);
   public readonly neopixelB = signal<number[]>([]);
 
@@ -34,13 +35,16 @@ export class MqttService {
 
     client.on('message', (topic, message) => {
       switch (topic) {
+        case 'visualisation':
+          this.visualisation.set(Array.from(message));
+          break;
         case 'dmx':
           this.dmx.set(Array.from(message));
           break;
-        case 'neopixel-a':
+        case 'visualisation-neopixel-a':
           this.neopixelA.set(Array.from(message));
           break;
-        case 'neopixel-b':
+        case 'visualisation-neopixel-b':
           this.neopixelB.set(Array.from(message));
           break;
       }

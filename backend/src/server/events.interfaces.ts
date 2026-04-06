@@ -1,4 +1,4 @@
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { ChaseColor } from '../dmx/lib/chase';
 import { DeviceConfig, Visuals } from '../dmx/lib/config';
 import { ActiveProgramName, OverrideProgramName } from '../dmx/lib/program';
@@ -66,3 +66,4 @@ export interface ServerToClientEvents {
 }
 
 export type TypedServer = Server<ClientToServerEvents, ServerToClientEvents>;
+export type TypedSocket = Socket<ClientToServerEvents, ServerToClientEvents>;

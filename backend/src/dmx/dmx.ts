@@ -104,7 +104,7 @@ export class DMX {
     this.activeProgram.setChases(this.chases.active(this.config.activeProgram));
   }
 
-  data(): Buffer {
+  data(dmx: boolean): Buffer {
     if (this.config.settingsMode) {
       return this.config.settingsData;
     }
@@ -142,12 +142,14 @@ export class DMX {
     }
 
     // Master override
-    for (const device of this.devices.masterChannels) {
-      const master = this.config.getDeviceConfig(device.deviceId).master;
-      const multiplier = this.config.master * master;
-      if (multiplier !== 1) {
-        for (const channel of device.channels) {
-          data[channel] = Math.round(data[channel] * multiplier);
+    if (dmx) {
+      for (const device of this.devices.masterChannels) {
+        const master = this.config.getDeviceConfig(device.deviceId).master;
+        const multiplier = this.config.master * master;
+        if (multiplier !== 1) {
+          for (const channel of device.channels) {
+            data[channel] = Math.round(data[channel] * multiplier);
+          }
         }
       }
     }
@@ -155,7 +157,7 @@ export class DMX {
     return data;
   }
 
-  neopixelData(): Buffer {
+  neopixelData(dmx: boolean): Buffer {
     if (this.config.settingsMode || this.config.black) {
       return Buffer.alloc(2 * 150 * 4, 0);
     }
@@ -163,11 +165,13 @@ export class DMX {
       ? this.overrideProgram.pixelData()
       : this.activeProgram.pixelData();
 
-    const master = this.config.getDeviceConfig('neopixel-a').master;
-    const multiplier = this.config.master * master;
-    for (let i = 0; i < buffer.length; i++) {
-      if (buffer[i] !== 0) {
-        buffer[i] = Math.round(buffer[i] * multiplier);
+    if (dmx) {
+      const master = this.config.getDeviceConfig('neopixel-a').master;
+      const multiplier = this.config.master * master;
+      for (let i = 0; i < buffer.length; i++) {
+        if (buffer[i] !== 0) {
+          buffer[i] = Math.round(buffer[i] * multiplier);
+        }
       }
     }
 
@@ -175,13 +179,23 @@ export class DMX {
   }
 
   async _send() {
-    const data = this.data();
-    this.mqtt.send('dmx', data);
+    const dmx = this.data(true);
+    this.mqtt.send('dmx', dmx);
+
+    const visualisation = this.data(false);
+    this.mqtt.send('visualisation', visualisation);
   }
 
   async _sendMQTT() {
-    const data = this.neopixelData();
-    this.mqtt.send('neopixel-a', data.subarray(0, 600));
-    this.mqtt.send('neopixel-b', data.subarray(600, 1200));
+    const dmx = this.neopixelData(true);
+    this.mqtt.send('neopixel-a', dmx.subarray(0, 600));
+    this.mqtt.send('neopixel-b', dmx.subarray(600, 1200));
+
+    const visualisation = this.neopixelData(false);
+    this.mqtt.send('visualisation-neopixel-a', visualisation.subarray(0, 600));
+    this.mqtt.send(
+      'visualisation-neopixel-b',
+      visualisation.subarray(600, 1200),
+    );
   }
 }

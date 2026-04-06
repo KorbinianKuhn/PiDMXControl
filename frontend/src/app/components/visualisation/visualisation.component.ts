@@ -58,7 +58,7 @@ export class VisualisationComponent implements AfterViewInit {
 
   private interval = combineLatest([
     toObservable(this.configService.visualisation),
-    toObservable(this.mqttService.dmx),
+    toObservable(this.mqttService.visualisation),
     toObservable(this.mqttService.neopixelA),
     toObservable(this.mqttService.neopixelB),
   ]).pipe(

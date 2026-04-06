@@ -33,9 +33,13 @@ export class AppComponent {
   protected readonly status = this.wsService.status;
   protected readonly connected = this.wsService.connected;
 
-  protected readonly showOverlay = computed(
-    () => this.connected() === false || this.status().value !== 'ready',
-  );
+  protected readonly showOverlay = computed(() => {
+    if (location.href.includes('/visuals')) {
+      return false;
+    }
+
+    return this.connected() === false || this.status().value !== 'ready';
+  });
 
   constructor() {
     ICONS.map((o) =>

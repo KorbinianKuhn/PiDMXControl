@@ -32,21 +32,16 @@ export class VideoService {
 
   private address = 146;
   private numChannels = 5;
-  private messages: string[] = [`Space Rave`];
+  private messages: string[] = [`Space Rave`]; // TODO: make tests adjustable thorugh app
 
-  public readonly visualsSource$ = this.wsService.visualsSource;
-  public readonly visualsSettings$ = this.wsService.visualsSettings;
+  public readonly visualsSettings = this.wsService.visualsSettings;
 
-  public readonly video = computed(() => {
-    const channels = this.mqttService
-      .dmx()
-      .slice(this.address, this.address + this.numChannels);
-
+  private getVideo(channels: number[]) {
     const [r, g, b, master, strobe] = channels;
 
     const color = this.colorService.toRGB(255, r, g, b, 0, 0, 0);
     const opacity =
-      this.visualsSettings$().opacity === 'chase' ? master / 255 : 1;
+      this.visualsSettings().opacity === 'chase' ? master / 255 : 1;
 
     const { classes, duration } = this.colorService.getStrobeClasses(
       strobe,
@@ -62,10 +57,26 @@ export class VideoService {
         duration,
       },
     };
+  }
+
+  public readonly visualisationVideo = computed(() => {
+    const channels = this.mqttService
+      .visualisation()
+      .slice(this.address, this.address + this.numChannels);
+
+    return this.getVideo(channels);
+  });
+
+  public readonly dmxVideo = computed(() => {
+    const channels = this.mqttService
+      .dmx()
+      .slice(this.address, this.address + this.numChannels);
+
+    return this.getVideo(channels);
   });
 
   public readonly text = toSignal(
-    combineLatest([toObservable(this.visualsSettings$), interval(10000)]).pipe(
+    combineLatest([toObservable(this.visualsSettings), interval(10000)]).pipe(
       filter(([visuals, _]) => visuals.text),
       map(([_, counter]) => {
         const show = counter % 5 === 0;

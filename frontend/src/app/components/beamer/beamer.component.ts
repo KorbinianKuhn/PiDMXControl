@@ -44,7 +44,7 @@ export class BeamerComponent {
 
     return this.configService.video() ? 'video' : 'color';
   });
-  protected readonly video = this.videoService.video;
+  protected readonly video = this.videoService.visualisationVideo;
   protected readonly text = this.videoService.text;
   protected readonly videoSelected = computed(
     () => this.wsService.visualsSource() > -1,

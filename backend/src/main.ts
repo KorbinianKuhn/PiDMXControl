@@ -7,6 +7,8 @@ import { STATIC_DIRECTORY } from './env';
 import {
   ClientToServerEvents,
   ServerToClientEvents,
+  TypedServer,
+  TypedSocket,
 } from './server/events.interfaces';
 import { Logger } from './utils/logger';
 
@@ -42,51 +44,47 @@ const main = async () => {
 
   const dmx = new DMX(io);
 
-  io.on('connection', (socket) => {
-    const sendInitialValues = () => {
-      socket.emit('bpm:updated', { value: dmx.config.bpm });
-      socket.emit('black:updated', { value: dmx.config.black });
-      socket.emit('master:updated', { value: dmx.config.master });
-      socket.emit('ambient-uv:updated', { value: dmx.config.ambientUV });
-      socket.emit('override-program:updated', {
-        value: dmx.config.overrideProgram,
-      });
-      socket.emit('active-program:updated', {
-        value: dmx.config.activeProgram,
-      });
-      socket.emit('active-colors:updated', {
-        colors: dmx.config.activeColors,
-      });
-      socket.emit('settings-mode:updated', {
-        value: dmx.config.settingsMode,
-      });
-      socket.emit('settings-data:updated', {
-        buffer: [...dmx.config.settingsData],
-      });
-      socket.emit('device-config:updated', {
-        devices: dmx.config.devices,
-      });
-      socket.emit('visuals:source-updated', dmx.config.visuals.currentIndex);
-      socket.emit('visuals:settings-updated', dmx.config.visuals);
-    };
+  // TODO: can lead to errors in the app
+  const sendInitialConfig = (emitter: TypedServer | TypedSocket) => {
+    emitter.emit('bpm:updated', { value: dmx.config.bpm });
+    emitter.emit('black:updated', { value: dmx.config.black });
+    emitter.emit('master:updated', { value: dmx.config.master });
+    emitter.emit('ambient-uv:updated', { value: dmx.config.ambientUV });
+    emitter.emit('override-program:updated', {
+      value: dmx.config.overrideProgram,
+    });
+    emitter.emit('active-program:updated', {
+      value: dmx.config.activeProgram,
+    });
+    emitter.emit('active-colors:updated', {
+      colors: dmx.config.activeColors,
+    });
+    emitter.emit('settings-mode:updated', {
+      value: dmx.config.settingsMode,
+    });
+    emitter.emit('settings-data:updated', {
+      buffer: [...dmx.config.settingsData],
+    });
+    emitter.emit('device-config:updated', {
+      devices: dmx.config.devices,
+    });
+    emitter.emit('visuals:source-updated', dmx.config.visuals.currentIndex);
+    emitter.emit('visuals:settings-updated', dmx.config.visuals);
+  };
 
+  dmx.status$.subscribe((status) => {
+    io.emit('status', status);
+    if (dmx.isReady) {
+      sendInitialConfig(io);
+    }
+  });
+
+  io.on('connection', (socket) => {
     socket.emit('status', dmx.status$.getValue());
 
     if (dmx.isReady) {
-      sendInitialValues();
+      sendInitialConfig(socket);
     }
-
-    const subscription = dmx.status$.subscribe((status) => {
-      socket.emit('status', status);
-
-      if (dmx.isReady) {
-        sendInitialValues();
-      }
-    });
-
-    socket.on('disconnect', () => {
-      subscription.unsubscribe();
-    });
 
     socket.on('set:bpm', (args) => {
       if (dmx.isReady) {

@@ -25,7 +25,7 @@
           </mat-slider>
         </td>
       </tr>
-      @for (control of controls(); track control) {
+      @for (control of controls(); track control.id) {
         <tr>
           <td>{{ control.id }}</td>
           <td>

@@ -33,7 +33,7 @@ export class WSService {
   public readonly tick = signal<number>(0);
   public readonly black = signal<boolean>(false);
   public readonly strobe = signal<boolean>(false);
-  public readonly master = signal<number>(100);
+  public readonly master = signal<number>(1);
   public readonly ambientUV = signal<number>(0);
   public readonly activeProgramName = signal<ActiveProgramName>(
     ActiveProgramName.ON,

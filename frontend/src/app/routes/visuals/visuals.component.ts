@@ -26,7 +26,7 @@ export class VisualsComponent {
     viewChild.required<ElementRef<HTMLVideoElement>>('videoElement');
 
   protected readonly text = this.videoService.text;
-  protected readonly video = this.videoService.video;
+  protected readonly video = this.videoService.dmxVideo;
   protected readonly crop = computed(() => {
     const visuals = this.wsService.visualsSettings();
     return {
