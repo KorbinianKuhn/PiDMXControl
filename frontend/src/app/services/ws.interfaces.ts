@@ -70,6 +70,7 @@ export enum ActiveProgramName {
 export interface DeviceConfig {
   id: string;
   master: number;
+  flipped?: boolean;
   minPan?: number;
   maxPan?: number;
   minTilt?: number;
@@ -147,10 +148,7 @@ export interface ServerToClientEvents {
   // 'step:updated': (payload: { value: number }) => void;
   'settings-mode:updated': (payload: { value: boolean }) => void;
   'settings-data:updated': (payload: { buffer: number[] }) => void;
-  'device-config:updated': (payload: {
-    id: string;
-    config: DeviceConfig;
-  }) => void;
+  'device-config:updated': (payload: { devices: DeviceConfig[] }) => void;
   'visuals:source-updated': (payload: number) => void;
   'visuals:settings-updated': (payload: Visuals) => void;
 }

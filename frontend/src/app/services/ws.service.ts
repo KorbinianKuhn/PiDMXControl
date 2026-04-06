@@ -169,9 +169,7 @@ export class WSService {
     });
 
     this.socket.on('device-config:updated', (data) => {
-      const devices = this.devices().filter((o) => o.id !== data.id);
-      devices.push(data.config);
-      this.devices.set(devices);
+      this.devices.set(data.devices);
     });
     this.socket.on('visuals:source-updated', (data) => {
       this.visualsSource.set(data);

@@ -19,6 +19,7 @@ export interface DeviceConfig {
   maxPan?: number;
   minTilt?: number;
   maxTilt?: number;
+  flipped?: boolean;
   disabled?: boolean;
 }
 interface ConfigStore {
@@ -116,7 +117,31 @@ export class Config {
       ambientUV: 0,
       activeProgram: ActiveProgramName.MIRROR_BALL,
       activeColors: Object.values(ChaseColor),
-      devices: [],
+      devices: [
+        ...[
+          'hex-1',
+          'hex-2',
+          'hex-3',
+          'hex-4',
+          'hex-5',
+          'bar',
+          'dome',
+          'spot',
+          'beamer',
+          'neopixel-a',
+          'neopixel-b',
+        ].map((id) => ({ id, master: 1, disabled: false })),
+        ...['head-left', 'head-right'].map((id) => ({
+          id,
+          master: 1,
+          disabled: false,
+          flipped: id === 'head-right',
+          minPan: 128,
+          maxPan: 212,
+          minTilt: 25,
+          maxTilt: 128,
+        })),
+      ],
       visuals: {
         left: 0,
         right: 100,
@@ -129,7 +154,34 @@ export class Config {
       try {
         const content = readFileSync(CONFIG_PATH, 'utf-8');
         const savedConfig = JSON.parse(content) as ConfigStore;
-        config = { ...config, ...savedConfig };
+        const { visuals, devices, ...values } = savedConfig;
+
+        const allDevices = [];
+        for (const device of devices) {
+          const item = config.devices.find((o) => o.id === device.id);
+          if (item) {
+            allDevices.push({
+              ...item,
+              ...device,
+            });
+          }
+        }
+
+        for (const device of config.devices) {
+          if (!allDevices.find((o) => o.id === device.id)) {
+            allDevices.push(device);
+          }
+        }
+
+        config = {
+          ...config,
+          ...values,
+          visuals: {
+            ...config.visuals,
+            ...visuals,
+          },
+          devices: allDevices,
+        };
       } catch (error) {
         this.logger.warn(
           'Error reading config file. Creating new default config.',
@@ -225,7 +277,7 @@ export class Config {
     Object.assign(device, config);
 
     this.store$.next();
-    this.io.emit('device-config:updated', { id, config });
+    this.io.emit('device-config:updated', { devices: this.devices });
   }
 
   async scanVisualSources(): Promise<void> {

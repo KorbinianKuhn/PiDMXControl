@@ -1,4 +1,4 @@
-import { Component, computed, HostListener, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { PadButtonComponent } from '../../../../components/pad-button/pad-button.component';
 import { PanelGroupComponent } from '../../../../components/panel-group/panel-group.component';
@@ -168,10 +168,5 @@ export class BoardColorsModalComponent {
   onClickSwitch(event: MouseEvent, on: boolean) {
     event.stopImmediatePropagation();
     this.wsService.setColors(on ? this.allColors : []);
-  }
-
-  @HostListener('click')
-  onComponentClick() {
-    this.dialogRef.close();
   }
 }

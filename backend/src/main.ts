@@ -63,12 +63,9 @@ const main = async () => {
       socket.emit('settings-data:updated', {
         buffer: [...dmx.config.settingsData],
       });
-      for (const device of dmx.config.devices) {
-        socket.emit('device-config:updated', {
-          id: device.id,
-          config: dmx.config.getDeviceConfig(device.id),
-        });
-      }
+      socket.emit('device-config:updated', {
+        devices: dmx.config.devices,
+      });
       socket.emit('visuals:source-updated', dmx.config.visuals.currentIndex);
       socket.emit('visuals:settings-updated', dmx.config.visuals);
     };
