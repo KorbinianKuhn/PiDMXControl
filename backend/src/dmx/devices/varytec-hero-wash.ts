@@ -40,7 +40,7 @@ export class VarytecHeroWash extends Device {
   }
 
   get tiltMin() {
-    return this.config.minTilt ?? 25;
+    return this.config.minTilt ?? 0;
   }
 
   get tiltMax() {

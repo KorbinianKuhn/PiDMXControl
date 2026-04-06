@@ -153,8 +153,9 @@ export class VisualisationComponent implements AfterViewInit {
     const v = flipped ? valueMax - (value - valueMin) : value;
 
     const maxLeft = 10;
-    const middle = 20;
     const maxRight = 30;
+    const middle = maxRight - maxLeft;
+
     const valueMiddle = (valueMin + valueMax) / 2;
 
     if (v <= valueMiddle) {
@@ -197,17 +198,7 @@ export class VisualisationComponent implements AfterViewInit {
     const masterWithStrobe = this.strobeMultiplier(strobe) * master;
     const color = this.colorService.toRGB(masterWithStrobe, r, g, b, w, a, uv);
 
-    // const xOffset = this.getOffset(
-    //   pan,
-    //   config?.minPan ?? 0,
-    //   config?.maxPan ?? 255,
-    //   config?.flipped ?? false,
-    // );
-
     const ctx = this.context;
-
-    ctx.fillStyle = this.bgColor;
-    // ctx.fillRect(x, y, 40, 40);
 
     // Clear area
     ctx.fillStyle = '#000';
@@ -215,32 +206,27 @@ export class VisualisationComponent implements AfterViewInit {
 
     // Draw static
     ctx.fillStyle = this.bgColor;
-    ctx.beginPath();
-    ctx.arc(x + 20, y + 20, 16, 0, 2 * Math.PI);
-    ctx.fill();
+    ctx.fillRect(x, y + 34, 40, 6);
+    ctx.fillRect(x + 12, y + 20, 16, 20);
 
-    // ctx.fillStyle = this.bgColor;
-    // ctx.fillRect(x + 20, y + 20, 20, 20);
-
-    // ctx.fillStyle = '#000';
-    // ctx.beginPath();
-    // ctx.arc(x + 20, y + 20, 16, 0, 2 * Math.PI);
-    // ctx.fill();
-    // ctx.save();
-
-    // ctx.arc(x + 20, y + 20, 16, 0, 2 * Math.PI);
-    // ctx.clip();
-
-    const xOffset = this.getOffset(pan, 0, 255, config?.flipped ?? false);
-    const yOffset = this.getOffset(tilt, 0, 255, false);
+    const xOffset = this.getOffset(
+      pan,
+      config?.minPan ?? 0,
+      config?.maxPan ?? 0,
+      config?.flipped ?? false,
+    );
+    const yOffset = this.getOffset(
+      tilt,
+      config?.minTilt ?? 0,
+      config?.maxTilt ?? 0,
+      true,
+    );
 
     // Draw color
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.arc(x + xOffset, y + yOffset, 8, 0, 2 * Math.PI);
     ctx.fill();
-
-    // ctx.restore();
   }
 
   updateGigabarHex(

@@ -21,8 +21,8 @@ export const createChaseStrobeStorm = (
 
   const steps: ChannelAnimation = [];
 
-  for (const color of [colors.a, colors.b]) {
-    for (let i = 0; i < 5; i++) {
+  for (const color of [colors.a, colors.b, colors.a, colors.b]) {
+    for (let i = 0; i < 8; i++) {
       const state = flattenChannelStates(
         ...hex.all.map((o, i2) =>
           i2 === i
@@ -30,7 +30,7 @@ export const createChaseStrobeStorm = (
             : o.state({ master: 0, w: 0 }),
         ),
         bar.state({ segments: 'all', master: 255, w: 255, strobe: 250 }),
-        ...head.all.map((o) => o.state({ master: 255, ...color, strobe: 250 })),
+        ...head.all.map((o) => o.state({ master: 255, ...color, strobe: 210 })),
         dome.state({
           master: 255,
           ...getDomeColorValue(color),
@@ -38,7 +38,7 @@ export const createChaseStrobeStorm = (
           movement: 127,
         }),
         spot.state({ master: 255, ...color, strobe: 250 }),
-        beamer.state({ master: 255, ...color, strobe: 120 }),
+        beamer.state({ master: 255, ...color, strobe: 250 }),
       );
 
       steps.push(state);
@@ -108,7 +108,7 @@ export const createChaseStrobeSlowmo = (devices: DeviceRegistry): Chase => {
 
   const state = flattenChannelStates(
     bar.state({ segments: 'all', master: 255, w: 255, strobe: 120 }),
-    ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 100 })),
+    ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 80 })),
   );
 
   for (let i = 0; i < 32; i++) {
@@ -137,12 +137,12 @@ export const createChaseStrobeColor = (
   const { bar, head } = devices.object();
 
   const a = flattenChannelStates(
-    ...head.all.map((o) => o.state({ master: 255, ...colors.a, strobe: 180 })),
+    ...head.all.map((o) => o.state({ master: 255, ...colors.a, strobe: 200 })),
     bar.state({ segments: 'all', master: 255, ...colors.a, strobe: 240 }),
   );
 
   const b = flattenChannelStates(
-    ...head.all.map((o) => o.state({ master: 255, ...colors.b, strobe: 180 })),
+    ...head.all.map((o) => o.state({ master: 255, ...colors.b, strobe: 200 })),
     bar.state({ segments: 'all', master: 255, ...colors.b, strobe: 240 }),
   );
 
@@ -237,7 +237,7 @@ export const createChaseStrobeShort = (devices: DeviceRegistry): Chase => {
 
   const state = flattenChannelStates(
     bar.state({ segments: 'all', master: 255, w: 255, strobe: 240 }),
-    ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 220 })),
+    ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 200 })),
   );
 
   for (let i = 0; i < 16; i++) {

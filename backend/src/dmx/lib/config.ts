@@ -135,10 +135,10 @@ export class Config {
           id,
           master: 1,
           disabled: false,
-          flipped: id === 'head-right',
+          flipped: id === 'head-left',
           minPan: 128,
           maxPan: 212,
-          minTilt: 25,
+          minTilt: 0,
           maxTilt: 128,
         })),
       ],
@@ -162,7 +162,7 @@ export class Config {
           if (item) {
             allDevices.push({
               ...item,
-              ...device,
+              master: device.master, // TODO: use all values when configurable through app
             });
           }
         }
