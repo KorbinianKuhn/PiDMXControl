@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,6 +11,7 @@ import { PanelGroupComponent } from '../../components/panel-group/panel-group.co
 import { ToggleButtonComponent } from '../../components/toggle-button/toggle-button.component';
 import { VisualisationComponent } from '../../components/visualisation/visualisation.component';
 import { ConfigService } from '../../services/config.service';
+import { MqttService } from '../../services/mqtt.service';
 import {
   ActiveProgramName,
   OverrideProgramName,
@@ -42,10 +43,11 @@ import { OverrideProgramButtonComponent } from './components/override-program-bu
     NgClass,
   ],
 })
-export class BoardComponent {
+export class BoardComponent implements OnInit, OnDestroy {
   private dialog = inject(MatDialog);
   private configService = inject(ConfigService);
   private wsService = inject(WSService);
+  private mqttService = inject(MqttService);
 
   protected readonly overridePrograms: Array<{
     name: OverrideProgramName;
@@ -236,6 +238,14 @@ export class BoardComponent {
   protected isVideoActive = computed(
     () => this.visualsSettings().currentIndex > -1,
   );
+
+  ngOnInit(): void {
+    this.mqttService.subscribe('visualisation/#');
+  }
+
+  ngOnDestroy(): void {
+    this.mqttService.unsubscribe('visualisation/#');
+  }
 
   onOpenChannelMixerModal() {
     this.dialog.open(ChannelMixerModalComponent, {

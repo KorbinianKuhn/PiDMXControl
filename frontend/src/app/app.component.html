@@ -4,16 +4,16 @@
 
 @if (showOverlay()) {
   <div class="overlay-container">
-    <div class="flex flex-col p-6 bg-black text-xs w-[400px] max-w-100">
+    <div class="flex flex-col p-6 bg-black text-xs w-[400px] max-w-100 fade-in">
       @if (!connected()) {
         <span class="flex-1 text-center">Waiting for connection...</span>
       } @else if (status().value === "init") {
         <div class="flex flex-col flex-1">
           <div class="flex flex-1 mb-2">
             <span class="flex-1">Creating chases</span>
-            <span>{{ status().progress }} %</span>
+            <span>{{ progress() }} %</span>
           </div>
-          <mat-progress-bar [value]="status().progress"></mat-progress-bar>
+          <mat-progress-bar [value]="progress()"></mat-progress-bar>
         </div>
       }
       <div class="flex flex-1 justify-center">

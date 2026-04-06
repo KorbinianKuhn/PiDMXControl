@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import mqtt from 'mqtt';
+import mqtt, { MqttClient } from 'mqtt';
 import { EnvService } from './env.service';
 
 @Injectable({
@@ -15,47 +15,53 @@ export class MqttService {
 
   public readonly connected = signal(false);
 
+  private client!: MqttClient;
+
   connect() {
     console.log(`mqtt connect: ${this.envService.mqttWsUrl}`);
-    const client = mqtt.connect(this.envService.mqttWsUrl);
+    this.client = mqtt.connect(this.envService.mqttWsUrl);
 
-    client.on('connect', () => {
+    this.client.on('connect', () => {
       this.connected.set(true);
       console.log(`mqtt connected`);
     });
 
-    client.on('disconnect', () => {
+    this.client.on('disconnect', () => {
       this.connected.set(false);
       console.log(`mqtt disconnected`);
     });
 
-    client.on('error', (err) => {
+    this.client.on('error', (err) => {
       console.log(`mqtt error`, err);
     });
 
-    client.on('message', (topic, message) => {
+    this.client.on('message', (topic, message) => {
       switch (topic) {
-        case 'visualisation':
-          this.visualisation.set(Array.from(message));
-          break;
         case 'dmx':
           this.dmx.set(Array.from(message));
           break;
-        case 'visualisation-neopixel-a':
+        case 'visualisation/dmx':
+          this.visualisation.set(Array.from(message));
+          break;
+        case 'visualisation/neopixel-a':
           this.neopixelA.set(Array.from(message));
           break;
-        case 'visualisation-neopixel-b':
+        case 'visualisation/neopixel-b':
           this.neopixelB.set(Array.from(message));
           break;
       }
     });
+  }
 
-    client.subscribe(
-      '+',
-      {
-        qos: 0,
-      },
-      (err) => {},
-    );
+  subscribe(topic: 'dmx' | 'visualisation/#') {
+    console.log('subscribe', topic);
+    this.client.subscribe(topic, {
+      qos: 0,
+    });
+  }
+
+  unsubscribe(topic: 'dmx' | 'visualisation/#') {
+    console.log('unsubscribe', topic);
+    this.client.unsubscribe(topic);
   }
 }

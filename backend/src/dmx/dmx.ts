@@ -183,7 +183,7 @@ export class DMX {
     this.mqtt.send('dmx', dmx);
 
     const visualisation = this.data(false);
-    this.mqtt.send('visualisation', visualisation);
+    this.mqtt.send('visualisation/dmx', visualisation);
   }
 
   async _sendMQTT() {
@@ -192,9 +192,9 @@ export class DMX {
     this.mqtt.send('neopixel-b', dmx.subarray(600, 1200));
 
     const visualisation = this.neopixelData(false);
-    this.mqtt.send('visualisation-neopixel-a', visualisation.subarray(0, 600));
+    this.mqtt.send('visualisation/neopixel-a', visualisation.subarray(0, 600));
     this.mqtt.send(
-      'visualisation-neopixel-b',
+      'visualisation/neopixel-b',
       visualisation.subarray(600, 1200),
     );
   }

@@ -32,6 +32,7 @@ export class AppComponent {
 
   protected readonly status = this.wsService.status;
   protected readonly connected = this.wsService.connected;
+  protected readonly progress = computed(() => this.status().progress ?? 0);
 
   protected readonly showOverlay = computed(() => {
     if (location.href.includes('/visuals')) {

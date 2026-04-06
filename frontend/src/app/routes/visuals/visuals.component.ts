@@ -3,11 +3,14 @@ import {
   Component,
   ElementRef,
   HostListener,
+  OnDestroy,
+  OnInit,
   computed,
   effect,
   inject,
   viewChild,
 } from '@angular/core';
+import { MqttService } from '../../services/mqtt.service';
 import { VideoService } from '../../services/video.service';
 import { WSService } from '../../services/ws.service';
 
@@ -17,10 +20,11 @@ import { WSService } from '../../services/ws.service';
   styleUrls: ['./visuals.component.scss'],
   imports: [NgClass],
 })
-export class VisualsComponent {
+export class VisualsComponent implements OnInit, OnDestroy {
   private elementRef = inject(ElementRef);
   private videoService = inject(VideoService);
   private wsService = inject(WSService);
+  private mqttService = inject(MqttService);
 
   private readonly videoElement =
     viewChild.required<ElementRef<HTMLVideoElement>>('videoElement');
@@ -51,6 +55,14 @@ export class VisualsComponent {
 
       this.videoService.setVideoElement(videoElement.nativeElement);
     });
+  }
+
+  ngOnInit(): void {
+    this.mqttService.subscribe('dmx');
+  }
+
+  ngOnDestroy(): void {
+    this.mqttService.unsubscribe('dmx');
   }
 
   onLoadedMetadata(videoElement: HTMLVideoElement) {
