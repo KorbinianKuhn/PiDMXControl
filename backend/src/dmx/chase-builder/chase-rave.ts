@@ -99,15 +99,15 @@ const createHeadPattern = (
   const b = flattenChannelStates(
     ...head.all.map((o) => o.state({ master: 255, ...colors.b, strobe: 240 })),
   );
-  const w = flattenChannelStates(
-    ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 240 })),
-  );
 
   for (let state of [a, b]) {
+    for (let j = 0; j < 32; j++) {
+      steps.push(off);
+    }
     for (let j = 0; j < 4; j++) {
       steps.push(state);
     }
-    for (let j = 0; j < 60; j++) {
+    for (let j = 0; j < 28; j++) {
       steps.push(off);
     }
   }

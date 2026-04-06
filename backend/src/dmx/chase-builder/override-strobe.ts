@@ -108,7 +108,7 @@ export const createChaseStrobeSlowmo = (devices: DeviceRegistry): Chase => {
 
   const state = flattenChannelStates(
     bar.state({ segments: 'all', master: 255, w: 255, strobe: 120 }),
-    ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 120 })),
+    ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 100 })),
   );
 
   for (let i = 0; i < 32; i++) {
@@ -137,12 +137,12 @@ export const createChaseStrobeColor = (
   const { bar, head } = devices.object();
 
   const a = flattenChannelStates(
-    ...head.all.map((o) => o.state({ master: 255, ...colors.a, strobe: 240 })),
+    ...head.all.map((o) => o.state({ master: 255, ...colors.a, strobe: 180 })),
     bar.state({ segments: 'all', master: 255, ...colors.a, strobe: 240 }),
   );
 
   const b = flattenChannelStates(
-    ...head.all.map((o) => o.state({ master: 255, ...colors.b, strobe: 240 })),
+    ...head.all.map((o) => o.state({ master: 255, ...colors.b, strobe: 180 })),
     bar.state({ segments: 'all', master: 255, ...colors.b, strobe: 240 }),
   );
 
@@ -172,7 +172,7 @@ export const createChaseStrobeWhite = (devices: DeviceRegistry): Chase => {
 
   const state = flattenChannelStates(
     bar.state({ segments: 'all', master: 255, w: 255, strobe: 240 }),
-    ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 240 })),
+    ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 200 })),
   );
 
   for (let i = 0; i < 32; i++) {
@@ -237,7 +237,7 @@ export const createChaseStrobeShort = (devices: DeviceRegistry): Chase => {
 
   const state = flattenChannelStates(
     bar.state({ segments: 'all', master: 255, w: 255, strobe: 240 }),
-    ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 240 })),
+    ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 220 })),
   );
 
   for (let i = 0; i < 16; i++) {
@@ -293,7 +293,7 @@ export const createChaseStrobeFlat = (devices: DeviceRegistry): Chase => {
       o.state({
         master: 255,
         w: 255,
-        strobe: 150,
+        strobe: 240,
       }),
     ),
   );

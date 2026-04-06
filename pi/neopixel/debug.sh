@@ -1,0 +1,1 @@
+mpremote connect auto run src/main.py

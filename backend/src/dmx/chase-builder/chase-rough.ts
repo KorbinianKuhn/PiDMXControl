@@ -24,7 +24,7 @@ export const createChaseRough = (
 
   const animations = devices
     .object()
-    .head.all.map((o) => o.animationTop(steps.length));
+    .head.all.map((o) => o.animationEight(steps.length));
 
   chase.addSteps(mergeDevicePatterns(steps, ...animations));
 
