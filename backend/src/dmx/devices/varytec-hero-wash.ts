@@ -27,6 +27,26 @@ const CHANNEL_ORDER: ChannelType[] = [
 ];
 
 export class VarytecHeroWash extends Device {
+  get panMin() {
+    return this.config.minPan ?? 128;
+  }
+
+  get panMax() {
+    return this.config.maxPan ?? 212;
+  }
+
+  get panMiddle() {
+    return this.panMin + Math.floor((this.panMax - this.panMin) / 2);
+  }
+
+  get tiltMin() {
+    return this.config.minTilt ?? 25;
+  }
+
+  get tiltMax() {
+    return this.config.maxTilt ?? 128;
+  }
+
   constructor(address: number, id: string, config: Config) {
     super(address, id, CHANNEL_ORDER, config);
   }
@@ -74,11 +94,11 @@ export class VarytecHeroWash extends Device {
       steps.push([
         {
           address: this.address + 0,
-          value: 0,
+          value: this.panMiddle,
         },
         {
           address: this.address + 2,
-          value: 127,
+          value: 128,
         },
       ]);
     }
@@ -93,7 +113,7 @@ export class VarytecHeroWash extends Device {
       steps.push([
         {
           address: this.address + 0,
-          value: 0,
+          value: this.panMiddle,
         },
         {
           address: this.address + 2,
@@ -108,10 +128,10 @@ export class VarytecHeroWash extends Device {
   animationEight(numSteps: number): ChannelAnimation {
     const steps: ChannelAnimation = [];
 
-    const panMin = this.config.minPan ?? 127;
-    const panMax = this.config.maxPan ?? 212;
-    const tiltMin = this.config.minTilt ?? 25;
-    const tiltMax = this.config.maxTilt ?? 127;
+    const panMin = this.panMin;
+    const panMax = this.panMax;
+    const tiltMin = this.tiltMin;
+    const tiltMax = this.tiltMax;
 
     // PAN
     const panSteps = numSteps / 2;
@@ -160,10 +180,10 @@ export class VarytecHeroWash extends Device {
   animationNodding(numSteps: number): ChannelAnimation {
     const steps: ChannelAnimation = [];
 
-    const panMin = this.config.minPan ?? 127;
-    const panMax = this.config.maxPan ?? 212;
-    const tiltMin = this.config.minTilt ?? 25;
-    const tiltMax = this.config.maxTilt ?? 127;
+    const panMin = this.panMin;
+    const panMax = this.panMax;
+    const tiltMin = this.tiltMin;
+    const tiltMax = this.tiltMax;
 
     // PAN
     const panSteps = numSteps / 2;
@@ -217,8 +237,8 @@ export class VarytecHeroWash extends Device {
   animationWatching(numSteps: number): ChannelAnimation {
     const steps: ChannelAnimation = [];
 
-    const panMin = this.config.minPan ?? 127;
-    const panMax = this.config.maxPan ?? 212;
+    const panMin = this.panMin;
+    const panMax = this.panMax;
 
     // PAN
     const panSteps = numSteps / 2;

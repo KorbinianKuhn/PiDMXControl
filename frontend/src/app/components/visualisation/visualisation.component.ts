@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  computed,
   DestroyRef,
   ElementRef,
   inject,
@@ -19,6 +20,8 @@ import {
 import { ColorService } from '../../services/color.service';
 import { ConfigService } from '../../services/config.service';
 import { MqttService } from '../../services/mqtt.service';
+import { DeviceConfig } from '../../services/ws.interfaces';
+import { WSService } from '../../services/ws.service';
 import { BeamerComponent } from '../beamer/beamer.component';
 
 @Component({
@@ -31,6 +34,7 @@ export class VisualisationComponent implements AfterViewInit {
   private colorService = inject(ColorService);
   private mqttService = inject(MqttService);
   private configService = inject(ConfigService);
+  private wsService = inject(WSService);
   private destroyRef = inject(DestroyRef);
 
   readonly canvas = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
@@ -40,6 +44,13 @@ export class VisualisationComponent implements AfterViewInit {
   protected readonly mqttConnected = this.mqttService.connected;
   protected readonly visualisation = this.configService.visualisation;
   protected readonly video = this.configService.video;
+
+  private headLeft = computed(() =>
+    this.wsService.devices().find((o) => o.id === 'head-left'),
+  );
+  private headRight = computed(() =>
+    this.wsService.devices().find((o) => o.id === 'head-right'),
+  );
 
   get context() {
     return this.canvas().nativeElement.getContext('2d', { alpha: false })!;
@@ -65,6 +76,7 @@ export class VisualisationComponent implements AfterViewInit {
     canvas.height = rect.height * dpr;
 
     this.context.scale(dpr, dpr);
+    this.context.save();
 
     canvas.style.width = `${rect.width}px`;
     canvas.style.height = `${rect.height}px`;
@@ -95,8 +107,8 @@ export class VisualisationComponent implements AfterViewInit {
   }
 
   redraw(data: number[]) {
-    this.updateHeroWash(0, 0, 114, data);
-    this.updateHeroWash(300 - 40, 0, 130, data);
+    this.updateHeroWash(0, 0, 114, data, this.headLeft());
+    this.updateHeroWash(300 - 40, 0, 130, data, this.headRight());
 
     this.updateLedPixBar(150 - 82, 50, 50, data);
 
@@ -132,7 +144,39 @@ export class VisualisationComponent implements AfterViewInit {
     return phase > 0.5 ? 1 : 0;
   }
 
-  updateHeroWash(x: number, y: number, address: number, data: number[]) {
+  private getOffset(
+    value: number,
+    valueMin: number,
+    valueMax: number,
+    flipped: boolean,
+  ) {
+    const v = flipped ? valueMax - (value - valueMin) : value;
+
+    const maxLeft = 10;
+    const middle = 20;
+    const maxRight = 30;
+    const valueMiddle = (valueMin + valueMax) / 2;
+
+    if (v <= valueMiddle) {
+      return (
+        maxLeft +
+        ((v - valueMin) * (middle - maxLeft)) / (valueMiddle - valueMin)
+      );
+    } else {
+      return (
+        middle +
+        ((v - valueMiddle) * (maxRight - middle)) / (valueMax - valueMiddle)
+      );
+    }
+  }
+
+  updateHeroWash(
+    x: number,
+    y: number,
+    address: number,
+    data: number[],
+    config?: DeviceConfig,
+  ) {
     // TODO: draw animation position
     const [
       pan,
@@ -153,15 +197,50 @@ export class VisualisationComponent implements AfterViewInit {
     const masterWithStrobe = this.strobeMultiplier(strobe) * master;
     const color = this.colorService.toRGB(masterWithStrobe, r, g, b, w, a, uv);
 
+    // const xOffset = this.getOffset(
+    //   pan,
+    //   config?.minPan ?? 0,
+    //   config?.maxPan ?? 255,
+    //   config?.flipped ?? false,
+    // );
+
     const ctx = this.context;
 
     ctx.fillStyle = this.bgColor;
+    // ctx.fillRect(x, y, 40, 40);
+
+    // Clear area
+    ctx.fillStyle = '#000';
     ctx.fillRect(x, y, 40, 40);
 
-    ctx.fillStyle = color;
+    // Draw static
+    ctx.fillStyle = this.bgColor;
     ctx.beginPath();
     ctx.arc(x + 20, y + 20, 16, 0, 2 * Math.PI);
     ctx.fill();
+
+    // ctx.fillStyle = this.bgColor;
+    // ctx.fillRect(x + 20, y + 20, 20, 20);
+
+    // ctx.fillStyle = '#000';
+    // ctx.beginPath();
+    // ctx.arc(x + 20, y + 20, 16, 0, 2 * Math.PI);
+    // ctx.fill();
+    // ctx.save();
+
+    // ctx.arc(x + 20, y + 20, 16, 0, 2 * Math.PI);
+    // ctx.clip();
+
+    const xOffset = this.getOffset(pan, 0, 255, config?.flipped ?? false);
+    const yOffset = this.getOffset(tilt, 0, 255, false);
+
+    // Draw color
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x + xOffset, y + yOffset, 8, 0, 2 * Math.PI);
+    ctx.fill();
+
+    // ctx.restore();
   }
 
   updateGigabarHex(
