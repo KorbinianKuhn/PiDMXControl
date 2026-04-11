@@ -1,7 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { MatSlider, MatSliderThumb } from '@angular/material/slider';
-import { Device } from '../../../../../services/ws.interfaces';
-import { WSService } from '../../../../../services/ws.service';
+import { Device } from '../../../../../../services/ws.interfaces';
+import { WSService } from '../../../../../../services/ws.service';
 
 @Component({
   selector: 'app-test-channel-device',

@@ -70,8 +70,7 @@ const main = async () => {
     emitter.emit('device-config:updated', {
       devices: dmx.config.devices$.getValue(),
     });
-    emitter.emit('visuals:source-updated', dmx.config.visuals.currentIndex);
-    emitter.emit('visuals:settings-updated', dmx.config.visuals);
+    emitter.emit('visuals:updated', dmx.config.visuals);
   };
 
   dmx.status$.subscribe((status) => {
@@ -161,15 +160,7 @@ const main = async () => {
     });
     socket.on('set:visuals-settings', (args) => {
       if (dmx.isReady) {
-        dmx.config.setVisualsSettings(
-          args.color,
-          args.opacity,
-          args.text,
-          args.left,
-          args.right,
-          args.top,
-          args.bottom,
-        );
+        dmx.config.setVisualsSettings(args);
       }
     });
     socket.on('set:chases-recreate', async () => {

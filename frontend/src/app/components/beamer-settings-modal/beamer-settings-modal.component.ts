@@ -24,26 +24,26 @@ import { PanelGroupComponent } from '../panel-group/panel-group.component';
 export class BeamerSettingsModalComponent {
   private wsService = inject(WSService);
 
-  protected readonly visuals = this.wsService.visualsSettings;
+  protected readonly visuals = this.wsService.visuals;
 
   onVisualIndexChange(event: MatRadioChange<number>) {
     this.wsService.setVisualsSource(event.value);
   }
 
   onToggleColor() {
-    const { currentIndex, ...settings } = this.visuals()!;
-    const color = settings.color === 'chase' ? 'original' : 'chase';
-    this.wsService.setVisualsSettings({ ...settings, color });
+    const visuals = this.visuals()!;
+    const color = visuals.color === 'chase' ? 'original' : 'chase';
+    this.wsService.setVisualsSettings({ color });
   }
 
   onToggleOpacity() {
-    const { currentIndex, ...settings } = this.visuals()!;
-    const opacity = settings.opacity === 'chase' ? 'off' : 'chase';
-    this.wsService.setVisualsSettings({ ...settings, opacity });
+    const visuals = this.visuals()!;
+    const opacity = visuals.opacity === 'chase' ? 'off' : 'chase';
+    this.wsService.setVisualsSettings({ opacity });
   }
 
   onToggleText() {
-    const { currentIndex, ...settings } = this.visuals()!;
-    this.wsService.setVisualsSettings({ ...settings, text: !settings.text });
+    const { showText } = this.visuals()!;
+    this.wsService.setVisualsSettings({ showText: !showText });
   }
 }

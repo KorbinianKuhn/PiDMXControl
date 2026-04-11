@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MatTab, MatTabContent, MatTabGroup } from '@angular/material/tabs';
-import { WSService } from '../../../../services/ws.service';
+import { WSService } from '../../../../../services/ws.service';
 import { TestChannelDeviceComponent } from './test-channel-device/test-channel-device.component';
 
 @Component({

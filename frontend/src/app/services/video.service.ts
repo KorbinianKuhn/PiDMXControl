@@ -32,16 +32,23 @@ export class VideoService {
 
   private address = 146;
   private numChannels = 5;
-  private messages: string[] = [`Niemandsland`]; // TODO: make tests adjustable thorugh app
+  private messages = computed(() =>
+    this.wsService
+      .visuals()
+      .messages.split('\n')
+      .map((o) => o.trim())
+      .filter((o) => !!o),
+  );
+  private lastMessage!: string;
 
-  public readonly visualsSettings = this.wsService.visualsSettings;
+  public readonly visuals = this.wsService.visuals;
+  public readonly sourceChanged = computed(() => this.visuals().currentIndex);
 
   private getVideo(channels: number[]) {
     const [r, g, b, master, strobe] = channels;
 
     const color = this.colorService.toRGB(255, r, g, b, 0, 0, 0);
-    const opacity =
-      this.visualsSettings().opacity === 'chase' ? master / 255 : 1;
+    const opacity = this.visuals().opacity === 'chase' ? master / 255 : 1;
 
     const { classes, duration } = this.colorService.getStrobeClasses(
       strobe,
@@ -76,17 +83,26 @@ export class VideoService {
   });
 
   public readonly text = toSignal(
-    combineLatest([toObservable(this.visualsSettings), interval(10000)]).pipe(
-      filter(([visuals, _]) => visuals.text),
-      map(([_, counter]) => {
+    combineLatest([
+      toObservable(this.visuals),
+      interval(10000),
+      toObservable(this.messages),
+    ]).pipe(
+      filter(([visuals, _]) => visuals.showText),
+      map(([_, counter, messages]) => {
         const show = counter % 5 === 0;
-        let message = this.messages[0];
         if (show) {
-          const index = this.messages.indexOf(message) ?? 0;
-          message = this.messages[(index + 1) % this.messages.length];
+          let index = this.lastMessage
+            ? messages.indexOf(this.lastMessage) + 1
+            : 0;
+
+          if (index > messages.length - 1) {
+            index = 0;
+          }
+          this.lastMessage = messages[index];
         }
         return {
-          message,
+          message: this.lastMessage,
           opacity: show ? 1 : 0,
           transform: '',
         };
@@ -95,7 +111,7 @@ export class VideoService {
   );
 
   setVideoElement(element: HTMLVideoElement) {
-    const visuals = this.wsService.visualsSettings();
+    const visuals = this.wsService.visuals();
 
     element.pause();
     if (visuals.currentIndex < 0) {
@@ -111,7 +127,7 @@ export class VideoService {
   }
 
   onVideoElementMetadataLoaded(element: HTMLVideoElement) {
-    const visuals = this.wsService.visualsSettings();
+    const visuals = this.wsService.visuals();
     if (visuals.currentIndex >= 0) {
       const timeElapsed =
         (new Date().valueOf() - new Date(visuals.startedAt).valueOf()) / 1000;

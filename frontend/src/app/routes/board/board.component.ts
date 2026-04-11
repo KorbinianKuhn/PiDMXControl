@@ -211,7 +211,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   protected readonly visualisation = this.configService.visualisation;
   protected readonly performanceMode = this.configService.performanceMode;
-  protected readonly visualsSettings = this.wsService.visualsSettings;
+  protected readonly visuals = this.wsService.visuals;
   protected readonly black = this.wsService.black;
 
   protected readonly currentColor = computed(() => {
@@ -233,9 +233,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         ?.disabled || false,
   );
 
-  protected isVideoActive = computed(
-    () => this.visualsSettings().currentIndex > -1,
-  );
+  protected isVideoActive = computed(() => this.visuals().currentIndex > -1);
 
   ngOnInit(): void {
     this.mqttService.subscribe('visualisation/#');

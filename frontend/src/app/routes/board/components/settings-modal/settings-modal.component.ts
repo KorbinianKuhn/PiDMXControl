@@ -3,8 +3,9 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatTab, MatTabContent, MatTabGroup } from '@angular/material/tabs';
 import { PadButtonComponent } from '../../../../components/pad-button/pad-button.component';
 import { WSService } from '../../../../services/ws.service';
-import { TestChannelDeviceListComponent } from '../test-channel-device-list/test-channel-device-list.component';
+import { BeamerTextMessagesComponent } from './beamer-text-messages/beamer-text-messages.component';
 import { DeviceConfigListComponent } from './device-config-list/device-config-list.component';
+import { TestChannelDeviceListComponent } from './test-channel-device-list/test-channel-device-list.component';
 
 @Component({
   selector: 'app-settings-modal',
@@ -15,6 +16,7 @@ import { DeviceConfigListComponent } from './device-config-list/device-config-li
     TestChannelDeviceListComponent,
     DeviceConfigListComponent,
     PadButtonComponent,
+    BeamerTextMessagesComponent,
   ],
   templateUrl: './settings-modal.component.html',
   styleUrl: './settings-modal.component.scss',

@@ -82,13 +82,17 @@ export interface DeviceConfig {
   bottom?: number;
 }
 
-export interface Visuals {
+export interface VisualsSettings {
+  color: 'chase' | 'original';
+  opacity: 'chase' | 'off';
+  showText: boolean;
+  messages: string;
+}
+
+export interface Visuals extends VisualsSettings {
   sources: Array<{ url: string }>;
   currentIndex: number;
   startedAt: string;
-  color: 'chase' | 'original';
-  opacity: 'chase' | 'off';
-  text: boolean;
 }
 
 export interface DeviceChannel {
@@ -120,11 +124,7 @@ export interface ClientToServerEvents {
   'set:settings-channel': (payload: { address: number; value: number }) => void;
   'set:device-config': (payload: { id: string; config: DeviceConfig }) => void;
   'set:visuals-source': (payload: { id: number }) => void;
-  'set:visuals-settings': (payload: {
-    color: 'chase' | 'original';
-    opacity: 'chase' | 'off';
-    text: boolean;
-  }) => void;
+  'set:visuals-settings': (payload: Partial<VisualsSettings>) => void;
   'set:chases-recreate': () => void;
 }
 
@@ -161,6 +161,5 @@ export interface ServerToClientEvents {
   'test-channel-data:updated': (payload: { buffer: number[] }) => void;
   'devices:updated': (payload: { devices: Device[] }) => void;
   'device-config:updated': (payload: { devices: DeviceConfig[] }) => void;
-  'visuals:source-updated': (payload: number) => void;
-  'visuals:settings-updated': (payload: Visuals) => void;
+  'visuals:updated': (payload: Visuals) => void;
 }

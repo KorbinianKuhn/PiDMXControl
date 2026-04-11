@@ -11,6 +11,7 @@ import {
   ServerStatus,
   ServerToClientEvents,
   Visuals,
+  VisualsSettings,
 } from './ws.interfaces';
 
 @Injectable({
@@ -55,14 +56,14 @@ export class WSService {
   public readonly deviceConfigs = signal<DeviceConfig[]>([]);
   public readonly devices = signal<Device[]>([]);
 
-  public readonly visualsSource = signal<number>(-1);
-  public readonly visualsSettings = signal<Visuals>({
+  public readonly visuals = signal<Visuals>({
     sources: [],
     currentIndex: -1,
     startedAt: '',
     color: 'chase',
     opacity: 'chase',
-    text: false,
+    showText: false,
+    messages: '',
   });
 
   private getWsUrl(): {
@@ -172,12 +173,8 @@ export class WSService {
       this.devices.set(data.devices);
     });
 
-    this.socket.on('visuals:source-updated', (data) => {
-      this.visualsSource.set(data);
-    });
-
-    this.socket.on('visuals:settings-updated', (data) => {
-      this.visualsSettings.set(data);
+    this.socket.on('visuals:updated', (data) => {
+      this.visuals.set(data);
     });
   }
 
@@ -229,11 +226,7 @@ export class WSService {
     this.socket.emit('set:visuals-source', { id });
   }
 
-  setVisualsSettings(settings: {
-    color: 'chase' | 'original';
-    opacity: 'chase' | 'off';
-    text: boolean;
-  }) {
+  setVisualsSettings(settings: Partial<VisualsSettings>) {
     this.socket.emit('set:visuals-settings', settings);
   }
 

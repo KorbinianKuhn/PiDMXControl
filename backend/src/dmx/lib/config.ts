@@ -33,16 +33,21 @@ interface ConfigStore {
   ambientUV: number;
   activeProgram: ActiveProgramName;
   activeColors: ChaseColor[];
+  visuals: VisualsSettings;
   devices: DeviceConfig[];
 }
 
-export interface Visuals {
+export interface VisualsSettings {
+  color: 'chase' | 'original';
+  opacity: 'chase' | 'off';
+  showText: boolean;
+  messages: string;
+}
+
+export interface Visuals extends VisualsSettings {
   sources: Array<{ url: string }>;
   currentIndex: number;
   startedAt: string;
-  color: 'chase' | 'original';
-  opacity: 'chase' | 'off';
-  text: boolean;
 }
 
 const DEFAULT_CONFIG: ConfigStore = {
@@ -52,6 +57,12 @@ const DEFAULT_CONFIG: ConfigStore = {
   ambientUV: 0,
   activeProgram: ActiveProgramName.MIRROR_BALL,
   activeColors: Object.values(ChaseColor),
+  visuals: {
+    color: 'chase',
+    opacity: 'chase',
+    showText: false,
+    messages: '',
+  },
   devices: [
     ...[
       'hex-1',
@@ -104,7 +115,8 @@ export class Config {
     startedAt: new Date().toISOString(),
     color: 'chase',
     opacity: 'chase',
-    text: false,
+    showText: false,
+    messages: '',
   };
 
   public devices$ = new BehaviorSubject<DeviceConfig[]>([]);
@@ -128,6 +140,12 @@ export class Config {
       ambientUV: this.ambientUV,
       activeProgram: this.activeProgram,
       activeColors: this.activeColors,
+      visuals: {
+        color: this.visuals.color,
+        opacity: this.visuals.opacity,
+        showText: this.visuals.showText,
+        messages: this.visuals.messages,
+      },
       devices: this.devices$.getValue(),
     };
     const content = JSON.stringify(config, null, 2);
@@ -181,6 +199,7 @@ export class Config {
     this.setOverrideProgram(null);
     this.setActiveProgram(config.activeProgram);
     this.setActiveColors(config.activeColors);
+    this.setVisualsSettings(config.visuals);
 
     this.devices$.next(config.devices);
 
@@ -302,23 +321,16 @@ export class Config {
 
   setVisualsSource(currentIndex: number) {
     this.visuals.currentIndex = currentIndex;
-    this.io.emit('visuals:settings-updated', this.visuals);
-    this.io.emit('visuals:source-updated', currentIndex);
+    this.io.emit('visuals:updated', this.visuals);
   }
 
-  setVisualsSettings(
-    color: 'chase' | 'original',
-    opacity: 'chase' | 'off',
-    text: boolean,
-  ) {
+  setVisualsSettings(visuals: Partial<VisualsSettings>) {
     this.visuals = {
       ...this.visuals,
-      color,
-      opacity,
-      text,
+      ...visuals,
     };
     this.store$.next();
-    this.io.emit('visuals:settings-updated', this.visuals);
+    this.io.emit('visuals:updated', this.visuals);
   }
 
   registerDevices(devices: Device[]) {

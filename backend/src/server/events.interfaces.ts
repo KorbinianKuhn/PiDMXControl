@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
 import { ChaseColor } from '../dmx/lib/chase';
-import { DeviceConfig, Visuals } from '../dmx/lib/config';
+import { DeviceConfig, Visuals, VisualsSettings } from '../dmx/lib/config';
 import { Device } from '../dmx/lib/device';
 import { ActiveProgramName, OverrideProgramName } from '../dmx/lib/program';
 
@@ -19,15 +19,7 @@ export interface ClientToServerEvents {
   'set:settings-channel': (payload: { address: number; value: number }) => void;
   'set:device-config': (payload: { id: string; config: DeviceConfig }) => void;
   'set:visuals-source': (payload: { id: number }) => void;
-  'set:visuals-settings': (payload: {
-    color: 'chase' | 'original';
-    opacity: 'chase' | 'off';
-    text: boolean;
-    left: number;
-    right: number;
-    top: number;
-    bottom: number;
-  }) => void;
+  'set:visuals-settings': (payload: Partial<VisualsSettings>) => void;
   'set:chases-recreate': () => void;
 }
 
@@ -58,14 +50,11 @@ export interface ServerToClientEvents {
     progress: number;
   }) => void;
   'active-colors:updated': (payload: { colors: ChaseColor[] }) => void;
-  // 'chase:updated': (payload: { value: number }) => void;
-  // 'step:updated': (payload: { value: number }) => void;
   'test-channel-mode:updated': (payload: { value: boolean }) => void;
   'test-channel-data:updated': (payload: { buffer: number[] }) => void;
   'devices:updated': (payload: { devices: Device[] }) => void;
   'device-config:updated': (payload: { devices: DeviceConfig[] }) => void;
-  'visuals:source-updated': (payload: number) => void;
-  'visuals:settings-updated': (payload: Visuals) => void;
+  'visuals:updated': (payload: Visuals) => void;
 }
 
 export type TypedServer = Server<ClientToServerEvents, ServerToClientEvents>;

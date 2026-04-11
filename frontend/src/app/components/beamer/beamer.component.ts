@@ -32,7 +32,7 @@ export class BeamerComponent {
   protected readonly show = computed(() => {
     if (
       !this.configService.visualisation() ||
-      this.wsService.visualsSource() === -1
+      this.wsService.visuals().currentIndex === -1
     ) {
       return 'hidden';
     }
@@ -46,11 +46,9 @@ export class BeamerComponent {
   protected readonly video = this.videoService.visualisationVideo;
   protected readonly text = this.videoService.text;
   protected readonly videoSelected = computed(
-    () => this.wsService.visualsSource() > -1,
+    () => this.wsService.visuals().currentIndex > -1,
   );
-  protected readonly color = computed(
-    () => this.wsService.visualsSettings().color,
-  );
+  protected readonly color = computed(() => this.wsService.visuals().color);
 
   constructor() {
     effect(() => {
@@ -63,7 +61,7 @@ export class BeamerComponent {
         return;
       }
 
-      const _ = this.wsService.visualsSource();
+      const _ = this.videoService.sourceChanged();
 
       this.videoService.setVideoElement(videoElement.nativeElement);
     });

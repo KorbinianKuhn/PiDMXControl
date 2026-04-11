@@ -46,9 +46,7 @@ export class VisualsComponent implements OnInit, OnDestroy {
       bottom: beamer.bottom!,
     };
   });
-  protected readonly color = computed(
-    () => this.wsService.visualsSettings().color,
-  );
+  protected readonly color = computed(() => this.wsService.visuals().color);
 
   constructor() {
     effect(() => {
@@ -57,7 +55,7 @@ export class VisualsComponent implements OnInit, OnDestroy {
         return;
       }
 
-      const _ = this.wsService.visualsSource();
+      const _ = this.videoService.sourceChanged();
 
       this.videoService.setVideoElement(videoElement.nativeElement);
     });
