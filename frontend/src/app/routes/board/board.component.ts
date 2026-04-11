@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnDestroy, OnInit } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { BeamerSettingsModalComponent } from '../../components/beamer-settings-modal/beamer-settings-modal.component';
@@ -37,7 +37,7 @@ import { SettingsModalComponent } from './components/settings-modal/settings-mod
     ActiveProgramButtonComponent,
     BpmComponent,
     VisualisationComponent,
-    MatButtonModule, // TODO: remove module
+    MatIconButton,
     MatIcon,
   ],
 })

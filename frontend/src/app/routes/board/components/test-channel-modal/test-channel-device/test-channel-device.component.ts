@@ -1,5 +1,5 @@
 import { Component, computed, inject, input } from '@angular/core';
-import { MatSliderModule } from '@angular/material/slider';
+import { MatSlider, MatSliderThumb } from '@angular/material/slider';
 import { Device } from '../../../../../services/ws.interfaces';
 import { WSService } from '../../../../../services/ws.service';
 
@@ -7,9 +7,7 @@ import { WSService } from '../../../../../services/ws.service';
   selector: 'app-test-channel-device',
   templateUrl: './test-channel-device.component.html',
   styleUrls: ['./test-channel-device.component.scss'],
-  imports: [
-    MatSliderModule, // TODO: remove module
-  ],
+  imports: [MatSlider, MatSliderThumb],
 })
 export class TestChannelDeviceComponent {
   private wsService = inject(WSService);

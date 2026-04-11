@@ -1,10 +1,16 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatSliderModule } from '@angular/material/slider';
+import { MatCheckbox } from '@angular/material/checkbox';
+import {
+  MatRadioButton,
+  MatRadioChange,
+  MatRadioGroup,
+} from '@angular/material/radio';
+import {
+  MatSlider,
+  MatSliderDragEvent,
+  MatSliderRangeThumb,
+} from '@angular/material/slider';
 import { WSService } from '../../services/ws.service';
 
 @Component({
@@ -12,12 +18,12 @@ import { WSService } from '../../services/ws.service';
   templateUrl: './beamer-settings-modal.component.html',
   styleUrls: ['./beamer-settings-modal.component.scss'],
   imports: [
-    MatButtonModule, // TODO: remove module
     TitleCasePipe,
-    MatRadioModule, // TODO: remove module
-    FormsModule, // TODO: remove module
-    MatSliderModule, // TODO: remove module
-    MatCheckboxModule, // TODO: remove module
+    MatRadioButton,
+    MatSlider,
+    MatSliderRangeThumb,
+    MatCheckbox,
+    MatRadioGroup,
   ],
 })
 export class BeamerSettingsModalComponent {
@@ -25,13 +31,13 @@ export class BeamerSettingsModalComponent {
 
   protected readonly visuals = this.wsService.visualsSettings;
 
-  onVisualIndexChange(index: number) {
-    this.wsService.setVisualsSource(index);
+  onVisualIndexChange(event: MatRadioChange<number>) {
+    this.wsService.setVisualsSource(event.value);
   }
 
   onSliderChange(
     direction: 'left' | 'right' | 'top' | 'bottom',
-    event: { value: number },
+    event: MatSliderDragEvent,
   ) {
     const { currentIndex, ...settings } = this.visuals()!;
     this.wsService.setVisualsSettings({

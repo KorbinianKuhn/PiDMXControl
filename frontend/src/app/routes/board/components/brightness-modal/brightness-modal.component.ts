@@ -4,7 +4,11 @@ import {
   MatSlideToggle,
   MatSlideToggleChange,
 } from '@angular/material/slide-toggle';
-import { MatSliderDragEvent, MatSliderModule } from '@angular/material/slider';
+import {
+  MatSlider,
+  MatSliderDragEvent,
+  MatSliderThumb,
+} from '@angular/material/slider';
 import { PanelGroupComponent } from '../../../../components/panel-group/panel-group.component';
 import { WSService } from '../../../../services/ws.service';
 
@@ -20,7 +24,8 @@ interface Control {
   styleUrls: ['./brightness-modal.component.scss'],
   imports: [
     PanelGroupComponent,
-    MatSliderModule, // TODO: remove module,
+    MatSlider,
+    MatSliderThumb,
     PercentPipe,
     MatSlideToggle,
   ],

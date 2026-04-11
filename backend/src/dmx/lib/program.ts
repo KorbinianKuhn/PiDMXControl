@@ -86,7 +86,6 @@ export class Program {
 
       if (this.stepIndex >= chase.length - 1) {
         if (this.isOverride && !this.chases[this.chaseIndex].loop) {
-          console.log('here');
           this.config.setOverrideProgram(null);
           this.stop();
           return;

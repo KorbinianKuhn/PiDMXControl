@@ -4,8 +4,8 @@
   <div class="mr-12">
     <label>Source</label>
     <mat-radio-group
-      [(ngModel)]="visuals().currentIndex"
-      (ngModelChange)="onVisualIndexChange($event)"
+      [value]="visuals().currentIndex"
+      (change)="onVisualIndexChange($event)"
       class="flex flex-col"
     >
       <mat-radio-button [value]="-1" color="primary">None</mat-radio-button>
@@ -44,12 +44,12 @@
         <input
           matSliderStartThumb
           (dragEnd)="onSliderChange('left', $event)"
-          [(ngModel)]="visuals().left"
+          [value]="visuals().left"
         />
         <input
           matSliderEndThumb
           (dragEnd)="onSliderChange('right', $event)"
-          [(ngModel)]="visuals().right"
+          [value]="visuals().right"
         />
       </mat-slider>
       <label>Height</label>
@@ -57,12 +57,12 @@
         <input
           matSliderStartThumb
           (dragEnd)="onSliderChange('top', $event)"
-          [(ngModel)]="visuals().top"
+          [value]="visuals().top"
         />
         <input
           matSliderEndThumb
           (dragEnd)="onSliderChange('bottom', $event)"
-          [(ngModel)]="visuals().bottom"
+          [value]="visuals().bottom"
         />
       </mat-slider>
     </div>
