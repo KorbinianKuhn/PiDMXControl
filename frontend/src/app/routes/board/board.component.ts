@@ -269,7 +269,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.dialog.open(BoardColorsModalComponent, {
       panelClass: 'custom-dialog',
       backdropClass: 'custom-backdrop',
-      maxWidth: '602px',
+      maxWidth: '90vw',
     });
   }
 
@@ -282,6 +282,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.dialog.open(BeamerSettingsModalComponent, {
       panelClass: 'custom-dialog',
       backdropClass: 'custom-backdrop',
+      maxWidth: '90vw',
     });
   }
 

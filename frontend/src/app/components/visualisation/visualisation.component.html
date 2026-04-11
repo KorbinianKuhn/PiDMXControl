@@ -1,9 +1,10 @@
 <div class="container" (click)="onClick()">
   <canvas #canvas width="300" height="200"></canvas>
-  <!-- TODO: disabled beamer is not respected yet -->
-  <div class="beamer-wrapper">
-    <app-beamer id="beamer" (click)="onClickBeamer($event)" />
-  </div>
+  @if (showBeamer()) {
+    <div class="beamer-wrapper">
+      <app-beamer id="beamer" (click)="onClickBeamer($event)" />
+    </div>
+  }
   @if (!mqttConnected()) {
     <div class="message text-xs tracking-wide">
       Waiting for dmx connection...

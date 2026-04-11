@@ -1,8 +1,8 @@
-<mat-tab-group class="h-screen w-100">
+<mat-tab-group class="h-screen">
   @for (device of configs(); track device.id) {
     <mat-tab [label]="device.id">
       <ng-template matTabContent>
-        <app-device-config [device]="device"></app-device-config>
+        <app-device-config [device]="device" class="mt-2"></app-device-config>
       </ng-template>
     </mat-tab>
   }

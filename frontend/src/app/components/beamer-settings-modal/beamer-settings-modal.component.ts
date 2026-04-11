@@ -6,12 +6,8 @@ import {
   MatRadioChange,
   MatRadioGroup,
 } from '@angular/material/radio';
-import {
-  MatSlider,
-  MatSliderDragEvent,
-  MatSliderRangeThumb,
-} from '@angular/material/slider';
 import { WSService } from '../../services/ws.service';
+import { PanelGroupComponent } from '../panel-group/panel-group.component';
 
 @Component({
   selector: 'app-beamer-settings-modal',
@@ -20,10 +16,9 @@ import { WSService } from '../../services/ws.service';
   imports: [
     TitleCasePipe,
     MatRadioButton,
-    MatSlider,
-    MatSliderRangeThumb,
     MatCheckbox,
     MatRadioGroup,
+    PanelGroupComponent,
   ],
 })
 export class BeamerSettingsModalComponent {
@@ -33,17 +28,6 @@ export class BeamerSettingsModalComponent {
 
   onVisualIndexChange(event: MatRadioChange<number>) {
     this.wsService.setVisualsSource(event.value);
-  }
-
-  onSliderChange(
-    direction: 'left' | 'right' | 'top' | 'bottom',
-    event: MatSliderDragEvent,
-  ) {
-    const { currentIndex, ...settings } = this.visuals()!;
-    this.wsService.setVisualsSettings({
-      ...settings,
-      [direction]: event.value,
-    });
   }
 
   onToggleColor() {

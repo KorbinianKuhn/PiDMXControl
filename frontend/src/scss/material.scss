@@ -4,6 +4,7 @@
 
 .mat-mdc-dialog-container {
   --mat-dialog-container-color: #000;
+  --mat-dialog-container-shape: 0;
 }
 
 .mdc-slider__value-indicator {
@@ -24,4 +25,26 @@ mat-slider {
 
 .mat-mdc-progress-bar {
   --mat-progress-bar-active-indicator-color: #fff;
+}
+
+.mdc-icon-button {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.mdc-dialog__surface {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mat-mdc-tab {
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  min-width: 0 !important;
+}
+
+mat-tab-group {
+  width: 100% !important;
 }

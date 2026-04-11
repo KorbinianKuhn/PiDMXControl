@@ -27,7 +27,6 @@ export class BpmModalComponent {
   private dialogRef = inject(MatDialogRef<BpmModalComponent>);
 
   private taps: number[] = [];
-  private precision = 5;
 
   protected readonly bpm = this.wsService.bpm;
   protected readonly presets = [70, 90, 110, 120, 128, 135, 140, 145, 150, 160];
@@ -36,70 +35,45 @@ export class BpmModalComponent {
     this.wsService.setStart();
   }
 
-  // TODO: optimise detection
   onClickTap() {
-    this.taps.push(Date.now());
+    const now = performance.now();
 
-    let ticks = [];
-
-    if (this.taps.length >= 2) {
-      for (let i = 0; i < this.taps.length; i++) {
-        if (i >= 1) {
-          // calc bpm between last two taps
-          ticks.push(
-            Math.round(
-              (60 / (this.taps[i] / 1000 - this.taps[i - 1] / 1000)) * 100,
-            ) / 100,
-          );
-        }
-      }
+    // Reset on pause
+    if (this.taps.length && now - this.taps.at(-1)! > 2000) {
+      this.taps = [];
     }
 
-    if (this.taps.length >= 24) {
-      this.taps.shift();
-    }
-
-    if (ticks.length >= 4) {
-      let n = 0;
-
-      for (let i = ticks.length - 1; i >= 0; i--) {
-        n += ticks[i];
-        if (ticks.length - i >= this.precision) break;
-      }
-
-      const bpm = Math.round((n / this.precision) * 2) / 2;
-      this.wsService.setBpm(bpm);
-    }
-  }
-
-  onClickTap2() {
-    const now = Date.now();
-    const length = this.taps.length;
-
-    if (length === 0) {
-      this.taps.push(now);
-      return;
-    }
-
-    const latest = this.taps[length - 1];
-    if (now - latest > 2000) {
-      this.taps = [now];
-      return;
-    }
-
-    if (length > 5) {
-      this.taps.shift();
-    }
     this.taps.push(now);
 
-    let sum = 0;
-    for (let i = 1; i < this.taps.length; i++) {
-      sum += this.taps[i] - this.taps[i - 1];
+    if (this.taps.length > 12) {
+      this.taps.shift();
     }
 
-    const bpm = 60000 / (sum / (this.taps.length - 1));
+    if (this.taps.length < 2) return;
 
-    this.wsService.setBpm(bpm);
+    const intervals = this.taps
+      .slice(1)
+      .map((o, i) => o - this.taps[i])
+      .filter((i) => i > 100 && i < 2000); // guard
+
+    if (intervals.length === 0) return;
+
+    // focus on recent taps only (more responsive)
+    const recent = intervals.slice(-6);
+
+    const avg = recent.reduce((a, b) => a + b, 0) / recent.length;
+
+    // outlier rejection
+    const filtered = recent.filter((i) => Math.abs(i - avg) < avg * 0.2);
+    const safe = filtered.length ? filtered : recent;
+
+    const finalAvg = safe.reduce((a, b) => a + b, 0) / safe.length;
+
+    const bpm = 60000 / finalAvg;
+
+    const roundedBpm = Math.round(bpm);
+
+    this.wsService.setBpm(roundedBpm);
   }
 
   onSliderChange(event: MatSliderDragEvent) {

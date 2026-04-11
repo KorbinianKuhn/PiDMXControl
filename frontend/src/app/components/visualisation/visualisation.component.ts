@@ -65,6 +65,11 @@ export class VisualisationComponent implements AfterViewInit {
   private headRight = computed(
     () => this.wsService.deviceConfigs().find((o) => o.id === 'head-right')!,
   );
+  private beamer = computed(
+    () => this.wsService.deviceConfigs().find((o) => o.id === 'beamer')!,
+  );
+
+  protected showBeamer = computed(() => !this.beamer()?.disabled);
 
   get context() {
     return this.canvas().nativeElement.getContext('2d', { alpha: false })!;

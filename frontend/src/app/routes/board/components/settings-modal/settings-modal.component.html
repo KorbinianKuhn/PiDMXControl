@@ -1,28 +1,33 @@
-<mat-tab-group class="h-screen w-100">
-  <!-- TODO: Max tab group width 100 -->
+<mat-tab-group class="h-screen">
   <mat-tab label="Actions">
-    <div class="flex">
-      <app-pad-button
-        color="bg-cyan-400"
-        [active]="testChannelMode()"
-        (click)="onToggleTestChannelMode()"
-        class="m-2"
-        >Channel Tester</app-pad-button
-      >
+    <ng-template matTabContent>
+      <div class="flex">
+        <app-pad-button
+          color="bg-cyan-400"
+          [active]="testChannelMode()"
+          (click)="onToggleTestChannelMode()"
+          class="m-2"
+          >Channel Tester</app-pad-button
+        >
 
-      <app-pad-button
-        color="bg-red-400"
-        [active]="false"
-        class="m-2"
-        (click)="onClickRecreateChases()"
-        >Recreate chases</app-pad-button
-      >
-    </div>
+        <app-pad-button
+          color="bg-red-400"
+          [active]="false"
+          class="m-2"
+          (click)="onClickRecreateChases()"
+          >Recreate chases</app-pad-button
+        >
+      </div>
+    </ng-template>
   </mat-tab>
   <mat-tab label="Settings">
-    <app-device-config-list></app-device-config-list>
+    <ng-template matTabContent>
+      <app-device-config-list></app-device-config-list>
+    </ng-template>
   </mat-tab>
   <mat-tab label="Test channels">
-    <app-test-channel-modal></app-test-channel-modal>
+    <ng-template matTabContent>
+      <app-test-channel-device-list></app-test-channel-device-list>
+    </ng-template>
   </mat-tab>
 </mat-tab-group>

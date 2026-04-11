@@ -18,15 +18,17 @@
         <td class="w-10">{{ index + device().address }}</td>
         <td class="w-15">{{ channel.type }}</td>
         <td>
-          <mat-slider [min]="0" [max]="255" [step]="1" discrete>
-            <input
-              matSliderThumb
-              [value]="values()[index]"
-              (valueChange)="onValueChange(index + device().address, $event)"
-            />
-          </mat-slider>
+          <div class="flex items-center">
+            <mat-slider [min]="0" [max]="255" [step]="1" discrete>
+              <input
+                matSliderThumb
+                [value]="values()[index]"
+                (valueChange)="onValueChange(index + device().address, $event)"
+              />
+            </mat-slider>
+            <span class="ml-6">{{ values()[index] }}</span>
+          </div>
         </td>
-        <td class="w-10">{{ values()[index] }}</td>
       </tr>
     }
   </tbody>

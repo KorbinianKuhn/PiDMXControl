@@ -81,7 +81,6 @@ export const COLORS_TO_DARKER: { [key: string]: string } = {
   pink: 'to-pink-600',
 };
 
-// TODO: Cannot close modal on smaller screens
 @Component({
   selector: 'app-board-colors-modal',
   templateUrl: './board-colors-modal.component.html',

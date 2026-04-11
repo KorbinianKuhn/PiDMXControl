@@ -63,10 +63,6 @@ export class WSService {
     color: 'chase',
     opacity: 'chase',
     text: false,
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
   });
 
   private getWsUrl(): {
@@ -237,10 +233,6 @@ export class WSService {
     color: 'chase' | 'original';
     opacity: 'chase' | 'off';
     text: boolean;
-    left: number;
-    right: number;
-    top: number;
-    bottom: number;
   }) {
     this.socket.emit('set:visuals-settings', settings);
   }

@@ -76,6 +76,10 @@ export interface DeviceConfig {
   maxPan?: number;
   minTilt?: number;
   maxTilt?: number;
+  left?: number;
+  right?: number;
+  top?: number;
+  bottom?: number;
 }
 
 export interface Visuals {
@@ -85,10 +89,6 @@ export interface Visuals {
   color: 'chase' | 'original';
   opacity: 'chase' | 'off';
   text: boolean;
-  left: number;
-  right: number;
-  top: number;
-  bottom: number;
 }
 
 export interface DeviceChannel {
@@ -124,10 +124,6 @@ export interface ClientToServerEvents {
     color: 'chase' | 'original';
     opacity: 'chase' | 'off';
     text: boolean;
-    left: number;
-    right: number;
-    top: number;
-    bottom: number;
   }) => void;
   'set:chases-recreate': () => void;
 }

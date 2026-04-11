@@ -1,0 +1,82 @@
+:root {
+  --mat-sys-surface: #000;
+}
+
+button {
+  touch-action: manipulation;
+}
+
+.strobe {
+  animation-delay: 0s;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  opacity: 0;
+  &.slow {
+    animation-name: fade-animation-slow;
+  }
+  &.middle {
+    animation-name: fade-animation-middle;
+  }
+  &.fast {
+    animation-name: fade-animation-fast;
+  }
+}
+
+@keyframes fade-animation-fast {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  0% {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-animation-middle {
+  25% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-animation-slow {
+  40% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0;
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+@font-face {
+  font-family: "Nasalization";
+  src: url("../assets/nasalization.otf") format("opentype");
+}
+
+.custom-dialog {
+  overflow: scroll;
+}
+
+.custom-backdrop {
+  background: #000;
+}

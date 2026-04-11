@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { MatTab, MatTabContent, MatTabGroup } from '@angular/material/tabs';
 import { PadButtonComponent } from '../../../../components/pad-button/pad-button.component';
 import { WSService } from '../../../../services/ws.service';
-import { TestChannelModalComponent } from '../test-channel-modal/test-channel-modal.component';
+import { TestChannelDeviceListComponent } from '../test-channel-device-list/test-channel-device-list.component';
 import { DeviceConfigListComponent } from './device-config-list/device-config-list.component';
 
 @Component({
@@ -11,7 +11,8 @@ import { DeviceConfigListComponent } from './device-config-list/device-config-li
   imports: [
     MatTabGroup,
     MatTab,
-    TestChannelModalComponent,
+    MatTabContent,
+    TestChannelDeviceListComponent,
     DeviceConfigListComponent,
     PadButtonComponent,
   ],

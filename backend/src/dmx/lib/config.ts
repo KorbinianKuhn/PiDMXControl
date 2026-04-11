@@ -21,6 +21,10 @@ export interface DeviceConfig {
   minTilt?: number;
   maxTilt?: number;
   flipped?: boolean;
+  left?: number;
+  right?: number;
+  top?: number;
+  bottom?: number;
 }
 interface ConfigStore {
   bpm: number;
@@ -30,12 +34,6 @@ interface ConfigStore {
   activeProgram: ActiveProgramName;
   activeColors: ChaseColor[];
   devices: DeviceConfig[];
-  visuals: {
-    left: number;
-    right: number;
-    top: number;
-    bottom: number;
-  };
 }
 
 export interface Visuals {
@@ -45,10 +43,6 @@ export interface Visuals {
   color: 'chase' | 'original';
   opacity: 'chase' | 'off';
   text: boolean;
-  left: number;
-  right: number;
-  top: number;
-  bottom: number;
 }
 
 const DEFAULT_CONFIG: ConfigStore = {
@@ -68,7 +62,6 @@ const DEFAULT_CONFIG: ConfigStore = {
       'bar',
       'dome',
       'spot',
-      'beamer',
       'neopixel-a',
       'neopixel-b',
     ].map((id) => ({ id, master: 1, disabled: false })),
@@ -82,13 +75,16 @@ const DEFAULT_CONFIG: ConfigStore = {
       minTilt: 0,
       maxTilt: 128,
     })),
+    {
+      id: 'beamer',
+      master: 1,
+      disabled: false,
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+    },
   ],
-  visuals: {
-    left: 0,
-    right: 100,
-    top: 0,
-    bottom: 100,
-  },
 };
 
 export class Config {
@@ -109,10 +105,6 @@ export class Config {
     color: 'chase',
     opacity: 'chase',
     text: false,
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
   };
 
   public devices$ = new BehaviorSubject<DeviceConfig[]>([]);
@@ -137,12 +129,6 @@ export class Config {
       activeProgram: this.activeProgram,
       activeColors: this.activeColors,
       devices: this.devices$.getValue(),
-      visuals: {
-        left: this.visuals.left,
-        right: this.visuals.right,
-        top: this.visuals.top,
-        bottom: this.visuals.bottom,
-      },
     };
     const content = JSON.stringify(config, null, 2);
     await writeFile(CONFIG_PATH, content);
@@ -156,7 +142,7 @@ export class Config {
       try {
         const content = readFileSync(CONFIG_PATH, 'utf-8');
         const savedConfig = JSON.parse(content) as ConfigStore;
-        const { visuals, devices, ...values } = savedConfig;
+        const { devices, ...values } = savedConfig;
 
         const allDevices = [];
         for (const device of devices) {
@@ -178,10 +164,6 @@ export class Config {
         config = {
           ...config,
           ...values,
-          visuals: {
-            ...config.visuals,
-            ...visuals,
-          },
           devices: allDevices,
         };
       } catch (error) {
@@ -201,13 +183,6 @@ export class Config {
     this.setActiveColors(config.activeColors);
 
     this.devices$.next(config.devices);
-
-    // TODO: save visual settings
-
-    this.visuals.left = config.visuals?.left;
-    this.visuals.right = config.visuals?.right;
-    this.visuals.top = config.visuals?.top;
-    this.visuals.bottom = config.visuals?.bottom;
 
     this.speed$.next(60000 / this.bpm);
   }
@@ -335,20 +310,12 @@ export class Config {
     color: 'chase' | 'original',
     opacity: 'chase' | 'off',
     text: boolean,
-    left: number,
-    right: number,
-    top: number,
-    bottom: number,
   ) {
     this.visuals = {
       ...this.visuals,
       color,
       opacity,
       text,
-      left,
-      right,
-      top,
-      bottom,
     };
     this.store$.next();
     this.io.emit('visuals:settings-updated', this.visuals);

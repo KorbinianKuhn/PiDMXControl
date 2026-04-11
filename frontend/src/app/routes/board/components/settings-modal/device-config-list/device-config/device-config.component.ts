@@ -62,6 +62,15 @@ export class DeviceConfigComponent {
             max: 1,
             step: 0.05,
           };
+        } else if (['left', 'right', 'top', 'bottom'].includes(key)) {
+          return {
+            type: 'slider',
+            key,
+            value: value as number,
+            min: 0,
+            max: 50,
+            step: 1,
+          };
         } else {
           return {
             type: 'slider',
@@ -69,7 +78,7 @@ export class DeviceConfigComponent {
             value: value as number,
             min: 0,
             max: 255,
-            step: 1,
+            step: 5,
           };
         }
       }),

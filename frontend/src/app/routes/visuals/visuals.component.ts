@@ -31,12 +31,19 @@ export class VisualsComponent implements OnInit, OnDestroy {
   protected readonly text = this.videoService.text;
   protected readonly video = this.videoService.dmxVideo;
   protected readonly crop = computed(() => {
-    const visuals = this.wsService.visualsSettings();
+    const beamer = this.wsService
+      .deviceConfigs()
+      .find((o) => o.id === 'beamer');
+
+    if (!beamer) {
+      return { left: 0, right: 0, top: 0, bottom: 0 };
+    }
+
     return {
-      left: visuals.left,
-      right: 100 - visuals.right,
-      top: visuals.top,
-      bottom: 100 - visuals.bottom,
+      left: beamer.left!,
+      right: beamer.right!,
+      top: beamer.top!,
+      bottom: beamer.bottom!,
     };
   });
   protected readonly color = computed(
