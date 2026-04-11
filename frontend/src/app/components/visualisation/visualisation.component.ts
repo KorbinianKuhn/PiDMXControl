@@ -8,7 +8,6 @@ import {
   viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { MatIconModule } from '@angular/material/icon';
 import {
   animationFrameScheduler,
   combineLatest,
@@ -28,7 +27,7 @@ import { BeamerComponent } from '../beamer/beamer.component';
   selector: 'app-visualisation',
   templateUrl: './visualisation.component.html',
   styleUrls: ['./visualisation.component.scss'],
-  imports: [BeamerComponent, MatIconModule],
+  imports: [BeamerComponent],
 })
 export class VisualisationComponent implements AfterViewInit {
   private colorService = inject(ColorService);
@@ -190,7 +189,8 @@ export class VisualisationComponent implements AfterViewInit {
     valueMax: number,
     flipped: boolean,
   ) {
-    const v = flipped ? valueMax - (value - valueMin) : value;
+    const clamped = Math.min(Math.max(value, valueMin), valueMax);
+    const v = flipped ? valueMax - (clamped - valueMin) : clamped;
 
     const maxLeft = 10;
     const maxRight = 30;
@@ -224,7 +224,7 @@ export class VisualisationComponent implements AfterViewInit {
     ctx.fillStyle = '#000';
     ctx.fillRect(x, y, 40, 40);
 
-    if (config?.disabled) {
+    if (config.disabled) {
       return;
     }
 
@@ -254,14 +254,14 @@ export class VisualisationComponent implements AfterViewInit {
 
     const xOffset = this.getOffset(
       pan,
-      config?.minPan ?? 0,
-      config?.maxPan ?? 0,
-      config?.flipped ?? false,
+      config.minPan ?? 0,
+      config.maxPan ?? 0,
+      config.flipped ?? false,
     );
     const yOffset = this.getOffset(
       tilt,
-      config?.minTilt ?? 0,
-      config?.maxTilt ?? 0,
+      config.minTilt ?? 0,
+      config.maxTilt ?? 0,
       true,
     );
 

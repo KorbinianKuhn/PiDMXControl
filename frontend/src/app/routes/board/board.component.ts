@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIcon } from '@angular/material/icon';
 import { BeamerSettingsModalComponent } from '../../components/beamer-settings-modal/beamer-settings-modal.component';
 import { BpmComponent } from '../../components/bpm/bpm.component';
 import { PadButtonComponent } from '../../components/pad-button/pad-button.component';
@@ -37,8 +37,8 @@ import { SettingsModalComponent } from './components/settings-modal/settings-mod
     ActiveProgramButtonComponent,
     BpmComponent,
     VisualisationComponent,
-    MatButtonModule,
-    MatIconModule,
+    MatButtonModule, // TODO: remove module
+    MatIcon,
   ],
 })
 export class BoardComponent implements OnInit, OnDestroy {

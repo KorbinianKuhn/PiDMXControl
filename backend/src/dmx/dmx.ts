@@ -76,6 +76,7 @@ export class DMX {
     }
 
     this.setActiveProgram(this.config.activeProgram);
+    this.activeProgram.start();
     this.clock.enable();
   }
 
@@ -91,16 +92,12 @@ export class DMX {
   setOverrideProgram(value: OverrideProgramName | null) {
     this.config.setOverrideProgram(value);
     if (value === null) {
-      this.overrideProgram.reset();
-      this.io.emit('override-program:progress', {
-        programName: '',
-        color: '',
-        progress: 0,
-      });
+      this.overrideProgram.stop();
     } else {
       this.overrideProgram.setChases(
         this.chases.override(value, this.activeProgram.currentChase()?.color),
       );
+      this.overrideProgram.start();
     }
   }
 
@@ -114,9 +111,10 @@ export class DMX {
     this.activeProgram.setChases(this.chases.active(this.config.activeProgram));
   }
 
-  data(dmx: boolean): Buffer {
+  data(): { dmx: Buffer; visualisation: Buffer } {
     if (this.config.testChannelMode) {
-      return this.config.testChannelData;
+      const data = this.config.testChannelData;
+      return { dmx: data, visualisation: data };
     }
 
     this.io.emit('active-program:progress', {
@@ -129,79 +127,84 @@ export class DMX {
       });
     }
 
-    if (this.config.black) {
-      return Buffer.alloc(512 + 1, 0);
-    }
-
-    const data: Buffer = this.config.overrideProgram
+    const visualisation: Buffer = this.config.overrideProgram
       ? this.overrideProgram.data()
       : this.activeProgram.data();
 
-    // UV override
-    if (this.config.ambientUV !== 0) {
-      for (const address of this.devices.ambientUVChannels) {
-        data[address] = Math.max(data[address], this.config.ambientUV);
+    const dmx = Buffer.from(visualisation);
+
+    // Overrides
+    for (const channel of this.devices.overrides) {
+      // Black
+      if (channel.disabled || this.config.black) {
+        visualisation[channel.address] = 0;
+        dmx[channel.address] = 0;
+        continue;
       }
-      for (const address of this.devices.ambientUVMasterChannels) {
-        data[address] = 255;
+
+      // UV
+      if (this.config.ambientUV !== 0 && channel.uv) {
+        visualisation[channel.uv] = Math.max(
+          visualisation[channel.uv],
+          this.config.ambientUV,
+        );
+        visualisation[channel.address] = 255;
+        dmx[channel.uv] = Math.max(dmx[channel.uv], this.config.ambientUV);
+        dmx[channel.address] = 255;
+      }
+
+      // Master
+      const multiplier = this.config.master * channel.master;
+      if (multiplier !== 1) {
+        dmx[channel.address] = Math.round(dmx[channel.address] * multiplier);
       }
     }
 
-    // Master override
-    for (const device of this.devices.masterChannels) {
-      const config = this.config.getDeviceConfig(device.deviceId);
-      if (config.disabled) {
-        for (const channel of device.channels) {
-          data[channel] = 0;
-        }
-      } else if (dmx) {
-        const multiplier = this.config.master * config.master;
-        if (multiplier !== 1) {
-          for (const channel of device.channels) {
-            data[channel] = Math.round(data[channel] * multiplier);
-          }
-        }
-      }
-    }
-
-    return data;
+    return {
+      dmx,
+      visualisation,
+    };
   }
 
-  neopixelData(dmx: boolean): Buffer {
+  neopixelData(): { dmx: Buffer; visualisation: Buffer } {
     if (this.config.testChannelMode || this.config.black) {
-      return Buffer.alloc(2 * 150 * 4, 0);
+      const data = Buffer.alloc(2 * 150 * 4, 0);
+      return {
+        dmx: data,
+        visualisation: data,
+      };
     }
-    const buffer = this.config.overrideProgram
+
+    const visualisation = this.config.overrideProgram
       ? this.overrideProgram.pixelData()
       : this.activeProgram.pixelData();
 
-    if (dmx) {
-      const master = this.config.getDeviceConfig('neopixel-a').master;
-      const multiplier = this.config.master * master;
-      for (let i = 0; i < buffer.length; i++) {
-        if (buffer[i] !== 0) {
-          buffer[i] = Math.round(buffer[i] * multiplier);
-        }
+    const dmx = Buffer.from(visualisation);
+    const master = this.config.getDeviceConfig('neopixel-a').master;
+    const multiplier = this.config.master * master;
+    for (let i = 0; i < dmx.length; i++) {
+      if (dmx[i] !== 0) {
+        dmx[i] = Math.round(dmx[i] * multiplier);
       }
     }
 
-    return buffer;
+    return {
+      dmx,
+      visualisation,
+    };
   }
 
   async _send() {
-    const dmx = this.data(true);
+    const { dmx, visualisation } = this.data();
     this.mqtt.send('dmx', dmx);
-
-    const visualisation = this.data(false);
     this.mqtt.send('visualisation/dmx', visualisation);
   }
 
   async _sendMQTT() {
-    const dmx = this.neopixelData(true);
+    const { dmx, visualisation } = this.neopixelData();
     this.mqtt.send('neopixel-a', dmx.subarray(0, 600));
     this.mqtt.send('neopixel-b', dmx.subarray(600, 1200));
 
-    const visualisation = this.neopixelData(false);
     this.mqtt.send('visualisation/neopixel-a', visualisation.subarray(0, 600));
     this.mqtt.send(
       'visualisation/neopixel-b',

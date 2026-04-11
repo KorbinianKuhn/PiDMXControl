@@ -1,5 +1,4 @@
 import { Component, computed, inject } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
 import { PadButtonComponent } from '../../../../components/pad-button/pad-button.component';
 import { PanelGroupComponent } from '../../../../components/panel-group/panel-group.component';
 import { ToggleButtonComponent } from '../../../../components/toggle-button/toggle-button.component';
@@ -82,6 +81,7 @@ export const COLORS_TO_DARKER: { [key: string]: string } = {
   pink: 'to-pink-600',
 };
 
+// TODO: Cannot close modal on smaller screens
 @Component({
   selector: 'app-board-colors-modal',
   templateUrl: './board-colors-modal.component.html',
@@ -90,7 +90,6 @@ export const COLORS_TO_DARKER: { [key: string]: string } = {
 })
 export class BoardColorsModalComponent {
   private wsService = inject(WSService);
-  private dialogRef = inject(MatDialogRef<BoardColorsModalComponent>);
 
   private readonly allColors = Object.values(ChaseColor);
   private readonly activeColors = this.wsService.activeColors;

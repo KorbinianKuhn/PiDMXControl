@@ -7,7 +7,10 @@ import { TestChannelDeviceComponent } from './test-channel-device/test-channel-d
   selector: 'app-test-channel-modal',
   templateUrl: './test-channel-modal.component.html',
   styleUrls: ['./test-channel-modal.component.scss'],
-  imports: [TestChannelDeviceComponent, MatTabsModule],
+  imports: [
+    TestChannelDeviceComponent,
+    MatTabsModule, // TODO: remove module
+  ],
 })
 export class TestChannelModalComponent {
   private readonly wsService = inject(WSService);

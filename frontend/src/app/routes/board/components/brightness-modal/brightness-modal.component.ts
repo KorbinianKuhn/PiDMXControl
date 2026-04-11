@@ -18,7 +18,12 @@ interface Control {
   selector: 'app-brightness-modal',
   templateUrl: './brightness-modal.component.html',
   styleUrls: ['./brightness-modal.component.scss'],
-  imports: [PanelGroupComponent, MatSliderModule, PercentPipe, MatSlideToggle],
+  imports: [
+    PanelGroupComponent,
+    MatSliderModule, // TODO: remove module,
+    PercentPipe,
+    MatSlideToggle,
+  ],
 })
 export class BrightnessModalComponent {
   private wsService = inject(WSService);

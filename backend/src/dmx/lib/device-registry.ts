@@ -1,3 +1,4 @@
+import { Logger } from '../../utils/logger';
 import { AdjSaberSpot } from '../devices/adj-saber-spot';
 import { Beamer } from '../devices/beamer';
 import { EuroliteLedPixBar } from '../devices/eurolite-led-pix-bar';
@@ -8,13 +9,15 @@ import { VarytecHeroWash } from '../devices/varytec-hero-wash';
 import { Config } from './config';
 import { ChannelType, COLOR_CHANNELS } from './device';
 
+interface OverrideChannel {
+  disabled: boolean;
+  master: number;
+  address: number;
+  uv: number;
+}
+
 export class DeviceRegistry {
-  public masterChannels: Array<{
-    deviceId: string;
-    channels: number[];
-  }> = [];
-  public ambientUVChannels: number[] = [];
-  public ambientUVMasterChannels: number[] = [];
+  private logger = new Logger('DeviceRegistry');
 
   private hex1 = new VarytecGigabarHex(1, 'hex-1', this.config);
   private hex2 = new VarytecGigabarHex(10, 'hex-2', this.config);
@@ -46,43 +49,57 @@ export class DeviceRegistry {
     this.neopixelB,
   ];
 
+  public overrides: OverrideChannel[] = [];
+
   constructor(private config: Config) {
-    for (const device of this.devices) {
-      if (device instanceof NeopixelStrip) {
-        continue;
-      }
-
-      if (device instanceof FunGenerationLedDiamondDome) {
-        this.masterChannels.push({
-          deviceId: device.id,
-          channels: device.channels
-            .filter((o) => COLOR_CHANNELS.includes(o.type))
-            .map((o) => o.address),
-        });
-      } else {
-        this.masterChannels.push({
-          deviceId: device.id,
-          channels: device.channels
-            .filter((o) => o.type === ChannelType.MASTER)
-            .map((o) => o.address),
-        });
-      }
-
-      if (device instanceof VarytecGigabarHex) {
-        this.ambientUVChannels.push(
-          ...device.channels
-            .filter((o) => o.type === ChannelType.UV)
-            .map((o) => o.address),
-        );
-        this.ambientUVMasterChannels.push(
-          ...device.channels
-            .filter((o) => o.type === ChannelType.MASTER)
-            .map((o) => o.address),
-        );
-      }
-    }
-
     this.config.registerDevices(this.devices);
+
+    config.devices$.subscribe((deviceConfigs) => {
+      const overrides: OverrideChannel[] = [];
+
+      for (const config of deviceConfigs) {
+        const device = this.devices.find((o) => o.id === config.id);
+
+        if (!device) {
+          this.logger.warn(`Unknown device ${config.id}`);
+          continue;
+        }
+
+        if (device instanceof NeopixelStrip) {
+          continue;
+        }
+
+        if (device instanceof FunGenerationLedDiamondDome) {
+          overrides.push(
+            ...device.channels
+              .filter((o) => COLOR_CHANNELS.includes(o.type))
+              .map((o) => ({
+                disabled: config.disabled,
+                master: config.master,
+                address: o.address,
+                uv: null,
+              })),
+          );
+        } else {
+          overrides.push(
+            ...device.channels
+              .filter((o) => o.type === ChannelType.MASTER)
+              .map((o) => ({
+                disabled: config.disabled,
+                master: config.master,
+                address: o.address,
+                uv:
+                  device instanceof VarytecGigabarHex
+                    ? device.channels.find((o) => o.type === ChannelType.UV)
+                        .address
+                    : null,
+              })),
+          );
+        }
+      }
+
+      this.overrides = overrides;
+    });
   }
 
   list() {

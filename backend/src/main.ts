@@ -68,7 +68,7 @@ const main = async () => {
       devices: dmx.listDevices(),
     });
     emitter.emit('device-config:updated', {
-      devices: dmx.config.devices,
+      devices: dmx.config.devices$.getValue(),
     });
     emitter.emit('visuals:source-updated', dmx.config.visuals.currentIndex);
     emitter.emit('visuals:settings-updated', dmx.config.visuals);

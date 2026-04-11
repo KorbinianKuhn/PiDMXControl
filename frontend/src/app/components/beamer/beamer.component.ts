@@ -7,7 +7,7 @@ import {
   input,
   viewChild,
 } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIcon } from '@angular/material/icon';
 import { ConfigService } from '../../services/config.service';
 import { VideoService } from '../../services/video.service';
 import { WSService } from '../../services/ws.service';
@@ -16,7 +16,7 @@ import { WSService } from '../../services/ws.service';
   selector: 'app-beamer',
   templateUrl: './beamer.component.html',
   styleUrls: ['./beamer.component.scss'],
-  imports: [MatIconModule],
+  imports: [MatIcon],
 })
 export class BeamerComponent {
   private videoService = inject(VideoService);

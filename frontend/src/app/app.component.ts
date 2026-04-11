@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { MatIcon, MatIconRegistry } from '@angular/material/icon';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressBar } from '@angular/material/progress-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import { map, throttleTime } from 'rxjs';
@@ -24,7 +24,7 @@ const ICONS = [
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  imports: [RouterOutlet, MatIcon, MatProgressBarModule],
+  imports: [RouterOutlet, MatIcon, MatProgressBar],
 })
 export class AppComponent {
   private wsService = inject(WSService);

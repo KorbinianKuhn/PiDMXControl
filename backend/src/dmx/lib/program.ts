@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import { Logger } from '../../utils/logger';
 import { Chase } from './chase';
 import { Clock } from './clock';
@@ -52,6 +53,8 @@ export class Program {
   private chases: Chase[] = [];
   private logger = new Logger(this.constructor.name);
 
+  private isRunning = false;
+
   get chase(): Chase {
     return this.chases[this.chaseIndex];
   }
@@ -61,8 +64,12 @@ export class Program {
     private config: Config,
     private isOverride: boolean,
   ) {
-    this.clock.tick$.subscribe(() => this._next());
-    this.clock.microtick$.subscribe(() => this._nextMicrotick());
+    this.clock.tick$
+      .pipe(filter(() => this.isRunning))
+      .subscribe(() => this._next());
+    this.clock.microtick$
+      .pipe(filter(() => this.isRunning))
+      .subscribe(() => this._nextMicrotick());
   }
 
   _next() {
@@ -79,7 +86,10 @@ export class Program {
 
       if (this.stepIndex >= chase.length - 1) {
         if (this.isOverride && !this.chases[this.chaseIndex].loop) {
+          console.log('here');
           this.config.setOverrideProgram(null);
+          this.stop();
+          return;
         }
 
         this.chaseIndex =
@@ -119,12 +129,14 @@ export class Program {
     this.stepIndex = -1;
     this.pixelStepIndex = 0;
     this.chaseIndex = 0;
+    this.isRunning = true;
   }
 
-  reset() {
+  stop() {
     this.stepIndex = -1;
     this.pixelStepIndex = 0;
     this.chaseIndex = 0;
+    this.isRunning = false;
   }
 
   setChases(chases: Chase[]) {

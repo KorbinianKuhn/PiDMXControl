@@ -12,12 +12,12 @@ import { WSService } from '../../services/ws.service';
   templateUrl: './beamer-settings-modal.component.html',
   styleUrls: ['./beamer-settings-modal.component.scss'],
   imports: [
-    MatButtonModule,
+    MatButtonModule, // TODO: remove module
     TitleCasePipe,
-    MatRadioModule,
-    FormsModule,
-    MatSliderModule,
-    MatCheckboxModule,
+    MatRadioModule, // TODO: remove module
+    FormsModule, // TODO: remove module
+    MatSliderModule, // TODO: remove module
+    MatCheckboxModule, // TODO: remove module
   ],
 })
 export class BeamerSettingsModalComponent {

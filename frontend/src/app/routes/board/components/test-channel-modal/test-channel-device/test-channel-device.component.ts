@@ -7,7 +7,9 @@ import { WSService } from '../../../../../services/ws.service';
   selector: 'app-test-channel-device',
   templateUrl: './test-channel-device.component.html',
   styleUrls: ['./test-channel-device.component.scss'],
-  imports: [MatSliderModule],
+  imports: [
+    MatSliderModule, // TODO: remove module
+  ],
 })
 export class TestChannelDeviceComponent {
   private wsService = inject(WSService);

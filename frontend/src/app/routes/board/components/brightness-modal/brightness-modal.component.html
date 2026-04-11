@@ -25,7 +25,7 @@
             />
           </mat-slider>
         </td>
-        <td>{{ ambientUV() | percent }}</td>
+        <td>{{ ambientUV() / 255 | percent }}</td>
       </tr>
       @for (control of controls(); track control.id) {
         <tr>

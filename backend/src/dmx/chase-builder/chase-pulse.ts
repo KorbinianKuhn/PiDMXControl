@@ -12,6 +12,10 @@ import {
   warp,
 } from './chase-utils';
 
+const BRIGHTNESS_ANIMATION = [
+  0, 255, 220, 160, 120, 95, 75, 60, 48, 38, 30, 23, 17, 12, 8, 5,
+];
+
 export const createChasePulse = (
   devices: DeviceRegistry,
   color: ChaseColor,
@@ -81,25 +85,9 @@ const createBarPattern = (
 
   const bar = devices.object().bar;
 
-  const fadeInSteps = 2;
-  const fadeOutSteps = 14;
-  const maxBrightness = 255;
-
   for (let color of [colors.a, colors.b]) {
     for (let _ = 0; _ < 8; _++) {
-      for (let i = 0; i < fadeInSteps; i++) {
-        const brightnessStep = Math.round(maxBrightness / fadeInSteps);
-
-        const master = i * brightnessStep;
-
-        steps.push(bar.state({ segments: 'all', master, ...color }));
-      }
-
-      for (let i = 0; i < fadeOutSteps; i++) {
-        const brightnessStep = Math.round(maxBrightness / fadeOutSteps);
-
-        const master = maxBrightness - brightnessStep * i;
-
+      for (const master of BRIGHTNESS_ANIMATION) {
         steps.push(bar.state({ segments: 'all', master, ...color }));
       }
     }
@@ -169,25 +157,9 @@ const createBeamerPattern = (
 
   const beamer = devices.object().beamer;
 
-  const fadeInSteps = 2;
-  const fadeOutSteps = 14;
-  const maxBrightness = 255;
-
   for (let color of [colors.a, colors.b]) {
     for (let _ = 0; _ < 8; _++) {
-      for (let i = 0; i < fadeInSteps; i++) {
-        const brightnessStep = Math.round(maxBrightness / fadeInSteps);
-
-        const master = i * brightnessStep;
-
-        steps.push(beamer.state({ master, ...color }));
-      }
-
-      for (let i = 0; i < fadeOutSteps; i++) {
-        const brightnessStep = Math.round(maxBrightness / fadeOutSteps);
-
-        const master = maxBrightness - brightnessStep * i;
-
+      for (const master of BRIGHTNESS_ANIMATION) {
         steps.push(beamer.state({ master, ...color }));
       }
     }

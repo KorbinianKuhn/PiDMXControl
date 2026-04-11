@@ -115,7 +115,7 @@ export class Config {
     bottom: 0,
   };
 
-  public devices: DeviceConfig[] = [];
+  public devices$ = new BehaviorSubject<DeviceConfig[]>([]);
 
   private store$ = new Subject<void>();
   private logger = new Logger('config');
@@ -136,7 +136,7 @@ export class Config {
       ambientUV: this.ambientUV,
       activeProgram: this.activeProgram,
       activeColors: this.activeColors,
-      devices: this.devices,
+      devices: this.devices$.getValue(),
       visuals: {
         left: this.visuals.left,
         right: this.visuals.right,
@@ -200,7 +200,7 @@ export class Config {
     this.setActiveProgram(config.activeProgram);
     this.setActiveColors(config.activeColors);
 
-    this.devices = config.devices;
+    this.devices$.next(config.devices);
 
     // TODO: save visual settings
 
@@ -241,6 +241,12 @@ export class Config {
     this.overrideProgram = value;
     if (value !== null && this.black) {
       this.setBlack(false);
+    } else if (value === null) {
+      this.io.emit('override-program:progress', {
+        programName: '',
+        color: '',
+        progress: 0,
+      });
     }
     this.io.emit('override-program:updated', { value });
     this.store$.next();
@@ -271,7 +277,7 @@ export class Config {
   }
 
   getDeviceConfig(id: string): DeviceConfig {
-    const device = this.devices.find((o) => o.id === id);
+    const device = this.devices$.getValue().find((o) => o.id === id);
     if (device) {
       return device;
     }
@@ -285,17 +291,24 @@ export class Config {
   }
 
   setDeviceConfig(id: string, config: DeviceConfig) {
-    const device = this.devices.find((o) => o.id === id);
+    const devices = this.devices$.getValue();
+    const index = devices.findIndex((o) => o.id === id);
 
-    if (!device) {
+    if (index === -1) {
       this.logger.warn(`setDeviceConfig failed. Cannot find device ${id}`);
       return;
     }
 
-    Object.assign(device, config);
+    const device = devices[index];
+    devices[index] = {
+      ...device,
+      ...config,
+    };
+
+    this.devices$.next(devices);
 
     this.store$.next();
-    this.io.emit('device-config:updated', { devices: this.devices });
+    this.io.emit('device-config:updated', { devices });
   }
 
   async scanVisualSources(): Promise<void> {
@@ -344,7 +357,7 @@ export class Config {
   registerDevices(devices: Device[]) {
     const updatedDevices: DeviceConfig[] = [];
     for (const device of devices) {
-      const item = this.devices.find((o) => o.id === device.id);
+      const item = this.devices$.getValue().find((o) => o.id === device.id);
       if (item) {
         updatedDevices.push(item);
         continue;
@@ -360,7 +373,7 @@ export class Config {
 
       throw new Error(`Cannot register device ${device.id}`);
     }
-    this.devices = updatedDevices;
+    this.devices$.next(updatedDevices);
     this.store$.next();
   }
 }

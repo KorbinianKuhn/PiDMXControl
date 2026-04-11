@@ -1,6 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatSliderDragEvent, MatSliderModule } from '@angular/material/slider';
+import {
+  MatSlider,
+  MatSliderDragEvent,
+  MatSliderThumb,
+} from '@angular/material/slider';
 import { WSService } from '../../../services/ws.service';
 import { PadButtonComponent } from '../../pad-button/pad-button.component';
 import { PanelGroupComponent } from '../../panel-group/panel-group.component';
@@ -13,7 +17,8 @@ import { BpmNumberComponent } from '../bpm-number/bpm-number.component';
   imports: [
     BpmNumberComponent,
     PadButtonComponent,
-    MatSliderModule,
+    MatSlider,
+    MatSliderThumb,
     PanelGroupComponent,
   ],
 })
@@ -31,6 +36,7 @@ export class BpmModalComponent {
     this.wsService.setStart();
   }
 
+  // TODO: optimise detection
   onClickTap() {
     this.taps.push(Date.now());
 
