@@ -1,18 +1,24 @@
+import { PercentPipe } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
-import { MatSliderModule } from '@angular/material/slider';
+import {
+  MatSlideToggle,
+  MatSlideToggleChange,
+} from '@angular/material/slide-toggle';
+import { MatSliderDragEvent, MatSliderModule } from '@angular/material/slider';
 import { PanelGroupComponent } from '../../../../components/panel-group/panel-group.component';
 import { WSService } from '../../../../services/ws.service';
 
 interface Control {
   id: string;
   value: number;
+  disabled: boolean;
 }
 
 @Component({
   selector: 'app-brightness-modal',
   templateUrl: './brightness-modal.component.html',
   styleUrls: ['./brightness-modal.component.scss'],
-  imports: [PanelGroupComponent, MatSliderModule],
+  imports: [PanelGroupComponent, MatSliderModule, PercentPipe, MatSlideToggle],
 })
 export class BrightnessModalComponent {
   private wsService = inject(WSService);
@@ -20,7 +26,7 @@ export class BrightnessModalComponent {
   public master = this.wsService.master;
   public ambientUV = this.wsService.ambientUV;
   public controls = computed(() => {
-    const devices = this.wsService.devices();
+    const devices = this.wsService.deviceConfigs();
 
     const controls: Control[] = [];
 
@@ -31,6 +37,7 @@ export class BrightnessModalComponent {
         controls.push({
           id: groupId,
           value: device.master,
+          disabled: device.disabled,
         });
       }
     }
@@ -48,17 +55,26 @@ export class BrightnessModalComponent {
     this.wsService.setAmbientUV(value);
   }
 
-  onValueChange(control: Control, event: any) {
-    control.value = event;
+  onSliderChange(control: Control, event: MatSliderDragEvent) {
+    control.value = event.value;
+    this.updateDeviceConfig(control);
+  }
 
+  onToggleChange(control: Control, event: MatSlideToggleChange) {
+    control.disabled = event.checked;
+    this.updateDeviceConfig(control);
+  }
+
+  private updateDeviceConfig(control: Control) {
     const allDevices = this.wsService
-      .devices()
+      .deviceConfigs()
       .filter((o) => o.id.startsWith(control.id));
 
     for (const device of allDevices) {
       this.wsService.setDeviceConfig(device.id, {
         ...device,
         master: control.value,
+        disabled: control.disabled,
       });
     }
   }

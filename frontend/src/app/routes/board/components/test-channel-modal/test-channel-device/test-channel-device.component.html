@@ -1,4 +1,4 @@
-<table class="mx-4 w-full">
+<table class="w-full">
   <thead>
     <tr>
       <th>CH</th>
@@ -8,29 +8,15 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>-</td>
-      <td>-</td>
-      <td>override</td>
-      <td>
-        <button
-          class="px-4 py-2 rounded-sm"
-          [ngClass]="enabled() ? 'bg-cyan-500' : 'bg-gray-900'"
-          (click)="onToggle()"
-        >
-          {{ enabled() ? "On" : "Off" }}
-        </button>
-      </td>
-    </tr>
     @for (
-      channel of device().channels;
+      channel of channels();
       track $index + device().address;
       let index = $index
     ) {
       <tr>
         <td class="w-10">{{ index + 1 }}</td>
         <td class="w-10">{{ index + device().address }}</td>
-        <td class="w-15">{{ channel }}</td>
+        <td class="w-15">{{ channel.type }}</td>
         <td>
           <mat-slider [min]="0" [max]="255" [step]="1" discrete>
             <input

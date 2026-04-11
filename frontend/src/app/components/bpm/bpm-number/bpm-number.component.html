@@ -6,7 +6,7 @@
     @for (bar of bars(); track $index; let last = $last) {
       <div
         [class.mr-2]="!last"
-        [ngClass]="bar ? 'bg-cyan-800' : 'bg-gray-900'"
+        [class]="bar ? 'bg-cyan-800' : 'bg-gray-900'"
         class="w-8 h-4"
       ></div>
     }

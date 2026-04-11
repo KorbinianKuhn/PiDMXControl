@@ -1,11 +1,9 @@
-import { NgClass } from '@angular/common';
 import { Component, computed, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { BeamerSettingsModalComponent } from '../../components/beamer-settings-modal/beamer-settings-modal.component';
 import { BpmComponent } from '../../components/bpm/bpm.component';
-import { ChannelMixerModalComponent } from '../../components/channel-mixer-modal/channel-mixer-modal.component';
 import { PadButtonComponent } from '../../components/pad-button/pad-button.component';
 import { PanelGroupComponent } from '../../components/panel-group/panel-group.component';
 import { ToggleButtonComponent } from '../../components/toggle-button/toggle-button.component';
@@ -25,6 +23,7 @@ import {
 } from './components/board-colors-modal/board-colors-modal.component';
 import { BrightnessModalComponent } from './components/brightness-modal/brightness-modal.component';
 import { OverrideProgramButtonComponent } from './components/override-program-button/override-program-button.component';
+import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
 
 @Component({
   selector: 'app-board',
@@ -40,7 +39,6 @@ import { OverrideProgramButtonComponent } from './components/override-program-bu
     VisualisationComponent,
     MatButtonModule,
     MatIconModule,
-    NgClass,
   ],
 })
 export class BoardComponent implements OnInit, OnDestroy {
@@ -231,8 +229,8 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   protected readonly neopixelDisabled = computed(
     () =>
-      this.wsService.devices().find((d) => d.id === 'neopixel-a')?.disabled ||
-      false,
+      this.wsService.deviceConfigs().find((d) => d.id === 'neopixel-a')
+        ?.disabled || false,
   );
 
   protected isVideoActive = computed(
@@ -247,8 +245,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.mqttService.unsubscribe('visualisation/#');
   }
 
-  onOpenChannelMixerModal() {
-    this.dialog.open(ChannelMixerModalComponent, {
+  onOpenSettingsModal() {
+    this.dialog.open(SettingsModalComponent, {
       panelClass: 'custom-dialog',
       backdropClass: 'custom-backdrop',
       maxWidth: '90vw',
@@ -288,7 +286,9 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   onToggleNeopixelDisabled() {
-    const config = this.wsService.devices().find((d) => d.id === 'neopixel-a')!;
+    const config = this.wsService
+      .deviceConfigs()
+      .find((d) => d.id === 'neopixel-a')!;
 
     this.wsService.setDeviceConfig('neopixel-a', {
       ...config,

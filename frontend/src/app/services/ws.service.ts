@@ -5,16 +5,13 @@ import {
   ActiveProgramName,
   ChaseColor,
   ClientToServerEvents,
+  Device,
   DeviceConfig,
   OverrideProgramName,
   ServerStatus,
   ServerToClientEvents,
   Visuals,
 } from './ws.interfaces';
-
-interface ClientStatus extends ServerStatus {
-  connected: boolean;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -52,10 +49,11 @@ export class WSService {
     color: string;
     progress: number;
   }>({ programName: '', color: '', progress: 0 });
-  public readonly settingsMode = signal<boolean>(false);
-  public readonly settingsData = signal<number[]>([]);
+  public readonly testChannelMode = signal<boolean>(false);
+  public readonly testChannelData = signal<number[]>([]);
 
-  public readonly devices = signal<DeviceConfig[]>([]);
+  public readonly deviceConfigs = signal<DeviceConfig[]>([]);
+  public readonly devices = signal<Device[]>([]);
 
   public readonly visualsSource = signal<number>(-1);
   public readonly visualsSettings = signal<Visuals>({
@@ -160,20 +158,26 @@ export class WSService {
       this.activeColors.set(data.colors);
     });
 
-    this.socket.on('settings-mode:updated', (data) => {
-      this.settingsMode.set(data.value);
+    this.socket.on('test-channel-mode:updated', (data) => {
+      this.testChannelMode.set(data.value);
     });
 
-    this.socket.on('settings-data:updated', (data) => {
-      this.settingsData.set(data.buffer);
+    this.socket.on('test-channel-data:updated', (data) => {
+      this.testChannelData.set(data.buffer);
     });
 
     this.socket.on('device-config:updated', (data) => {
+      this.deviceConfigs.set(data.devices);
+    });
+
+    this.socket.on('devices:updated', (data) => {
       this.devices.set(data.devices);
     });
+
     this.socket.on('visuals:source-updated', (data) => {
       this.visualsSource.set(data);
     });
+
     this.socket.on('visuals:settings-updated', (data) => {
       this.visualsSettings.set(data);
     });
@@ -211,11 +215,11 @@ export class WSService {
     this.socket.emit('set:active-colors', { colors });
   }
 
-  setSettingsMode(value: boolean) {
+  setTestChannelMode(value: boolean) {
     this.socket.emit('set:settings-mode', { value });
   }
 
-  setSettingsChannel(address: number, value: number) {
+  setTestChannelValue(address: number, value: number) {
     this.socket.emit('set:settings-channel', { address, value });
   }
 
@@ -237,5 +241,9 @@ export class WSService {
     bottom: number;
   }) {
     this.socket.emit('set:visuals-settings', settings);
+  }
+
+  setChasesRecreate() {
+    this.socket.emit('set:chases-recreate');
   }
 }

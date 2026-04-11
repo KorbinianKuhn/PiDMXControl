@@ -12,7 +12,7 @@ const SEGMENT_CHANNEL_ORDER: ChannelType[] = [
   ChannelType.RED,
   ChannelType.GREEN,
   ChannelType.BLUE,
-  null,
+  ChannelType.AUTO_PROGRAM, // 16-255
 ];
 
 const CHANNEL_ORDER = new Array(6 * 8)

@@ -15,11 +15,10 @@ const CHANNEL_ORDER: ChannelType[] = [
   ChannelType.UV,
   ChannelType.STROBE,
   ChannelType.MOVEMENT,
-  null, // sound mode
+  ChannelType.SOUND_MODE,
 ];
 
-interface FunGenerationLedDiamondDomeDeviceStateValues
-  extends DeviceStateValues {
+interface FunGenerationLedDiamondDomeDeviceStateValues extends DeviceStateValues {
   movement?: number;
 }
 

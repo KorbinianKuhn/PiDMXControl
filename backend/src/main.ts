@@ -59,11 +59,14 @@ const main = async () => {
     emitter.emit('active-colors:updated', {
       colors: dmx.config.activeColors,
     });
-    emitter.emit('settings-mode:updated', {
-      value: dmx.config.settingsMode,
+    emitter.emit('test-channel-mode:updated', {
+      value: dmx.config.testChannelMode,
     });
-    emitter.emit('settings-data:updated', {
-      buffer: [...dmx.config.settingsData],
+    emitter.emit('test-channel-data:updated', {
+      buffer: [...dmx.config.testChannelData],
+    });
+    emitter.emit('devices:updated', {
+      devices: dmx.listDevices(),
     });
     emitter.emit('device-config:updated', {
       devices: dmx.config.devices,
@@ -136,13 +139,13 @@ const main = async () => {
 
     socket.on('set:settings-mode', (args) => {
       if (dmx.isReady) {
-        dmx.config.setSettingsMode(args.value);
+        dmx.config.setTestChannelMode(args.value);
       }
     });
 
     socket.on('set:settings-channel', (args) => {
       if (dmx.isReady) {
-        dmx.config.setSettingsChannel(args.address, args.value);
+        dmx.config.setTestChannelValue(args.address, args.value);
       }
     });
 
@@ -169,6 +172,9 @@ const main = async () => {
           args.bottom,
         );
       }
+    });
+    socket.on('set:chases-recreate', async () => {
+      await dmx.init();
     });
   });
 

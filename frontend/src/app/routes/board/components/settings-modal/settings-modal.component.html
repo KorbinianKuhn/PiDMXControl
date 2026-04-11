@@ -1,0 +1,27 @@
+<mat-tab-group class="h-screen w-100">
+  <mat-tab label="Actions">
+    <div class="flex">
+      <app-pad-button
+        color="bg-cyan-400"
+        [active]="testChannelMode()"
+        (click)="onToggleTestChannelMode()"
+        class="m-2"
+        >Channel Tester</app-pad-button
+      >
+
+      <app-pad-button
+        color="bg-red-400"
+        [active]="false"
+        class="m-2"
+        (click)="onClickRecreateChases()"
+        >Recreate chases</app-pad-button
+      >
+    </div>
+  </mat-tab>
+  <mat-tab label="Settings">
+    <app-device-config-list></app-device-config-list>
+  </mat-tab>
+  <mat-tab label="Test channels">
+    <app-test-channel-modal></app-test-channel-modal>
+  </mat-tab>
+</mat-tab-group>

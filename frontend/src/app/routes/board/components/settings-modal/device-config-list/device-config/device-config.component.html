@@ -1,0 +1,34 @@
+<table>
+  @for (control of controls(); track control) {
+    <tr>
+      <td>{{ control.key }}</td>
+      <td>
+        @switch (control.type) {
+          @case ("slider") {
+            <mat-slider
+              [min]="control.min"
+              [max]="control.max"
+              [step]="control.step"
+              discrete
+            >
+              <input
+                matSliderThumb
+                [value]="control.value"
+                (dragEnd)="onSliderChange(control, $event)"
+              />
+            </mat-slider>
+          }
+          @case ("toggle") {
+            <mat-slide-toggle
+              [checked]="control.value"
+              (change)="onToggleChange(control, $event)"
+            ></mat-slide-toggle>
+          }
+        }
+      </td>
+      <td>
+        {{ control.value }}
+      </td>
+    </tr>
+  }
+</table>

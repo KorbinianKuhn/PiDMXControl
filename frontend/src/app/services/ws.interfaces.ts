@@ -70,12 +70,12 @@ export enum ActiveProgramName {
 export interface DeviceConfig {
   id: string;
   master: number;
+  disabled: boolean;
   flipped?: boolean;
   minPan?: number;
   maxPan?: number;
   minTilt?: number;
   maxTilt?: number;
-  disabled?: boolean;
 }
 
 export interface Visuals {
@@ -89,6 +89,20 @@ export interface Visuals {
   right: number;
   top: number;
   bottom: number;
+}
+
+export interface DeviceChannel {
+  address: number;
+  type: string;
+  value: number;
+  min: number;
+  max: number;
+}
+
+export interface Device {
+  id: string;
+  address: number;
+  channels: DeviceChannel[];
 }
 
 export interface ClientToServerEvents {
@@ -115,6 +129,7 @@ export interface ClientToServerEvents {
     top: number;
     bottom: number;
   }) => void;
+  'set:chases-recreate': () => void;
 }
 
 type ServerStatusValue = 'init' | 'ready';
@@ -146,8 +161,9 @@ export interface ServerToClientEvents {
   'active-colors:updated': (payload: { colors: ChaseColor[] }) => void;
   // 'chase:updated': (payload: { value: number }) => void;
   // 'step:updated': (payload: { value: number }) => void;
-  'settings-mode:updated': (payload: { value: boolean }) => void;
-  'settings-data:updated': (payload: { buffer: number[] }) => void;
+  'test-channel-mode:updated': (payload: { value: boolean }) => void;
+  'test-channel-data:updated': (payload: { buffer: number[] }) => void;
+  'devices:updated': (payload: { devices: Device[] }) => void;
   'device-config:updated': (payload: { devices: DeviceConfig[] }) => void;
   'visuals:source-updated': (payload: number) => void;
   'visuals:settings-updated': (payload: Visuals) => void;

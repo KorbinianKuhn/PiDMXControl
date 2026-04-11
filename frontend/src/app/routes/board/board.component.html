@@ -97,8 +97,8 @@
         <button mat-icon-button (click)="onRefreshClick()">
           <mat-icon svgIcon="refresh" />
         </button>
-        <button mat-icon-button (click)="onOpenChannelMixerModal()">
-          <mat-icon svgIcon="tune" />
+        <button mat-icon-button (click)="onOpenSettingsModal()">
+          <mat-icon svgIcon="settings" />
         </button>
       </div>
     </div>
@@ -126,7 +126,7 @@
           >
             <mat-icon
               svgIcon="tortoise"
-              [ngClass]="performanceMode() ? 'text-red-600' : undefined"
+              [class]="performanceMode() ? 'text-red-600' : undefined"
             />
           </button>
 
@@ -141,7 +141,7 @@
           >
             <mat-icon
               svgIcon="neopixel_off"
-              [ngClass]="neopixelDisabled() ? 'text-red-600' : undefined"
+              [class]="neopixelDisabled() ? 'text-red-600' : undefined"
             />
           </button>
         </div>

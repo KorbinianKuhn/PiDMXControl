@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
 import { ConfigService } from '../../services/config.service';
 
@@ -6,7 +5,7 @@ import { ConfigService } from '../../services/config.service';
   selector: 'app-pad-button',
   templateUrl: './pad-button.component.html',
   styleUrls: ['./pad-button.component.scss'],
-  imports: [NgClass],
+  imports: [],
 })
 export class PadButtonComponent {
   private configService = inject(ConfigService);

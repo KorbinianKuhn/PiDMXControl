@@ -8,11 +8,11 @@ import {
 } from '../lib/device';
 
 const CHANNEL_ORDER: ChannelType[] = [
-  null, //pan
-  null, // pan fine
-  null, // tilt
-  null, // tilt fine
-  null, // speed pan tilt
+  ChannelType.PAN, //pan
+  ChannelType.PAN_FINE, // pan fine
+  ChannelType.TILT, // tilt
+  ChannelType.TILT_FINE, // tilt fine
+  ChannelType.PAN_TILT_SPEED, // speed pan tilt
   ChannelType.MASTER,
   ChannelType.STROBE, // 10-250
   ChannelType.RED,
@@ -21,9 +21,9 @@ const CHANNEL_ORDER: ChannelType[] = [
   ChannelType.WHITE,
   ChannelType.AMBER,
   ChannelType.UV,
-  null, // color temperature
-  null, // color macros
-  null, // auto programs
+  ChannelType.COLOR_TEMPERATURE, // color temperature
+  ChannelType.COLOR_MACRO, // color macros
+  ChannelType.AUTO_PROGRAM, // auto programs
 ];
 
 export class VarytecHeroWash extends Device {

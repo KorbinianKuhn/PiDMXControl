@@ -1,0 +1,9 @@
+<mat-tab-group class="h-screen w-100">
+  @for (device of devices(); track device.id) {
+    <mat-tab [label]="device.id">
+      <ng-template matTabContent>
+        <app-test-channel-device [device]="device" class="mt-2" />
+      </ng-template>
+    </mat-tab>
+  }
+</mat-tab-group>

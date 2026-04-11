@@ -12,6 +12,7 @@
             />
           </mat-slider>
         </td>
+        <td>{{ master() | percent }}</td>
       </tr>
       <tr>
         <td>Ambient UV</td>
@@ -24,18 +25,27 @@
             />
           </mat-slider>
         </td>
+        <td>{{ ambientUV() | percent }}</td>
       </tr>
       @for (control of controls(); track control.id) {
         <tr>
           <td>{{ control.id }}</td>
-          <td>
+          <td [class.opacity-50]="control.disabled">
             <mat-slider [min]="0" [max]="1" [step]="0.05" discrete>
               <input
                 matSliderThumb
                 [value]="control.value"
-                (valueChange)="onValueChange(control, $event)"
+                (dragEnd)="onSliderChange(control, $event)"
               />
             </mat-slider>
+          </td>
+          <td>{{ control.value | percent }}</td>
+          <td>
+            <mat-slide-toggle
+              [checked]="control.disabled"
+              (change)="onToggleChange(control, $event)"
+              >Disable</mat-slide-toggle
+            >
           </td>
         </tr>
       }

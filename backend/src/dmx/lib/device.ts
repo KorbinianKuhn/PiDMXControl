@@ -11,6 +11,15 @@ export enum ChannelType {
   UV = 'uv',
   OTHER = 'other',
   MOVEMENT = 'movement',
+  PAN = 'pan',
+  PAN_FINE = 'pan-fine',
+  TILT = 'tilt',
+  TILT_FINE = 'tilt-fine',
+  PAN_TILT_SPEED = 'pan-tilt-speed',
+  COLOR_TEMPERATURE = 'color-temperature',
+  COLOR_MACRO = 'color-macro',
+  AUTO_PROGRAM = 'auto-program',
+  SOUND_MODE = 'sound-mode',
 }
 
 export const COLOR_CHANNELS = [

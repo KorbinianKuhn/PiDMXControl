@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -18,7 +17,7 @@ import { WSService } from '../../services/ws.service';
   selector: 'app-visuals',
   templateUrl: './visuals.component.html',
   styleUrls: ['./visuals.component.scss'],
-  imports: [NgClass],
+  imports: [],
 })
 export class VisualsComponent implements OnInit, OnDestroy {
   private elementRef = inject(ElementRef);

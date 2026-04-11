@@ -15,7 +15,7 @@ const CHANNEL_ORDER: ChannelType[] = [
   ChannelType.UV,
   ChannelType.MASTER,
   ChannelType.STROBE,
-  null, // sound mode
+  ChannelType.SOUND_MODE,
 ];
 
 export class VarytecGigabarHex extends Device {

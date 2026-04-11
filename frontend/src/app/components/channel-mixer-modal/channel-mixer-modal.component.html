@@ -1,9 +1,0 @@
-<mat-tab-group>
-  @for (device of devices; track device.name) {
-    <mat-tab [label]="device.name">
-      <ng-template matTabContent>
-        <app-device-tester [device]="device" class="mt-2" />
-      </ng-template>
-    </mat-tab>
-  }
-</mat-tab-group>

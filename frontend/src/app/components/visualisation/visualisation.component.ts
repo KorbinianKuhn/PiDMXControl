@@ -45,11 +45,26 @@ export class VisualisationComponent implements AfterViewInit {
   protected readonly visualisation = this.configService.visualisation;
   protected readonly video = this.configService.video;
 
-  private headLeft = computed(() =>
-    this.wsService.devices().find((o) => o.id === 'head-left'),
+  private bar = computed(
+    () => this.wsService.deviceConfigs().find((o) => o.id === 'bar')!,
   );
-  private headRight = computed(() =>
-    this.wsService.devices().find((o) => o.id === 'head-right'),
+  private spot = computed(
+    () => this.wsService.deviceConfigs().find((o) => o.id === 'spot')!,
+  );
+  private dome = computed(
+    () => this.wsService.deviceConfigs().find((o) => o.id === 'dome')!,
+  );
+  private neopixel = computed(() =>
+    this.wsService.deviceConfigs().filter((o) => o.id.startsWith('neopixel-')),
+  );
+  private hex = computed(() =>
+    this.wsService.deviceConfigs().filter((o) => o.id.startsWith('hex-')),
+  );
+  private headLeft = computed(
+    () => this.wsService.deviceConfigs().find((o) => o.id === 'head-left')!,
+  );
+  private headRight = computed(
+    () => this.wsService.deviceConfigs().find((o) => o.id === 'head-right')!,
   );
 
   get context() {
@@ -110,21 +125,31 @@ export class VisualisationComponent implements AfterViewInit {
     this.updateHeroWash(0, 0, 114, data, this.headLeft());
     this.updateHeroWash(300 - 40, 0, 130, data, this.headRight());
 
-    this.updateLedPixBar(150 - 82, 50, 50, data);
+    this.updateLedPixBar(150 - 82, 50, 50, data, this.bar());
 
-    this.updateGigabarHex(8, 48, true, 1, data);
-    this.updateGigabarHex(8, 120, true, 20, data);
-    this.updateGigabarHex(300 - 32, 48, true, 10, data);
-    this.updateGigabarHex(300 - 32, 120, true, 30, data);
-    this.updateGigabarHex(150 - 32, 200 - 24, false, 40, data);
+    this.updateGigabarHex(8, 48, true, 1, data, this.hex()[0]);
+    this.updateGigabarHex(8, 120, true, 20, data, this.hex()[1]);
+    this.updateGigabarHex(300 - 32, 48, true, 10, data, this.hex()[2]);
+    this.updateGigabarHex(300 - 32, 120, true, 30, data, this.hex()[3]);
+    this.updateGigabarHex(150 - 32, 200 - 24, false, 40, data, this.hex()[4]);
 
-    this.updateSpot(150 - 48, 100, 108, data);
-    this.updateDiamondDome(150 + 8, 110, 99, data);
+    this.updateSpot(150 - 48, 100, 108, data, this.spot());
+    this.updateDiamondDome(150 + 8, 110, 99, data, this.dome());
   }
 
   redrawNeopixel(message: number[]) {
-    this.updateNeopixelStrip(48, 20, message.slice(0, 150 * 4));
-    this.updateNeopixelStrip(300 - 60, 20, message.slice(150 * 4, 2 * 150 * 4));
+    this.updateNeopixelStrip(
+      48,
+      20,
+      message.slice(0, 150 * 4),
+      this.neopixel()[0],
+    );
+    this.updateNeopixelStrip(
+      300 - 60,
+      20,
+      message.slice(150 * 4, 2 * 150 * 4),
+      this.neopixel()[1],
+    );
   }
 
   private strobeMultiplier(strobe: number) {
@@ -176,9 +201,18 @@ export class VisualisationComponent implements AfterViewInit {
     y: number,
     address: number,
     data: number[],
-    config?: DeviceConfig,
+    config: DeviceConfig,
   ) {
-    // TODO: draw animation position
+    const ctx = this.context;
+
+    // Clear area
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x, y, 40, 40);
+
+    if (config?.disabled) {
+      return;
+    }
+
     const [
       pan,
       panFine,
@@ -197,12 +231,6 @@ export class VisualisationComponent implements AfterViewInit {
 
     const masterWithStrobe = this.strobeMultiplier(strobe) * master;
     const color = this.colorService.toRGB(masterWithStrobe, r, g, b, w, a, uv);
-
-    const ctx = this.context;
-
-    // Clear area
-    ctx.fillStyle = '#000';
-    ctx.fillRect(x, y, 40, 40);
 
     // Draw static
     ctx.fillStyle = this.bgColor;
@@ -235,24 +263,28 @@ export class VisualisationComponent implements AfterViewInit {
     vertical: boolean,
     address: number,
     data: number[],
+    config: DeviceConfig,
   ) {
-    const [r, g, b, w, a, uv, master, strobe] = data.slice(
-      address,
-      address + 9,
-    );
-    const masterWithStrobe = this.strobeMultiplier(strobe) * master;
-
     const radius = 8;
     const margin = 4;
     const width = radius * 6 + margin * 4;
     const height = radius * 2 + margin * 2;
 
-    const color = this.colorService.toRGB(masterWithStrobe, r, g, b, w, a, uv);
-
     const ctx = this.context;
 
-    ctx.fillStyle = this.bgColor;
+    ctx.fillStyle = config.disabled ? '#000' : this.bgColor;
     ctx.fillRect(x, y, vertical ? height : width, vertical ? width : height);
+
+    if (config.disabled) {
+      return;
+    }
+
+    const [r, g, b, w, a, uv, master, strobe] = data.slice(
+      address,
+      address + 9,
+    );
+    const masterWithStrobe = this.strobeMultiplier(strobe) * master;
+    const color = this.colorService.toRGB(masterWithStrobe, r, g, b, w, a, uv);
 
     ctx.fillStyle = color;
 
@@ -274,7 +306,13 @@ export class VisualisationComponent implements AfterViewInit {
     }
   }
 
-  updateLedPixBar(x: number, y: number, address: number, data: number[]) {
+  updateLedPixBar(
+    x: number,
+    y: number,
+    address: number,
+    data: number[],
+    config: DeviceConfig,
+  ) {
     const ctx = this.context;
 
     const segmentWidth = 16;
@@ -284,8 +322,12 @@ export class VisualisationComponent implements AfterViewInit {
     const width = segmentWidth * 8 + margin * 9;
     const height = segmentHeight + margin * 2;
 
-    ctx.fillStyle = this.bgColor;
+    ctx.fillStyle = config.disabled ? '#000' : this.bgColor;
     ctx.fillRect(x, y, width, height);
+
+    if (config.disabled) {
+      return;
+    }
 
     let strobeMultiplier = 1;
     for (let i = 0; i < 8; i++) {
@@ -315,7 +357,22 @@ export class VisualisationComponent implements AfterViewInit {
     }
   }
 
-  updateDiamondDome(x: number, y: number, address: number, data: number[]) {
+  updateDiamondDome(
+    x: number,
+    y: number,
+    address: number,
+    data: number[],
+    config: DeviceConfig,
+  ) {
+    const ctx = this.context;
+
+    ctx.fillStyle = config.disabled ? '#000' : this.bgColor;
+    ctx.fillRect(x, y, 40, 24);
+
+    if (config.disabled) {
+      return;
+    }
+
     const [r, g, b, w, a, uv, strobe, movement] = data.slice(
       address,
       address + 9,
@@ -331,26 +388,31 @@ export class VisualisationComponent implements AfterViewInit {
       uv * strobeMultiplier,
     );
 
-    const ctx = this.context;
-
-    ctx.fillStyle = this.bgColor;
-    ctx.fillRect(x, y, 40, 24);
-
     ctx.beginPath();
     ctx.arc(x + 20, y + 20, 16, 0, Math.PI, true);
     ctx.fillStyle = color;
     ctx.fill();
   }
 
-  updateSpot(x: number, y: number, address: number, data: number[]) {
+  updateSpot(
+    x: number,
+    y: number,
+    address: number,
+    data: number[],
+    config: DeviceConfig,
+  ) {
+    const ctx = this.context;
+
+    ctx.fillStyle = config.disabled ? '#000' : this.bgColor;
+    ctx.fillRect(x, y, 40, 40);
+
+    if (config.disabled) {
+      return;
+    }
+
     const [strobe, r, g, b, w, master] = data.slice(address, address + 6);
     const masterWithStrobe = this.strobeMultiplier(strobe) * master;
     const color = this.colorService.toRGB(masterWithStrobe, r, g, b, w, 0, 0);
-
-    const ctx = this.context;
-
-    ctx.fillStyle = this.bgColor;
-    ctx.fillRect(x, y, 40, 40);
 
     ctx.beginPath();
     ctx.arc(x + 20, y + 20, 16, 0, 2 * Math.PI);
@@ -358,14 +420,23 @@ export class VisualisationComponent implements AfterViewInit {
     ctx.fill();
   }
 
-  updateNeopixelStrip(x: number, y: number, data: number[]) {
+  updateNeopixelStrip(
+    x: number,
+    y: number,
+    data: number[],
+    config: DeviceConfig,
+  ) {
     const ctx = this.context;
 
     const numPixels = data.length / 4;
     const margin = 4;
 
-    ctx.fillStyle = this.bgColor;
+    ctx.fillStyle = config.disabled ? '#000' : this.bgColor;
     ctx.fillRect(x, y, 4 + margin * 2, numPixels + margin * 2);
+
+    if (config.disabled) {
+      return;
+    }
 
     for (let i = 0; i < numPixels; i += 4) {
       const pixels = data.slice(i * 4, i * 4 + 16);

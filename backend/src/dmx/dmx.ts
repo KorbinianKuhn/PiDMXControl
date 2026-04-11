@@ -5,6 +5,7 @@ import { ChaseColor } from './lib/chase';
 import { ChaseRegistry } from './lib/chase-registry';
 import { Clock } from './lib/clock';
 import { Config } from './lib/config';
+import { Device } from './lib/device';
 import { DeviceRegistry } from './lib/device-registry';
 import { MQTT } from './lib/mqtt/mqtt';
 import { ActiveProgramName, OverrideProgramName, Program } from './lib/program';
@@ -41,6 +42,10 @@ export class DMX {
         progress,
       }),
     );
+  }
+
+  listDevices(): Device[] {
+    return this.devices.list();
   }
 
   async init(): Promise<void> {
@@ -87,6 +92,11 @@ export class DMX {
     this.config.setOverrideProgram(value);
     if (value === null) {
       this.overrideProgram.reset();
+      this.io.emit('override-program:progress', {
+        programName: '',
+        color: '',
+        progress: 0,
+      });
     } else {
       this.overrideProgram.setChases(
         this.chases.override(value, this.activeProgram.currentChase()?.color),
@@ -105,23 +115,19 @@ export class DMX {
   }
 
   data(dmx: boolean): Buffer {
-    if (this.config.settingsMode) {
-      return this.config.settingsData;
+    if (this.config.testChannelMode) {
+      return this.config.testChannelData;
     }
 
     this.io.emit('active-program:progress', {
       ...this.activeProgram.progress(),
     });
 
-    this.io.emit('override-program:progress', {
-      ...(this.config.overrideProgram
-        ? this.overrideProgram.progress()
-        : {
-            programName: '',
-            color: '',
-            progress: 0,
-          }),
-    });
+    if (this.config.overrideProgram) {
+      this.io.emit('override-program:progress', {
+        ...this.overrideProgram.progress(),
+      });
+    }
 
     if (this.config.black) {
       return Buffer.alloc(512 + 1, 0);
@@ -142,10 +148,14 @@ export class DMX {
     }
 
     // Master override
-    if (dmx) {
-      for (const device of this.devices.masterChannels) {
-        const master = this.config.getDeviceConfig(device.deviceId).master;
-        const multiplier = this.config.master * master;
+    for (const device of this.devices.masterChannels) {
+      const config = this.config.getDeviceConfig(device.deviceId);
+      if (config.disabled) {
+        for (const channel of device.channels) {
+          data[channel] = 0;
+        }
+      } else if (dmx) {
+        const multiplier = this.config.master * config.master;
         if (multiplier !== 1) {
           for (const channel of device.channels) {
             data[channel] = Math.round(data[channel] * multiplier);
@@ -158,7 +168,7 @@ export class DMX {
   }
 
   neopixelData(dmx: boolean): Buffer {
-    if (this.config.settingsMode || this.config.black) {
+    if (this.config.testChannelMode || this.config.black) {
       return Buffer.alloc(2 * 150 * 4, 0);
     }
     const buffer = this.config.overrideProgram

@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatSliderModule } from '@angular/material/slider';
+import { MatSliderDragEvent, MatSliderModule } from '@angular/material/slider';
 import { WSService } from '../../../services/ws.service';
 import { PadButtonComponent } from '../../pad-button/pad-button.component';
 import { PanelGroupComponent } from '../../panel-group/panel-group.component';
@@ -96,7 +96,7 @@ export class BpmModalComponent {
     this.wsService.setBpm(bpm);
   }
 
-  onSliderChange(event: any) {
+  onSliderChange(event: MatSliderDragEvent) {
     this.wsService.setBpm(event.value);
   }
 

@@ -15,12 +15,12 @@ const VISUALS_PATH = join(STATIC_DIRECTORY, 'visuals');
 export interface DeviceConfig {
   id: string;
   master: number;
+  disabled: boolean;
   minPan?: number;
   maxPan?: number;
   minTilt?: number;
   maxTilt?: number;
   flipped?: boolean;
-  disabled?: boolean;
 }
 interface ConfigStore {
   bpm: number;
@@ -51,6 +51,46 @@ export interface Visuals {
   bottom: number;
 }
 
+const DEFAULT_CONFIG: ConfigStore = {
+  bpm: 128,
+  black: false,
+  master: 1,
+  ambientUV: 0,
+  activeProgram: ActiveProgramName.MIRROR_BALL,
+  activeColors: Object.values(ChaseColor),
+  devices: [
+    ...[
+      'hex-1',
+      'hex-2',
+      'hex-3',
+      'hex-4',
+      'hex-5',
+      'bar',
+      'dome',
+      'spot',
+      'beamer',
+      'neopixel-a',
+      'neopixel-b',
+    ].map((id) => ({ id, master: 1, disabled: false })),
+    ...['head-left', 'head-right'].map((id) => ({
+      id,
+      master: 1,
+      disabled: false,
+      flipped: id === 'head-left',
+      minPan: 128,
+      maxPan: 212,
+      minTilt: 0,
+      maxTilt: 128,
+    })),
+  ],
+  visuals: {
+    left: 0,
+    right: 100,
+    top: 0,
+    bottom: 100,
+  },
+};
+
 export class Config {
   public bpm: number;
   public speed$ = new BehaviorSubject<number>(null);
@@ -60,8 +100,8 @@ export class Config {
   public overrideProgram: OverrideProgramName;
   public activeProgram: ActiveProgramName;
   public activeColors: ChaseColor[];
-  public settingsMode = false;
-  public settingsData = Buffer.alloc(512 + 1, 0);
+  public testChannelMode = false;
+  public testChannelData = Buffer.alloc(512 + 1, 0);
   public visuals: Visuals = {
     sources: [],
     currentIndex: -1,
@@ -110,45 +150,7 @@ export class Config {
   }
 
   _readConfigFromFile() {
-    let config: ConfigStore = {
-      bpm: 128,
-      black: false,
-      master: 1,
-      ambientUV: 0,
-      activeProgram: ActiveProgramName.MIRROR_BALL,
-      activeColors: Object.values(ChaseColor),
-      devices: [
-        ...[
-          'hex-1',
-          'hex-2',
-          'hex-3',
-          'hex-4',
-          'hex-5',
-          'bar',
-          'dome',
-          'spot',
-          'beamer',
-          'neopixel-a',
-          'neopixel-b',
-        ].map((id) => ({ id, master: 1, disabled: false })),
-        ...['head-left', 'head-right'].map((id) => ({
-          id,
-          master: 1,
-          disabled: false,
-          flipped: id === 'head-left',
-          minPan: 128,
-          maxPan: 212,
-          minTilt: 0,
-          maxTilt: 128,
-        })),
-      ],
-      visuals: {
-        left: 0,
-        right: 100,
-        top: 0,
-        bottom: 100,
-      },
-    };
+    let config: ConfigStore = DEFAULT_CONFIG;
 
     if (existsSync(CONFIG_PATH)) {
       try {
@@ -162,7 +164,7 @@ export class Config {
           if (item) {
             allDevices.push({
               ...item,
-              master: device.master, // TODO: use all values when configurable through app
+              ...device,
             });
           }
         }
@@ -244,6 +246,7 @@ export class Config {
   setActiveProgram(value: ActiveProgramName) {
     this.activeProgram = value;
     this.io.emit('active-program:updated', { value });
+    this.store$.next();
   }
 
   setActiveColors(colors: ChaseColor[]) {
@@ -252,14 +255,16 @@ export class Config {
     this.store$.next();
   }
 
-  setSettingsMode(value: boolean) {
-    this.settingsMode = value;
-    this.io.emit('settings-mode:updated', { value });
+  setTestChannelMode(value: boolean) {
+    this.testChannelMode = value;
+    this.io.emit('test-channel-mode:updated', { value });
   }
 
-  setSettingsChannel(address: number, value: number) {
-    this.settingsData[address] = value;
-    this.io.emit('settings-data:updated', { buffer: [...this.settingsData] });
+  setTestChannelValue(address: number, value: number) {
+    this.testChannelData[address] = value;
+    this.io.emit('test-channel-data:updated', {
+      buffer: [...this.testChannelData],
+    });
   }
 
   getDeviceConfig(id: string): DeviceConfig {
@@ -268,12 +273,22 @@ export class Config {
       return device;
     }
 
-    this.devices.push({ id, master: 1 });
-    return this.devices[this.devices.length - 1];
+    const defaultConfig = DEFAULT_CONFIG.devices.find((o) => o.id === id);
+    if (defaultConfig) {
+      return defaultConfig;
+    }
+
+    return { id, master: 1, disabled: false };
   }
 
   setDeviceConfig(id: string, config: DeviceConfig) {
-    const device = this.getDeviceConfig(id);
+    const device = this.devices.find((o) => o.id === id);
+
+    if (!device) {
+      this.logger.warn(`setDeviceConfig failed. Cannot find device ${id}`);
+      return;
+    }
+
     Object.assign(device, config);
 
     this.store$.next();
@@ -329,9 +344,18 @@ export class Config {
       const item = this.devices.find((o) => o.id === device.id);
       if (item) {
         updatedDevices.push(item);
-      } else {
-        updatedDevices.push({ id: device.id, master: 1 });
+        continue;
       }
+
+      const defaultConfig = DEFAULT_CONFIG.devices.find(
+        (o) => o.id === device.id,
+      );
+      if (defaultConfig) {
+        updatedDevices.push(defaultConfig);
+        continue;
+      }
+
+      throw new Error(`Cannot register device ${device.id}`);
     }
     this.devices = updatedDevices;
     this.store$.next();

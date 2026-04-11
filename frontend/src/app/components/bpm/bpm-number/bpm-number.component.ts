@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { ConfigService } from '../../../services/config.service';
 import { WSService } from '../../../services/ws.service';
@@ -7,7 +6,7 @@ import { WSService } from '../../../services/ws.service';
   selector: 'app-bpm-number',
   templateUrl: './bpm-number.component.html',
   styleUrls: ['./bpm-number.component.scss'],
-  imports: [NgClass],
+  imports: [],
 })
 export class BpmNumberComponent {
   private wsService = inject(WSService);

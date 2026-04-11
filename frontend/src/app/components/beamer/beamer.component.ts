@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -17,7 +16,7 @@ import { WSService } from '../../services/ws.service';
   selector: 'app-beamer',
   templateUrl: './beamer.component.html',
   styleUrls: ['./beamer.component.scss'],
-  imports: [MatIconModule, NgClass],
+  imports: [MatIconModule],
 })
 export class BeamerComponent {
   private videoService = inject(VideoService);
