@@ -122,34 +122,49 @@ export class VisualisationComponent implements AfterViewInit {
   }
 
   redraw(data: number[]) {
-    this.updateHeroWash(0, 0, 114, data, this.headLeft());
-    this.updateHeroWash(300 - 40, 0, 130, data, this.headRight());
+    if (this.headLeft()) {
+      this.updateHeroWash(0, 0, 114, data, this.headLeft());
+    }
+    if (this.headRight()) {
+      this.updateHeroWash(300 - 40, 0, 130, data, this.headRight());
+    }
 
-    this.updateLedPixBar(150 - 82, 50, 50, data, this.bar());
+    if (this.bar()) {
+      this.updateLedPixBar(150 - 82, 50, 50, data, this.bar());
+    }
 
-    this.updateGigabarHex(8, 48, true, 1, data, this.hex()[0]);
-    this.updateGigabarHex(8, 120, true, 20, data, this.hex()[1]);
-    this.updateGigabarHex(300 - 32, 48, true, 10, data, this.hex()[2]);
-    this.updateGigabarHex(300 - 32, 120, true, 30, data, this.hex()[3]);
-    this.updateGigabarHex(150 - 32, 200 - 24, false, 40, data, this.hex()[4]);
+    if (this.hex().length === 5) {
+      this.updateGigabarHex(8, 48, true, 1, data, this.hex()[0]);
+      this.updateGigabarHex(8, 120, true, 20, data, this.hex()[1]);
+      this.updateGigabarHex(300 - 32, 48, true, 10, data, this.hex()[2]);
+      this.updateGigabarHex(300 - 32, 120, true, 30, data, this.hex()[3]);
+      this.updateGigabarHex(150 - 32, 200 - 24, false, 40, data, this.hex()[4]);
+    }
 
-    this.updateSpot(150 - 48, 100, 108, data, this.spot());
-    this.updateDiamondDome(150 + 8, 110, 99, data, this.dome());
+    if (this.spot()) {
+      this.updateSpot(150 - 48, 100, 108, data, this.spot());
+    }
+
+    if (this.dome()) {
+      this.updateDiamondDome(150 + 8, 110, 99, data, this.dome());
+    }
   }
 
   redrawNeopixel(message: number[]) {
-    this.updateNeopixelStrip(
-      48,
-      20,
-      message.slice(0, 150 * 4),
-      this.neopixel()[0],
-    );
-    this.updateNeopixelStrip(
-      300 - 60,
-      20,
-      message.slice(150 * 4, 2 * 150 * 4),
-      this.neopixel()[1],
-    );
+    if (this.neopixel().length === 2) {
+      this.updateNeopixelStrip(
+        48,
+        20,
+        message.slice(0, 150 * 4),
+        this.neopixel()[0],
+      );
+      this.updateNeopixelStrip(
+        300 - 60,
+        20,
+        message.slice(150 * 4, 2 * 150 * 4),
+        this.neopixel()[1],
+      );
+    }
   }
 
   private strobeMultiplier(strobe: number) {

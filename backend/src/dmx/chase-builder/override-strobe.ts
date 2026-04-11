@@ -108,7 +108,7 @@ export const createChaseStrobeSlowmo = (devices: DeviceRegistry): Chase => {
 
   const state = flattenChannelStates(
     bar.state({ segments: 'all', master: 255, w: 255, strobe: 120 }),
-    ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 50 })),
+    ...head.all.map((o) => o.state({ master: 255, w: 255, strobe: 80 })),
   );
 
   for (let i = 0; i < 32; i++) {

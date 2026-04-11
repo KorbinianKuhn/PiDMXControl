@@ -44,7 +44,6 @@ const main = async () => {
 
   const dmx = new DMX(io);
 
-  // TODO: can lead to errors in the app
   const sendInitialConfig = (emitter: TypedServer | TypedSocket) => {
     emitter.emit('bpm:updated', { value: dmx.config.bpm });
     emitter.emit('black:updated', { value: dmx.config.black });
@@ -174,7 +173,9 @@ const main = async () => {
       }
     });
     socket.on('set:chases-recreate', async () => {
-      await dmx.init();
+      if (dmx.isReady) {
+        await dmx.init();
+      }
     });
   });
 

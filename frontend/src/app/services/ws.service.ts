@@ -94,6 +94,7 @@ export class WSService {
     this.socket = io(url, {
       autoConnect: false,
       path,
+      reconnection: true,
     });
 
     this.registerEvents();
@@ -102,6 +103,7 @@ export class WSService {
   connect() {
     const { url } = this.getWsUrl();
     console.log(`ws connect: ${url}`);
+    this.connected.set(false);
     this.socket.connect();
   }
 

@@ -32,7 +32,7 @@ export class VideoService {
 
   private address = 146;
   private numChannels = 5;
-  private messages: string[] = [`Space Rave`]; // TODO: make tests adjustable thorugh app
+  private messages: string[] = [`Niemandsland`]; // TODO: make tests adjustable thorugh app
 
   public readonly visualsSettings = this.wsService.visualsSettings;
 

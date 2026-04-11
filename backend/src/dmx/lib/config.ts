@@ -239,6 +239,9 @@ export class Config {
 
   setOverrideProgram(value: OverrideProgramName) {
     this.overrideProgram = value;
+    if (value !== null && this.black) {
+      this.setBlack(false);
+    }
     this.io.emit('override-program:updated', { value });
     this.store$.next();
   }

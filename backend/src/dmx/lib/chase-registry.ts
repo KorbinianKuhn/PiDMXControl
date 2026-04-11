@@ -121,11 +121,11 @@ export class ChaseRegistry {
       const chase = task();
       this.chases.push(chase);
 
-      const progress = i / tasks.length;
-      this.logger.info(
-        `${(progress * 100).toFixed(0)}% (${i + 1}/${tasks.length})`,
-      );
-      this.progress$.next(parseInt((progress * 100).toFixed(0)));
+      const progress = parseInt(((i / tasks.length) * 100).toFixed(0));
+      this.logger.info(`${progress}% (${i + 1}/${tasks.length})`);
+      if (progress !== this.progress$.getValue()) {
+        this.progress$.next(progress);
+      }
       await wait(1);
     }
     this.logger.info('chases created');

@@ -1,8 +1,10 @@
 import { Component, computed, inject } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { MatIcon, MatIconRegistry } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
+import { map, throttleTime } from 'rxjs';
 import { MqttService } from './services/mqtt.service';
 import { WSService } from './services/ws.service';
 
@@ -32,7 +34,12 @@ export class AppComponent {
 
   protected readonly status = this.wsService.status;
   protected readonly connected = this.wsService.connected;
-  protected readonly progress = computed(() => this.status().progress ?? 0);
+  protected readonly progress = toSignal(
+    toObservable(this.status).pipe(
+      throttleTime(100),
+      map((o) => o.progress ?? 0),
+    ),
+  );
 
   protected readonly showOverlay = computed(() => {
     if (location.href.includes('/visuals')) {
