@@ -1,16 +1,3 @@
-:host {
-  // position: relative;
-  // height: 100vh;
-  // width: 100vw;
-  // display: flex;
-}
-
-// video {
-//   object-fit: cover;
-//   // width: 100vw;
-//   // height: 100vh;
-// }
-
 .text-overlay {
   padding: 1vw 2vw;
   font-weight: 900;
@@ -23,7 +10,6 @@
   animation-duration: 10s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
-  font-family: "Nasalization";
 }
 
 @keyframes zoom {

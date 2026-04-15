@@ -1,3 +1,7 @@
+.mat-mdc-slider {
+  --mat-slider-inactive-track-color: #fff;
+}
+
 .cdk-overlay-dark-backdrop {
   background: rgba(20, 20, 20, 1);
 }
@@ -7,24 +11,12 @@
   --mat-dialog-container-shape: 0;
 }
 
-.mdc-slider__value-indicator {
-  --mat-slider-label-container-color: #000;
-}
-
-.mat-mdc-slider .mdc-slider__value-indicator {
-  --mat-slider-label-label-text-color: #fff;
-}
-
-.mat-expansion-panel {
-  background: #000;
-}
-
 mat-slider {
   width: 100% !important;
 }
 
 .mat-mdc-progress-bar {
-  --mat-progress-bar-active-indicator-color: #fff;
+  --mat-progress-bar-active-indicator-color: var(--color-cyan-400);
 }
 
 .mdc-icon-button {

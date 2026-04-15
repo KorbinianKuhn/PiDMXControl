@@ -47,6 +47,10 @@ export class VisualsComponent implements OnInit, OnDestroy {
     };
   });
   protected readonly color = computed(() => this.wsService.visuals().color);
+  protected readonly invert = computed(
+    () => this.videoService.visuals().invert,
+  );
+  protected readonly fontClass = this.videoService.fontClass;
 
   constructor() {
     effect(() => {

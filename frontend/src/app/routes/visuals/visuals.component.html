@@ -17,6 +17,7 @@
       (loadedmetadata)="onLoadedMetadata(videoElement)"
       #videoElement
       class="object-cover w-full h-full"
+      [class.invert]="invert()"
     ></video>
     @if (color() === "chase") {
       <div
@@ -27,6 +28,7 @@
     <div class="absolute inset-0 flex items-center justify-center">
       <p
         class="text-overlay"
+        [class]="fontClass()"
         [style.-webkit-text-stroke]="'2px ' + video().color"
         [style.opacity]="text()?.opacity"
       >

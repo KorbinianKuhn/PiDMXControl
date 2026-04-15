@@ -15,7 +15,7 @@ get_env_variable () {
 BASE_REST_API=$(get_env_variable "BASE_REST_API")
 MQTT_WS_URL=$(get_env_variable "MQTT_WS_URL")
 
-cat <<EOF > /usr/share/nginx/html/assets/env.js
+cat <<EOF > /usr/share/nginx/html/env.js
 window.env = {
     BASE_REST_API: "${BASE_REST_API}",
     MQTT_WS_URL: "${MQTT_WS_URL}",

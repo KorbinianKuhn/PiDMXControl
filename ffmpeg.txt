@@ -1,0 +1,24 @@
+# Remove audio
+ffmpeg -i input.mp4 -c copy -an input-audio-removed.mp4
+
+# Cut start
+ffmpeg -ss 00:00:10 -i input.mp4 -c copy -an input-cut.mp4
+
+# Cut end
+ffmpeg -i input.mp4 -to 00:58:00 -c copy input-cut.mp4
+
+# Create preview
+ffmpeg -ss 10 -t 30 -i input.mp4 -vf "scale=100:-2,fps=15" -c:v libx264 -crf 28 -preset veryfast -an input.preview.mp4
+
+# Crop
+ffmpeg -i input.mp4 -vf "crop=in_w:in_h-112:0:56" -an -c:v libx264 -crf 18 -preset fast input-cropped.mp4
+
+# Create preview (advanced)
+ffmpeg \
+  -ss 60  -t 1 -i input.mp4 \
+  -ss 360 -t 1 -i input.mp4 \
+  -ss 660 -t 1 -i input.mp4 \
+  -ss 960 -t 1 -i input.mp4 \
+  -ss 1260 -t 1 -i input.mp4 \
+  -filter_complex "[0:v][1:v][2:v][3:v][4:v]concat=n=5:v=1,scale=100:-2,fps=12" \
+  -an -c:v libx264 -crf 30 -preset veryfast input.preview.mp4

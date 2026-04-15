@@ -2,7 +2,7 @@ import { Injectable, computed, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { combineLatest, filter, interval, map } from 'rxjs';
 import { ColorService } from './color.service';
-import { EnvService } from './env.service';
+import { DeviceService } from './device.service';
 import { MqttService } from './mqtt.service';
 import { WSService } from './ws.service';
 
@@ -26,9 +26,9 @@ export interface VideoState {
 })
 export class VideoService {
   private wsService = inject(WSService);
+  private deviceService = inject(DeviceService);
   private colorService = inject(ColorService);
   private mqttService = inject(MqttService);
-  private envService = inject(EnvService);
 
   private address = 146;
   private numChannels = 5;
@@ -43,12 +43,20 @@ export class VideoService {
 
   public readonly visuals = this.wsService.visuals;
   public readonly sourceChanged = computed(() => this.visuals().currentIndex);
+  private readonly opacity = computed(
+    () => this.deviceService.beamer()?.master ?? 255,
+  );
+  public readonly fontClass = computed(() =>
+    this.visuals().font.replaceAll(' ', '-').toLowerCase(),
+  );
 
   private getVideo(channels: number[]) {
     const [r, g, b, master, strobe] = channels;
 
     const color = this.colorService.toRGB(255, r, g, b, 0, 0, 0);
-    const opacity = this.visuals().opacity === 'chase' ? master / 255 : 1;
+
+    const opacity =
+      this.visuals().opacity === 'chase' ? master / 255 : this.opacity();
 
     const { classes, duration } = this.colorService.getStrobeClasses(
       strobe,
@@ -117,10 +125,7 @@ export class VideoService {
     if (visuals.currentIndex < 0) {
       element.removeAttribute('src');
     } else {
-      const src = `${this.envService.baseRestApi}/static/visuals/${
-        visuals.sources[visuals.currentIndex].url
-      }`;
-      element.setAttribute('src', src);
+      element.setAttribute('src', visuals.sources[visuals.currentIndex].url);
       element.setAttribute('type', 'video/mp4');
     }
     element.load();

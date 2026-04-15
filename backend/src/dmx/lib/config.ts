@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'fs';
 import { readdir, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { BehaviorSubject, Subject, debounceTime } from 'rxjs';
-import { STATIC_DIRECTORY } from '../../env';
+import { BASE_URL, STATIC_DIRECTORY } from '../../env';
 import { TypedServer } from '../../server/events.interfaces';
 import { Logger } from '../../utils/logger';
 import { ChaseColor } from './chase';
@@ -37,15 +37,33 @@ interface ConfigStore {
   devices: DeviceConfig[];
 }
 
+export enum Font {
+  Nasalization = 'Nasalization',
+  Arial = 'Arial',
+  Barrio = 'Barrio',
+  Bitcount = 'Bitcount Grid Double Variable',
+  Typewriter = 'JMH Typewriter',
+  Monoton = 'Monoton',
+  PressStart2p = 'Press Start 2P',
+}
+
 export interface VisualsSettings {
   color: 'chase' | 'original';
   opacity: 'chase' | 'off';
   showText: boolean;
   messages: string;
+  invert: boolean;
+  font: Font;
+}
+
+export interface VisualSource {
+  url: string;
+  preview: string;
+  title: string;
 }
 
 export interface Visuals extends VisualsSettings {
-  sources: Array<{ url: string }>;
+  sources: VisualSource[];
   currentIndex: number;
   startedAt: string;
 }
@@ -62,6 +80,8 @@ const DEFAULT_CONFIG: ConfigStore = {
     opacity: 'chase',
     showText: false,
     messages: '',
+    invert: false,
+    font: Font.Arial,
   },
   devices: [
     ...[
@@ -110,13 +130,10 @@ export class Config {
   public testChannelMode = false;
   public testChannelData = Buffer.alloc(512 + 1, 0);
   public visuals: Visuals = {
+    ...DEFAULT_CONFIG.visuals,
     sources: [],
     currentIndex: -1,
     startedAt: new Date().toISOString(),
-    color: 'chase',
-    opacity: 'chase',
-    showText: false,
-    messages: '',
   };
 
   public devices$ = new BehaviorSubject<DeviceConfig[]>([]);
@@ -145,6 +162,8 @@ export class Config {
         opacity: this.visuals.opacity,
         showText: this.visuals.showText,
         messages: this.visuals.messages,
+        invert: this.visuals.invert,
+        font: this.visuals.font,
       },
       devices: this.devices$.getValue(),
     };
@@ -307,13 +326,21 @@ export class Config {
 
   async scanVisualSources(): Promise<void> {
     const files = await readdir(VISUALS_PATH);
-    const videos = files.filter((o) => o.endsWith('.mp4'));
+    const videos = files.filter(
+      (o) => !o.endsWith('.preview.mp4') && o.endsWith('.mp4'),
+    );
 
     this.visuals = {
       ...this.visuals,
-      sources: videos.map((o, i) => ({
-        url: `${o}`,
-      })),
+      sources: videos.map((o, i) => {
+        const url = `${BASE_URL}/static/visuals/${o}`;
+        const filename = o.replace('.mp4', '');
+        return {
+          url,
+          preview: `${BASE_URL}/static/visuals/${filename}.preview.mp4`,
+          title: filename.replace(/-/g, ' '),
+        };
+      }),
     };
 
     this.setVisualsSource(0);

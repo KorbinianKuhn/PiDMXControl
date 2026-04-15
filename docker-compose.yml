@@ -15,6 +15,7 @@ services:
     container_name: dmx-backend
     restart: always
     environment:
+      - BASE_URL=http://dmx.local:3000
       - SEND_DATA=true
       - UART_SERIAL=true
       - MQTT_HOST=mqtt://mosquitto:1883

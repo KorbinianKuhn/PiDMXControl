@@ -1,11 +1,6 @@
-// TODO: Migrate to tailwind 4
 module.exports = {
-  content: ["./src/**/*.{html,scss,ts}"],
-  theme: {
-    extend: {},
+  content: ["./src/**/*.{html,ts}"],
+  corePlugins: {
+    preflight: false,
   },
-  variants: {
-    extend: {},
-  },
-  plugins: [],
 };

@@ -1,9 +1,9 @@
-<div class="container" tabindex="0">
-  <app-panel-group label="Global">
-    <table>
-      <tr>
-        <td>Brightness</td>
-        <td>
+<app-panel-group label="Settings">
+  <table class="w-[800px] max-w-[85vw]">
+    <tr class="border-b border-gray-700">
+      <td>Brightness</td>
+      <td>
+        <div class="flex items-center">
           <mat-slider [min]="0" [max]="1" [step]="0.05" discrete>
             <input
               matSliderThumb
@@ -11,12 +11,14 @@
               (valueChange)="onMasterChange($event)"
             />
           </mat-slider>
-        </td>
-        <td>{{ master() | percent }}</td>
-      </tr>
-      <tr>
-        <td>Ambient UV</td>
-        <td>
+          <span>{{ master() | percent }}</span>
+        </div>
+      </td>
+    </tr>
+    <tr class="border-b border-gray-700">
+      <td>Ambient UV</td>
+      <td>
+        <div class="flex items-center">
           <mat-slider [min]="0" [max]="255" [step]="1" discrete>
             <input
               matSliderThumb
@@ -24,31 +26,37 @@
               (valueChange)="onAmbientUVChange($event)"
             />
           </mat-slider>
-        </td>
-        <td>{{ ambientUV() / 255 | percent }}</td>
-      </tr>
-      @for (control of controls(); track control.id) {
-        <tr>
-          <td>{{ control.id }}</td>
-          <td [class.opacity-50]="control.disabled">
-            <mat-slider [min]="0" [max]="1" [step]="0.05" discrete>
-              <input
-                matSliderThumb
-                [value]="control.value"
-                (dragEnd)="onSliderChange(control, $event)"
-              />
-            </mat-slider>
-          </td>
-          <td>{{ control.value | percent }}</td>
-          <td>
+          <span>{{ ambientUV() / 255 | percent }}</span>
+        </div>
+      </td>
+    </tr>
+    @for (control of controls(); track control.id) {
+      <tr class="border-b border-gray-700">
+        <td>{{ control.id }}</td>
+        <td>
+          <div class="flex items-center justify-between flex-wrap">
+            <div
+              class="flex items-center flex-1"
+              [class.opacity-50]="control.disabled"
+            >
+              <mat-slider [min]="0" [max]="1" [step]="0.05" discrete>
+                <input
+                  matSliderThumb
+                  [value]="control.value"
+                  (dragEnd)="onSliderChange(control, $event)"
+                />
+              </mat-slider>
+              <span class="ml-1">{{ control.value | percent }}</span>
+            </div>
             <mat-slide-toggle
               [checked]="control.disabled"
               (change)="onToggleChange(control, $event)"
+              class="ml-4 mb-1"
               >Disable</mat-slide-toggle
             >
-          </td>
-        </tr>
-      }
-    </table>
-  </app-panel-group>
-</div>
+          </div>
+        </td>
+      </tr>
+    }
+  </table>
+</app-panel-group>

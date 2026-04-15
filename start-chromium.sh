@@ -1,0 +1,14 @@
+chromium \
+    --noerrdialogs \
+    --disable-infobars \
+    --disable-restore-session-state \
+    --disable-pinch \
+    --disable-translate \
+    --overscroll-history-navigation=0 \
+    --force-device-scale-factor=1 \
+    --disable-session-crashed-bubble \
+    --disable-restore-session-state \
+    --kiosk \
+    --incognito \
+    --display=:0 \
+    --window-position=0,0 http://dmx.local

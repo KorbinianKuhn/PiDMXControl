@@ -23,7 +23,10 @@
             "index": "src/index.html",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": [{
+                "glob": "**/*",
+                "input": "public"
+              }],
             "styles": ["src/styles.scss"],
             "scripts": [],
             "browser": "src/main.ts"
@@ -48,7 +51,8 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "serviceWorker": "ngsw-config.json"
             },
              "docker": {
                 "fileReplacements": [

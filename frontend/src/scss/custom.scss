@@ -1,7 +1,3 @@
-:root {
-  --mat-sys-surface: #000;
-}
-
 button {
   touch-action: manipulation;
 }
@@ -62,19 +58,14 @@ button {
 html,
 body {
   height: 100%;
+  font-size: 16px;
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-@font-face {
-  font-family: "Nasalization";
-  src: url("../assets/nasalization.otf") format("opentype");
 }
 
 .custom-dialog {
-  overflow: scroll;
+  overflow: auto;
 }
 
 .custom-backdrop {
@@ -84,4 +75,8 @@ body {
 textarea {
   background: #000;
   color: #fff;
+}
+
+.invert {
+  filter: invert(1);
 }

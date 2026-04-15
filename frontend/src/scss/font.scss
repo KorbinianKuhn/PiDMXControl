@@ -1,0 +1,43 @@
+@use "pkg:@fontsource-variable/bitcount-grid-double/wght.css";
+@use "pkg:@fontsource/barrio";
+@use "pkg:@fontsource/monoton";
+@use "pkg:@fontsource/press-start-2p";
+
+html,
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+@font-face {
+  font-family: "Nasalization";
+  src: url("../assets/fonts/nasalization.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "JMH Typewriter";
+  src: url("../assets/fonts/jmh-typewriter.otf") format("opentype");
+}
+
+.nasalization {
+  font-family: "Nasalization";
+}
+
+.bitcount-grid-double-variable {
+  font-family: "Bitcount Grid Double Variable";
+}
+
+.barrio {
+  font-family: "Barrio";
+}
+
+.monoton {
+  font-family: "Monoton";
+}
+
+.press-start-2p {
+  font-family: "Press Start 2P";
+}
+
+.jmh-typewriter {
+  font-family: "JMH Typewriter";
+}

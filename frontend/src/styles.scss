@@ -1,7 +1,6 @@
-@use "tailwindcss/base";
-@use "tailwindcss/components";
-@use "tailwindcss/utilities";
+@use "scss/tailwind";
 
 @use "scss/theme.scss";
+@use "scss/font.scss";
 @use "scss/custom.scss";
 @use "scss/material.scss";

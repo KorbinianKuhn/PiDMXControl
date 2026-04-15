@@ -175,16 +175,41 @@ export class DMX {
       };
     }
 
+    const a = this.config.getDeviceConfig('neopixel-a');
+    const b = this.config.getDeviceConfig('neopixel-b');
+
+    if (a.disabled && b.disabled) {
+      const data = Buffer.alloc(2 * 150 * 4, 0);
+      return {
+        dmx: data,
+        visualisation: data,
+      };
+    }
+
     const visualisation = this.config.overrideProgram
       ? this.overrideProgram.pixelData()
       : this.activeProgram.pixelData();
 
     const dmx = Buffer.from(visualisation);
-    const master = this.config.getDeviceConfig('neopixel-a').master;
-    const multiplier = this.config.master * master;
-    for (let i = 0; i < dmx.length; i++) {
-      if (dmx[i] !== 0) {
-        dmx[i] = Math.round(dmx[i] * multiplier);
+
+    const devices = [a, b];
+    for (let i = 0; i < devices.length; i++) {
+      const device = devices[i];
+      const start = i * 300;
+      const end = start + 300;
+      if (device.disabled) {
+        dmx.fill(0, start, end);
+        visualisation.fill(0, start, end);
+      } else {
+        const multiplier = this.config.master * device.master;
+        if (multiplier !== 1) {
+          for (let i = start; i < end; i++) {
+            const value = dmx[i];
+            if (value !== 0) {
+              dmx[i] = Math.round(value * multiplier);
+            }
+          }
+        }
       }
     }
 

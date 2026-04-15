@@ -97,9 +97,6 @@
         <button mat-icon-button (click)="onRefreshClick()">
           <mat-icon svgIcon="refresh" />
         </button>
-        <button mat-icon-button (click)="onOpenSettingsModal()">
-          <mat-icon svgIcon="settings" />
-        </button>
       </div>
     </div>
     <app-panel-group label="Visualisation">
@@ -124,25 +121,16 @@
             (click)="onTogglePerformanceMode()"
             class="m-2"
           >
-            <mat-icon
-              svgIcon="tortoise"
-              [class]="performanceMode() ? 'text-red-600' : undefined"
-            />
+            <mat-icon svgIcon="tortoise" [class.red-icon]="performanceMode()" />
           </button>
 
+          <!-- TODO: mobile responsiveness -->
           <button mat-icon-button (click)="onOpenBrightnessModal()" class="m-2">
             <mat-icon svgIcon="brightness" />
           </button>
 
-          <button
-            mat-icon-button
-            (click)="onToggleNeopixelDisabled()"
-            class="m-2"
-          >
-            <mat-icon
-              svgIcon="neopixel_off"
-              [class]="neopixelDisabled() ? 'text-red-600' : undefined"
-            />
+          <button mat-icon-button (click)="onOpenSettingsModal()">
+            <mat-icon svgIcon="settings" />
           </button>
         </div>
       </app-panel-group>

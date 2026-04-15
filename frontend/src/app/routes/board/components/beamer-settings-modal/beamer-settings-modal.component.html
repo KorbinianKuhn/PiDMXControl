@@ -1,0 +1,60 @@
+<div class="flex flex-wrap">
+  <app-panel-group label="Source" class="max-w-[494px]">
+    @for (source of visuals().sources; track $index; let index = $index) {
+      <div
+        class="m-2 border-cyan-700 border"
+        [class.bg-cyan-500]="visuals().currentIndex === index"
+        (click)="onClickVideo(index)"
+      >
+        <video
+          [src]="source.preview"
+          [muted]="true"
+          [loop]="true"
+          [autoplay]="!this.performanceMode()"
+          class="w-[99px] h-[56px] object-cover"
+          [class.invert]="visuals().invert"
+        ></video>
+        <div class="w-full my-1 text-xs text-center">
+          {{ source.title | titlecase }}
+        </div>
+      </div>
+    }
+  </app-panel-group>
+
+  <app-panel-group label="Options">
+    <div class="flex flex-col">
+      <app-pad-button
+        color="bg-cyan-400"
+        [active]="!this.disabled()"
+        (click)="onToggleDisabled()"
+        class="m-2"
+        >Enabled</app-pad-button
+      >
+      <mat-checkbox
+        [checked]="visuals().color === 'chase'"
+        (change)="onToggleColor()"
+        color="primary"
+        >Chase Color</mat-checkbox
+      >
+      <mat-checkbox
+        [checked]="visuals().opacity === 'chase'"
+        (change)="onToggleOpacity()"
+        color="primary"
+        >Chase Opacity</mat-checkbox
+      >
+      <mat-checkbox
+        [checked]="visuals().invert"
+        (change)="onToggleInvert()"
+        color="primary"
+        >Invert</mat-checkbox
+      >
+      <mat-checkbox
+        [checked]="visuals().showText"
+        (change)="onToggleText()"
+        color="primary"
+        >Show Text</mat-checkbox
+      >
+    </div>
+    <!-- TODO: Font -->
+  </app-panel-group>
+</div>

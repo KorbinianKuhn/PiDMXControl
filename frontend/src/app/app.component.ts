@@ -53,9 +53,7 @@ export class AppComponent {
     ICONS.map((o) =>
       this.matIconRegistry.addSvgIcon(
         o,
-        this.domSanitizer.bypassSecurityTrustResourceUrl(
-          `assets/icons/${o}.svg`,
-        ),
+        this.domSanitizer.bypassSecurityTrustResourceUrl(`svg/${o}.svg`),
       ),
     );
 

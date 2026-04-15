@@ -7,6 +7,7 @@ import {
   ClientToServerEvents,
   Device,
   DeviceConfig,
+  Font,
   OverrideProgramName,
   ServerStatus,
   ServerToClientEvents,
@@ -59,11 +60,13 @@ export class WSService {
   public readonly visuals = signal<Visuals>({
     sources: [],
     currentIndex: -1,
-    startedAt: '',
+    startedAt: new Date().toISOString(),
     color: 'chase',
     opacity: 'chase',
     showText: false,
     messages: '',
+    invert: false,
+    font: Font.Arial,
   });
 
   private getWsUrl(): {

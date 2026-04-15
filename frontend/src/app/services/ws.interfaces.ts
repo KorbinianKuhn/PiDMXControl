@@ -82,15 +82,33 @@ export interface DeviceConfig {
   bottom?: number;
 }
 
+export enum Font {
+  Arial = 'Arial',
+  Barrio = 'Barrio',
+  Bitcount = 'Bitcount Grid Double Variable',
+  Monoton = 'Monoton',
+  Nasalization = 'Nasalization',
+  PressStart2p = 'Press Start 2P',
+  Typewriter = 'JMH Typewriter',
+}
+
 export interface VisualsSettings {
   color: 'chase' | 'original';
   opacity: 'chase' | 'off';
   showText: boolean;
   messages: string;
+  invert: boolean;
+  font: Font;
+}
+
+export interface VisualSource {
+  url: string;
+  preview: string;
+  title: string;
 }
 
 export interface Visuals extends VisualsSettings {
-  sources: Array<{ url: string }>;
+  sources: VisualSource[];
   currentIndex: number;
   startedAt: string;
 }

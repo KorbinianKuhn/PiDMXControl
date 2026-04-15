@@ -1,7 +1,27 @@
-<textarea
-  class="w-full text-sm border-cyan-900 border rounded-sm mt-2"
-  rows="20"
-  (keyup)="onTextChange(textarea.value)"
-  [value]="text()"
-  #textarea
-></textarea>
+<div class="flex flex-wrap">
+  <app-panel-group label="Messages">
+    <textarea
+      class="text-sm"
+      rows="10"
+      cols="20"
+      (keyup)="onTextChange(textarea.value)"
+      [value]="text()"
+      [class]="fontClass()"
+      #textarea
+    ></textarea>
+  </app-panel-group>
+
+  <app-panel-group label="Font">
+    <div class="flex flex-col">
+      @for (fontOption of fonts; track $index) {
+        <span
+          [class]="fontOption.class"
+          class="m-1"
+          (click)="onFontChange(fontOption.value)"
+          [class.text-cyan-400]="font() === fontOption.value"
+          >{{ fontOption.viewValue }}</span
+        >
+      }
+    </div>
+  </app-panel-group>
+</div>

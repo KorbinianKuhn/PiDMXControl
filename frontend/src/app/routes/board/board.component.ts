@@ -2,12 +2,11 @@ import { Component, computed, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { BeamerSettingsModalComponent } from '../../components/beamer-settings-modal/beamer-settings-modal.component';
-import { BpmComponent } from '../../components/bpm/bpm.component';
+import { ActiveProgramButtonComponent } from '../../components/active-program-button/active-program-button.component';
+import { OverrideProgramButtonComponent } from '../../components/override-program-button/override-program-button.component';
 import { PadButtonComponent } from '../../components/pad-button/pad-button.component';
 import { PanelGroupComponent } from '../../components/panel-group/panel-group.component';
 import { ToggleButtonComponent } from '../../components/toggle-button/toggle-button.component';
-import { VisualisationComponent } from '../../components/visualisation/visualisation.component';
 import { ConfigService } from '../../services/config.service';
 import { MqttService } from '../../services/mqtt.service';
 import {
@@ -15,15 +14,16 @@ import {
   OverrideProgramName,
 } from '../../services/ws.interfaces';
 import { WSService } from '../../services/ws.service';
-import { ActiveProgramButtonComponent } from './components/active-program-button/active-program-button.component';
+import { BeamerSettingsModalComponent } from './components/beamer-settings-modal/beamer-settings-modal.component';
 import {
   BoardColorsModalComponent,
   COLORS_FROM,
   COLORS_TO,
 } from './components/board-colors-modal/board-colors-modal.component';
+import { BpmComponent } from './components/bpm/bpm.component';
 import { BrightnessModalComponent } from './components/brightness-modal/brightness-modal.component';
-import { OverrideProgramButtonComponent } from './components/override-program-button/override-program-button.component';
 import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
+import { VisualisationComponent } from './components/visualisation/visualisation.component';
 
 @Component({
   selector: 'app-board',
@@ -179,7 +179,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   }> = [
     {
       name: OverrideProgramName.STROBE_FLAT,
-      title: 'Flat',
+      title: 'Wash',
       duration: -1,
     },
     {
@@ -226,12 +226,6 @@ export class BoardComponent implements OnInit, OnDestroy {
       progress,
     };
   });
-
-  protected readonly neopixelDisabled = computed(
-    () =>
-      this.wsService.deviceConfigs().find((d) => d.id === 'neopixel-a')
-        ?.disabled || false,
-  );
 
   protected isVideoActive = computed(() => this.visuals().currentIndex > -1);
 
@@ -281,17 +275,6 @@ export class BoardComponent implements OnInit, OnDestroy {
       panelClass: 'custom-dialog',
       backdropClass: 'custom-backdrop',
       maxWidth: '90vw',
-    });
-  }
-
-  onToggleNeopixelDisabled() {
-    const config = this.wsService
-      .deviceConfigs()
-      .find((d) => d.id === 'neopixel-a')!;
-
-    this.wsService.setDeviceConfig('neopixel-a', {
-      ...config,
-      disabled: !config.disabled,
     });
   }
 
