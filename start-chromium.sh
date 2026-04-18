@@ -1,6 +1,8 @@
-#!/bin/sh
+#!/bin/bash
+sleep 10
 
-chromium \
+while true; do
+  chromium \
     --noerrdialogs \
     --disable-infobars \
     --disable-restore-session-state \
@@ -14,3 +16,5 @@ chromium \
     --incognito \
     --display=:0 \
     --window-position=0,0 http://dmx.local
+  sleep 5
+done
