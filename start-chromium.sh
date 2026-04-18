@@ -1,3 +1,5 @@
+#!/bin/sh
+
 chromium \
     --noerrdialogs \
     --disable-infobars \
