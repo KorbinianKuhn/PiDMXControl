@@ -1,6 +1,9 @@
+import { DialogRef } from '@angular/cdk/dialog';
 import { TitleCasePipe } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
 import { MatRadioChange } from '@angular/material/radio';
 import { PadButtonComponent } from '../../../../components/pad-button/pad-button.component';
 import { PanelGroupComponent } from '../../../../components/panel-group/panel-group.component';
@@ -17,12 +20,15 @@ import { WSService } from '../../../../services/ws.service';
     MatCheckbox,
     PanelGroupComponent,
     PadButtonComponent,
+    MatIcon,
+    MatIconButton,
   ],
 })
 export class BeamerSettingsModalComponent {
   private wsService = inject(WSService);
   private configService = inject(ConfigService);
   private deviceService = inject(DeviceService);
+  private dialogRef = inject(DialogRef<BeamerSettingsModalComponent>);
 
   protected readonly disabled = computed(
     () => this.deviceService.beamer()?.disabled ?? false,
@@ -70,5 +76,9 @@ export class BeamerSettingsModalComponent {
       device.disabled = !device.disabled;
       this.wsService.setDeviceConfig(device.id, device);
     }
+  }
+
+  onClickClose() {
+    this.dialogRef.close();
   }
 }

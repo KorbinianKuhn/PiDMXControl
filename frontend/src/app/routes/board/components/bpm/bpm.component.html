@@ -1,8 +1,19 @@
-<div class="flex items-center justify-center m-1">
-  <app-bpm-number class="cursor-pointer mr-2"
-    (click)="onClick()"
-   />
-  <app-pad-button (click)="onClickStart()" color="bg-gray-900" [active]="true"
+<div class="flex items-center justify-center">
+  <app-bpm-number class="cursor-pointer mr-2" (click)="onClick()" />
+  <app-pad-button
+    size="small"
+    (click)="onClickStart()"
+    color="bg-gray-900"
+    [active]="true"
+    class="m-1"
     >Start</app-pad-button
+  >
+  <app-pad-button
+    size="small"
+    (click)="onClick()"
+    color="bg-gray-900"
+    [active]="true"
+    class="m-1"
+    >Change</app-pad-button
   >
 </div>

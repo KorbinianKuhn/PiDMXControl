@@ -1,5 +1,8 @@
+import { DialogRef } from '@angular/cdk/dialog';
 import { PercentPipe } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import {
   MatSlideToggle,
   MatSlideToggleChange,
@@ -28,10 +31,13 @@ interface Control {
     MatSliderThumb,
     PercentPipe,
     MatSlideToggle,
+    MatIcon,
+    MatIconButton,
   ],
 })
 export class BrightnessModalComponent {
   private wsService = inject(WSService);
+  private dialogRef = inject(DialogRef<BrightnessModalComponent>);
 
   public master = this.wsService.master;
   public ambientUV = this.wsService.ambientUV;
@@ -87,5 +93,9 @@ export class BrightnessModalComponent {
         disabled: control.disabled,
       });
     }
+  }
+
+  onClickClose() {
+    this.dialogRef.close();
   }
 }

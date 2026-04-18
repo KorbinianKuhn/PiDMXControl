@@ -1,4 +1,4 @@
-<app-panel-group label="All colors" class="max-w-[602px]">
+<app-panel-group label="Color Themes" class="max-w-[602px]">
   @for (button of colorButtons(); track button.color) {
     <app-pad-button
       [color]="button.gradient"
@@ -13,7 +13,7 @@
   }
 </app-panel-group>
 
-<app-panel-group label="Switch">
+<app-panel-group label="Switch All">
   <app-toggle-button
     [active]="allOn()"
     class="m-1"
@@ -33,7 +33,7 @@
   </app-toggle-button>
 </app-panel-group>
 
-<app-panel-group label="Quick filter" class="max-w-[418px]">
+<app-panel-group label="Color Filter" class="max-w-[418px]">
   @for (button of filterButtons(); track button.color) {
     <app-pad-button
       [color]="button.gradient"
@@ -46,3 +46,8 @@
     </app-pad-button>
   }
 </app-panel-group>
+<div class="fixed top-0 right-0">
+  <button mat-icon-button (click)="onClickClose()">
+    <mat-icon svgIcon="close" />
+  </button>
+</div>

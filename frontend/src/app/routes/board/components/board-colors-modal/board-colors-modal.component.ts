@@ -1,4 +1,7 @@
+import { DialogRef } from '@angular/cdk/dialog';
 import { Component, computed, inject } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { PadButtonComponent } from '../../../../components/pad-button/pad-button.component';
 import { PanelGroupComponent } from '../../../../components/panel-group/panel-group.component';
 import { ToggleButtonComponent } from '../../../../components/toggle-button/toggle-button.component';
@@ -85,10 +88,17 @@ export const COLORS_TO_DARKER: { [key: string]: string } = {
   selector: 'app-board-colors-modal',
   templateUrl: './board-colors-modal.component.html',
   styleUrls: ['./board-colors-modal.component.scss'],
-  imports: [PadButtonComponent, PanelGroupComponent, ToggleButtonComponent],
+  imports: [
+    PadButtonComponent,
+    PanelGroupComponent,
+    ToggleButtonComponent,
+    MatIcon,
+    MatIconButton,
+  ],
 })
 export class BoardColorsModalComponent {
   private wsService = inject(WSService);
+  private dialogRef = inject(DialogRef<BoardColorsModalComponent>);
 
   private readonly allColors = Object.values(ChaseColor);
   private readonly activeColors = this.wsService.activeColors;
@@ -166,5 +176,9 @@ export class BoardColorsModalComponent {
   onClickSwitch(event: MouseEvent, on: boolean) {
     event.stopImmediatePropagation();
     this.wsService.setColors(on ? this.allColors : []);
+  }
+
+  onClickClose() {
+    this.dialogRef.close();
   }
 }

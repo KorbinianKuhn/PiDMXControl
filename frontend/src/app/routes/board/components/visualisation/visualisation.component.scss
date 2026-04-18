@@ -1,6 +1,5 @@
 :host {
   position: relative;
-  height: 218px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -8,6 +7,7 @@
 
 .container {
   position: relative;
+  margin: 10px 0;
 }
 
 .beamer-wrapper {

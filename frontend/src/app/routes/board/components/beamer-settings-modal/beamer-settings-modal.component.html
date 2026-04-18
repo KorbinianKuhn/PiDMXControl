@@ -25,10 +25,11 @@
     <div class="flex flex-col">
       <app-pad-button
         color="bg-cyan-400"
+        size="small"
         [active]="!this.disabled()"
         (click)="onToggleDisabled()"
         class="m-2"
-        >Enabled</app-pad-button
+        >On</app-pad-button
       >
       <mat-checkbox
         [checked]="visuals().color === 'chase'"
@@ -55,6 +56,10 @@
         >Show Text</mat-checkbox
       >
     </div>
-    <!-- TODO: Font -->
   </app-panel-group>
+</div>
+<div class="fixed top-0 right-0">
+  <button mat-icon-button (click)="onClickClose()">
+    <mat-icon svgIcon="close" />
+  </button>
 </div>

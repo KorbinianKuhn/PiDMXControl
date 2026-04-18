@@ -1,6 +1,6 @@
 <div class="flex flex-row pt-2 flex-wrap justify-center">
-  <div class="flex flex-col justify-start">
-    <app-panel-group label="Overrides" class="mb-1">
+  <div class="flex flex-col justify-between">
+    <app-panel-group label="Overrides">
       @for (program of overridePrograms; track program; let index = $index) {
         <app-override-program-button
           size="small"
@@ -15,11 +15,11 @@
       }
     </app-panel-group>
 
-    <app-panel-group label="Chases" class="mb-1">
-      <div class="flex flex-col">
+    <app-panel-group label="Chases">
+      <div class="flex flex-row md:flex-col">
         <app-pad-button
           [color]="currentColor().gradient"
-          class="m-1 mr-10"
+          class="m-1"
           size="small"
           (click)="onClickOpenColorsModal()"
           [current]="true"
@@ -51,7 +51,7 @@
       </div>
     </app-panel-group>
 
-    <app-panel-group label="Buildups" class="mb-2">
+    <app-panel-group label="Buildups">
       @for (program of buildupPrograms; track program) {
         <app-override-program-button
           [name]="program.name"
@@ -88,22 +88,22 @@
     </app-panel-group>
   </div>
 
-  <div class="flex flex-col">
+  <div class="flex flex-col justify-between">
     <div class="flex">
       <app-panel-group label="BPM">
         <app-bpm />
       </app-panel-group>
-      <div class="flex flex-1 flex-col justify-center items-center">
-        <button mat-icon-button (click)="onRefreshClick()">
+      <app-panel-group>
+        <button mat-icon-button (click)="onRefreshClick()" class="m-2">
           <mat-icon svgIcon="refresh" />
         </button>
-      </div>
+      </app-panel-group>
     </div>
     <app-panel-group label="Visualisation">
       <app-visualisation />
     </app-panel-group>
     <div class="flex">
-      <app-panel-group style="flex: 0">
+      <app-panel-group>
         <app-toggle-button
           [active]="black()"
           (click)="onClickBlack()"
@@ -111,7 +111,7 @@
           [current]="!!black()"
           colorOn="bg-red-900"
         >
-          <span class="text-xs">Black</span>
+          <span>Black</span>
         </app-toggle-button>
       </app-panel-group>
       <app-panel-group class="flex-1">
@@ -124,12 +124,11 @@
             <mat-icon svgIcon="tortoise" [class.red-icon]="performanceMode()" />
           </button>
 
-          <!-- TODO: mobile responsiveness -->
           <button mat-icon-button (click)="onOpenBrightnessModal()" class="m-2">
             <mat-icon svgIcon="brightness" />
           </button>
 
-          <button mat-icon-button (click)="onOpenSettingsModal()">
+          <button mat-icon-button (click)="onOpenSettingsModal()" class="m-2">
             <mat-icon svgIcon="settings" />
           </button>
         </div>

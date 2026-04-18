@@ -54,6 +54,7 @@ export interface VisualsSettings {
   messages: string;
   invert: boolean;
   font: Font;
+  currentIndex: number;
 }
 
 export interface VisualSource {
@@ -64,7 +65,6 @@ export interface VisualSource {
 
 export interface Visuals extends VisualsSettings {
   sources: VisualSource[];
-  currentIndex: number;
   startedAt: string;
 }
 
@@ -82,6 +82,7 @@ const DEFAULT_CONFIG: ConfigStore = {
     messages: '',
     invert: false,
     font: Font.Arial,
+    currentIndex: -1,
   },
   devices: [
     ...[
@@ -164,6 +165,7 @@ export class Config {
         messages: this.visuals.messages,
         invert: this.visuals.invert,
         font: this.visuals.font,
+        currentIndex: this.visuals.currentIndex,
       },
       devices: this.devices$.getValue(),
     };
@@ -343,11 +345,14 @@ export class Config {
       }),
     };
 
-    this.setVisualsSource(0);
+    if (this.visuals.currentIndex >= this.visuals.sources.length) {
+      this.setVisualsSource(0);
+    }
   }
 
   setVisualsSource(currentIndex: number) {
     this.visuals.currentIndex = currentIndex;
+    this.store$.next();
     this.io.emit('visuals:updated', this.visuals);
   }
 

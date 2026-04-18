@@ -1,5 +1,7 @@
 import { Component, inject } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
 import { MatTab, MatTabContent, MatTabGroup } from '@angular/material/tabs';
 import { PadButtonComponent } from '../../../../components/pad-button/pad-button.component';
 import { WSService } from '../../../../services/ws.service';
@@ -17,6 +19,8 @@ import { TestChannelDeviceListComponent } from './test-channel-device-list/test-
     DeviceConfigListComponent,
     PadButtonComponent,
     BeamerTextMessagesComponent,
+    MatIcon,
+    MatIconButton,
   ],
   templateUrl: './settings-modal.component.html',
   styleUrl: './settings-modal.component.scss',
@@ -33,6 +37,10 @@ export class SettingsModalComponent {
 
   onClickRecreateChases() {
     this.wsService.setChasesRecreate();
+    this.dialogRef.close();
+  }
+
+  onClickClose() {
     this.dialogRef.close();
   }
 }

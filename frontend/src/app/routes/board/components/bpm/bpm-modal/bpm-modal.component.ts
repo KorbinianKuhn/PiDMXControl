@@ -1,5 +1,7 @@
 import { Component, inject } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
 import {
   MatSlider,
   MatSliderDragEvent,
@@ -20,6 +22,8 @@ import { BpmNumberComponent } from '../bpm-number/bpm-number.component';
     MatSlider,
     MatSliderThumb,
     PanelGroupComponent,
+    MatIcon,
+    MatIconButton,
   ],
 })
 export class BpmModalComponent {
@@ -90,6 +94,10 @@ export class BpmModalComponent {
 
   onClickPreset(bpm: number) {
     this.wsService.setBpm(bpm);
+    this.dialogRef.close();
+  }
+
+  onClickClose() {
     this.dialogRef.close();
   }
 }
